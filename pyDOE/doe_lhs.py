@@ -196,17 +196,16 @@ def _lhsclassic(n, samples, randomstate):
         if isinstance(randomstate, np.random.RandomState)
         else randomstate.random((samples, n))
     )
+
     a = cut[:samples]
     b = cut[1 : samples + 1]
-    rdpoints = np.zeros_like(u)
-    for j in range(n):
-        rdpoints[:, j] = u[:, j] * (b - a) + a
 
     # Make the random pairings
-    H = np.zeros_like(rdpoints)
+    H = np.empty_like(u)
+
     for j in range(n):
-        order = randomstate.permutation(range(samples))
-        H[:, j] = rdpoints[order, j]
+        rdpoints = u[:, j] * (b - a) + a
+        H[:, j] = rdpoints[randomstate.permutation(samples)]
 
     return H
 
