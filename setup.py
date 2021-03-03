@@ -1,8 +1,9 @@
-import os
+from io import open
 from setuptools import setup
 
-def read(fname):
-    return open(os.path.join(os.path.dirname(__file__), fname)).read()
+def read(fname, encoding='utf-8'):
+    with open(fname, encoding=encoding) as f:
+        return f.read()
 
 setup(
     name='pyDOE',
@@ -12,7 +13,8 @@ setup(
     description='Design of experiments for Python',
     url='https://github.com/tisimst/pyDOE',
     license='BSD License (3-Clause)',
-    long_description=read('README'),
+    long_description=read('README.md'),
+    long_description_content_type='text/markdown',
     packages=['pyDOE'],
     install_requires=['numpy', 'scipy'],
     keywords=[
@@ -30,12 +32,12 @@ setup(
         'License :: OSI Approved :: BSD License',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3.0',
-        'Programming Language :: Python :: 3.1',
         'Programming Language :: Python :: 3.2',
         'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
         'Topic :: Education',
         'Topic :: Scientific/Engineering',
         'Topic :: Scientific/Engineering :: Mathematics',

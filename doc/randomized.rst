@@ -43,6 +43,9 @@ where
   - "centermaximin" or "cm": same as "maximin", but centered within the
     intervals
   - "correlation" or "corr": minimize the maximum correlation coefficient
+  - "lhsmu" : Latin hypercube with multifimensional Uniformity. Correlation between
+     variable can be enforced by setting a valid correlation matrix. Description of the
+     algorithm can be found in `Deutsch and Deutsch`_.
   
 The output design scales all the variable ranges from zero to one which
 can then be transformed as the user wishes (like to a specific statistical
@@ -142,3 +145,4 @@ Any questions, comments, bug-fixes, etc. can be forwarded to the `author`_.
 .. _Latin-Hypercube designs: http://en.wikipedia.org/wiki/Latin_hypercube_sampling
 .. _NIST: http://www.itl.nist.gov/div898/handbook/pri/pri.htm
 .. _scipy.stats.distributions: http://docs.scipy.org/doc/scipy/reference/stats.html
+.. _Deutsch and Deutsch : https://www.sciencedirect.com/science/article/pii/S0378375811003776?via%3Dihub

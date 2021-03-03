@@ -13,7 +13,6 @@ Much thanks goes to these individuals. It has been converted to Python by
 Abraham Lee.
 """
 
-import math
 import numpy as np
 from scipy.linalg import toeplitz, hankel
 
