@@ -1,9 +1,8 @@
+pyDOE: An experimental design package for python
+=================================================
+
 [![Tests](https://github.com/relf/pyDOE3/actions/workflows/tests.yml/badge.svg)](https://github.com/relf/pyDOE3/actions/workflows/tests.yml)
 [![Documentation](https://readthedocs.org/projects/pydoe3/badge/?version=latest)](https://pydoe3.readthedocs.io/en/latest/?badge=latest)
-
-
-pyDOE: An experimental design package for python
-=====================================================
 
 `pyDOE` is a package that is designed to help the scientist, engineer,
 statistician, etc., to construct appropriate experimental designs.
@@ -34,7 +33,6 @@ Requirements
 
 - NumPy
 - SciPy
-
 
 Installation
 ------------
@@ -78,4 +76,4 @@ References
 - Surowiec, Izabella, Ludvig Vikström, Gustaf Hector, Erik Johansson,
 Conny Vikström, and Johan Trygg. “Generalized Subset Designs in Analytical
 Chemistry.” Analytical Chemistry 89, no. 12 (June 20, 2017): 6491–97.
-https://doi.org/10.1021/acs.analchem.7b00506.
+<https://doi.org/10.1021/acs.analchem.7b00506>.
