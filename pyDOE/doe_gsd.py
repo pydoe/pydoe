@@ -1,6 +1,7 @@
 """
 Copyright (C) 2018 - Rickard Sjoegren
 """
+
 import itertools
 
 import numpy as np
@@ -147,7 +148,6 @@ def _make_orthogonal_arrays(latin_square, n_cols):
     Augment latin-square to the specified number of columns to produce
     an orthogonal array.
     """
-    p = len(latin_square)
 
     first_row = latin_square[0]
     A_matrices = [np.array([[v]]) for v in first_row]

@@ -9,7 +9,7 @@ Scilab:
 
     website: forge.scilab.org/index.php/p/scidoe/sourcetree/master/macros
 
-Much thanks goes to these individuals. It has been converted to Python by 
+Much thanks goes to these individuals. It has been converted to Python by
 Abraham Lee.
 """
 

@@ -9,7 +9,7 @@ Scilab:
 
     website: forge.scilab.org/index.php/p/scidoe/sourcetree/master/macros
 
-Much thanks goes to these individuals. It has been converted to Python by 
+Much thanks goes to these individuals. It has been converted to Python by
 Abraham Lee.
 """
 
@@ -252,7 +252,7 @@ def _lhsmu(N, samples=None, corr=None, random_state=None, M=5):
     if samples is None:
         samples = N
 
-    I = M * samples
+    I = M * samples  # noqa
 
     rdpoints = random_state.uniform(size=(I, N))
 
@@ -292,7 +292,7 @@ def _lhsmu(N, samples=None, corr=None, random_state=None, M=5):
         H = np.zeros_like(rdpoints, dtype=float)
         rank = np.argsort(rdpoints, axis=0)
 
-        for l in range(samples):
+        for l in range(samples):  # noqa
             low = float(l) / samples
             high = float(l + 1) / samples
 

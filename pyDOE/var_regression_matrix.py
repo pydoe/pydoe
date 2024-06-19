@@ -9,13 +9,13 @@ Scilab:
 
     website: forge.scilab.org/index.php/p/scidoe/sourcetree/master/macros
 
-Much thanks goes to these individuals. It has been converted to Python by 
+Much thanks goes to these individuals. It has been converted to Python by
 Abraham Lee.
 """
 
 import numpy as np
+from .build_regression_matrix import build_regression_matrix
 
-from pyDOE import build_regression_matrix
 
 def var_regression_matrix(H, x, model, sigma=1):
     """

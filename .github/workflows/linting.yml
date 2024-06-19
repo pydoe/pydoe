@@ -23,8 +23,7 @@ jobs:
         pip install -r requirements.txt
         pip install -e .
 
-    - name: Check format with black
+    - name: Check format with ruff
       run: |
-        black --version
-        black --diff pyDOE3
-        black --check pyDOE3
+        ruff --version
+        ruff check

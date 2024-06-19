@@ -9,7 +9,7 @@ Scilab:
 
     website: forge.scilab.org/index.php/p/scidoe/sourcetree/master/macros
 
-Much thanks goes to these individuals. It has been converted to Python by 
+Much thanks goes to these individuals. It has been converted to Python by
 Abraham Lee.
 """
 
@@ -22,7 +22,6 @@ import numpy as np
 from scipy.special import binom
 
 __all__ = [
-    "np",
     "fullfact",
     "ff2n",
     "fracfact",
@@ -212,7 +211,7 @@ def fracfact(gen):
     C = [len(item) for item in A]
 
     # Indices of single letters (main factors)
-    I = [i for i, item in enumerate(C) if item == 1]
+    I = [i for i, item in enumerate(C) if item == 1]  # noqa
 
     # Indices of letter combinations (we need them to fill out H2 properly).
     J = [i for i, item in enumerate(C) if item != 1]
@@ -222,7 +221,7 @@ def fracfact(gen):
 
     # If R1 is either None or not, the result is not changed, since it is a
     # multiplication of 1.
-    R1 = _grep(U, "+")
+    # R1 = _grep(U, "+")
     R2 = _grep(U, "-")
 
     # Fill in design with two level factorial design
@@ -406,7 +405,7 @@ def fracfact_opt(n_factors, n_erased, max_attempts=0):
     def n_comb(n, k):
         if k <= 0 or n <= 0 or k > n:
             return 0
-        return math.factorial(n) / (math.factorial(k) * math.factorial(n - k))
+        return math.factorial(n) // (math.factorial(k) * math.factorial(n - k))
 
     if n_factors > 20:
         raise ValueError("Design too big, use 20 factors or less")
@@ -424,7 +423,7 @@ def fracfact_opt(n_factors, n_erased, max_attempts=0):
         raise ValueError("Too many erased factors to create aliasing")
 
     all_names = string.ascii_lowercase
-    factors = range(n_factors)
+    # factors = range(n_factors)
     main_factors = range(n_main_factors)
     main_design = " ".join([all_names[f] for f in main_factors])
     aliases = itertools.chain.from_iterable(
@@ -503,8 +502,8 @@ def fracfact_aliasing(design):
     for combination in all_combinations:
         contrast = np.prod(design[:, combination], axis=1)
         contrast.flags.writeable = False
-        aliases[contrast.data] = aliases.get(contrast.data, [])
-        aliases[contrast.data].append(combination)
+        aliases[contrast.data.tobytes()] = aliases.get(contrast.data.tobytes(), [])
+        aliases[contrast.data.tobytes()].append(combination)
 
     aliases_list = []
     for alias in aliases.values():

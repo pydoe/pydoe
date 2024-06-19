@@ -9,7 +9,7 @@ Scilab:
 
     website: forge.scilab.org/index.php/p/scidoe/sourcetree/master/macros
 
-Much thanks goes to these individuals. It has been converted to Python by 
+Much thanks goes to these individuals. It has been converted to Python by
 Abraham Lee.
 """
 
@@ -129,19 +129,11 @@ def ccdesign(n, center=(4, 4), alpha="orthogonal", face="circumscribed"):
         "ccf",
     ), 'Invalid value for "face": {:}'.format(face)
 
-    try:
-        nc = len(center)
-    except:
-        raise TypeError(
-            'Invalid value for "center": {:}. Expected a 1-by-2 array.'.format(center)
+    nc = len(center)
+    if nc != 2:
+        raise ValueError(
+            'Invalid number of values for "center" (expected 2, but got {:})'.format(nc)
         )
-    else:
-        if nc != 2:
-            raise ValueError(
-                'Invalid number of values for "center" (expected 2, but got {:})'.format(
-                    nc
-                )
-            )
 
     # Orthogonal Design
     if alpha.lower() in ("orthogonal", "o"):

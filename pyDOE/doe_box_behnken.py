@@ -9,7 +9,7 @@ Scilab:
 
     website: forge.scilab.org/index.php/p/scidoe/sourcetree/master/macros
 
-Much thanks goes to these individuals. It has been converted to Python by 
+Much thanks goes to these individuals. It has been converted to Python by
 Abraham Lee.
 """
 
@@ -78,12 +78,12 @@ def bbdesign(n, center=None):
     for i in range(n - 1):
         for j in range(i + 1, n):
             Index = Index + 1
-            H[
-                max([0, (Index - 1) * H_fact.shape[0]]) : Index * H_fact.shape[0], i
-            ] = H_fact[:, 0]
-            H[
-                max([0, (Index - 1) * H_fact.shape[0]]) : Index * H_fact.shape[0], j
-            ] = H_fact[:, 1]
+            H[max([0, (Index - 1) * H_fact.shape[0]]) : Index * H_fact.shape[0], i] = (
+                H_fact[:, 0]
+            )
+            H[max([0, (Index - 1) * H_fact.shape[0]]) : Index * H_fact.shape[0], j] = (
+                H_fact[:, 1]
+            )
 
     if center is None:
         if n <= 16:

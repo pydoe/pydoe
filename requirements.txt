@@ -1,4 +1,4 @@
 numpy
 scipy
-black
+ruff
 pytest

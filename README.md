@@ -3,6 +3,8 @@ pyDOE: An experimental design package for python
 
 [![Tests](https://github.com/relf/pyDOE3/actions/workflows/tests.yml/badge.svg)](https://github.com/relf/pyDOE3/actions/workflows/tests.yml)
 [![Documentation](https://readthedocs.org/projects/pydoe3/badge/?version=latest)](https://pydoe3.readthedocs.io/en/latest/?badge=latest)
+[![DOI](https://zenodo.org/badge/709347557.svg)](https://zenodo.org/doi/10.5281/zenodo.10958492)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
 `pyDOE` is a package that is designed to help the scientist, engineer,
 statistician, etc., to construct appropriate experimental designs.
@@ -47,13 +49,11 @@ Credits
 `pyDOE` original code was originally converted from code by the following
 individuals for use with Scilab:
 
-- Copyright (C) 2012 - 2013 - Michael Baudin
-- Copyright (C) 2012 - Maria Christopoulou
-- Copyright (C) 2010 - 2011 - INRIA - Michael Baudin
-- Copyright (C) 2009 - Yann Collette
-- Copyright (C) 2009 - CEA - Jean-Marc Martinez
-
-- Website: forge.scilab.org/index.php/p/scidoe/sourcetree/master/macros
+- Copyright (C) 2012-2013, Michael Baudin
+- Copyright (C) 2012, Maria Christopoulou
+- Copyright (C) 2010-2011, INRIA, Michael Baudin
+- Copyright (C) 2009, Yann Collette
+- Copyright (C) 2009, CEA, Jean-Marc Martinez
 
 `pyDOE` was converted to Python by the following individual:
 
