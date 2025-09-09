@@ -23,6 +23,7 @@ The following individuals forked `pyDOE2` and worked on `pyDOE3`:
 
 from pyDOE.doe_box_behnken import bbdesign
 from pyDOE.doe_composite import ccdesign
+from pyDOE.doe_cranley_patterson_shift import cranley_patterson_shift
 from pyDOE.doe_doehlert import doehlert_shell_design, doehlert_simplex_design
 from pyDOE.doe_factorial import (
     alias_vector_indices,
@@ -35,8 +36,12 @@ from pyDOE.doe_factorial import (
 )
 from pyDOE.doe_fold import fold
 from pyDOE.doe_gsd import gsd
+from pyDOE.doe_halton import halton_sequence
+from pyDOE.doe_korobov import korobov_sequence
 from pyDOE.doe_lhs import lhs
 from pyDOE.doe_plackett_burman import pbdesign
+from pyDOE.doe_rank1 import rank1_lattice
+from pyDOE.doe_sobol import sobol_sequence
 from pyDOE.doe_taguchi import (
     TaguchiObjective,
     compute_snr,
@@ -72,6 +77,11 @@ __all__ = [
     "doehlert_shell_design",
     "doehlert_simplex_design",
     "sukharev_grid",
+    "cranley_patterson_shift",
+    "halton_sequence",
+    "sobol_sequence",
+    "rank1_lattice",
+    "korobov_sequence",
 ]
 
-from ._version import __version__  # noqa
+from ._version import __version__  # pyright: ignore[reportMissingImports] # noqa
