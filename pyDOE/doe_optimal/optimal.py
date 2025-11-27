@@ -17,10 +17,10 @@ def optimal_design(
     candidates: np.ndarray,
     n_points: int,
     degree: int,
-    criterion: Literal["D", "A", "I"] = "D",
+    criterion: Literal["D", "A", "I", "C", "E", "G", "V", "S", "T"] = "D",
     method: Literal[
         "sequential", "simple_exchange", "fedorov", "modified_fedorov", "detmax"
-    ] = "detmax",
+    ] = "sequential",
     alpha: float = 0.0,
     max_iter: int = 200,
 ) -> Tuple[np.ndarray, dict]:

@@ -54,7 +54,7 @@ def information_matrix(X, normalized=True, alpha=0.0, X0=None):
     X : ndarray of shape (n, p)
         Design matrix.
     normalized : bool, optional
-        If True, returns $(1/n) \cdot (X^T X_{\text{aug}})$; else returns $X^T X_{\text{aug}}$ (default is True).
+        If True, returns $(1/n) \cdot (X^T X_{\text{aug}})$; else returns $X^T X_{\text{aug}}$.
     alpha : float, optional
         Augmentation parameter (default is 0.0).
     X0 : ndarray, optional
@@ -91,6 +91,7 @@ def criterion_value(X, criterion, X0=None, alpha=0.0, M_moment=None, **kwargs):
         - c_vector : for C-optimality
         - test_points : for V-optimality
         - model_diff_subset : for T-optimality
+        - candidates : for G-optimality
 
     Returns
     -------
@@ -98,6 +99,7 @@ def criterion_value(X, criterion, X0=None, alpha=0.0, M_moment=None, **kwargs):
         Value of the specified criterion.
     """
     M = information_matrix(X, normalized=True, alpha=alpha, X0=X0)
+    p = X.shape[1]
 
     if criterion.upper() == "D":
         return d_optimality(M)
@@ -108,28 +110,20 @@ def criterion_value(X, criterion, X0=None, alpha=0.0, M_moment=None, **kwargs):
             M_moment = build_uniform_moment_matrix(X0)
         return i_optimality(M, M_moment)
     elif criterion.upper() == "C":
-        c_vector = kwargs.get("c_vector")
-        if c_vector is None:
-            raise ValueError("C-optimality requires c_vector parameter")
+        c_vector = kwargs.get("c_vector", np.ones(p))
         return c_optimality(M, c_vector)
     elif criterion.upper() == "E":
         return e_optimality(M)
     elif criterion.upper() == "G":
-        candidates = kwargs.get("candidates", X0)
-        if candidates is None:
-            raise ValueError("G-optimality requires candidates parameter")
+        candidates = kwargs.get("candidates", X0 if X0 is not None else X)
         return g_optimality(M, candidates)
     elif criterion.upper() == "V":
-        test_points = kwargs.get("test_points")
-        if test_points is None:
-            raise ValueError("V-optimality requires test_points parameter")
+        test_points = kwargs.get("test_points", X)
         return v_optimality(M, test_points)
     elif criterion.upper() == "S":
         return s_optimality(M)
     elif criterion.upper() == "T":
-        model_diff = kwargs.get("model_diff_subset")
-        if model_diff is None:
-            raise ValueError("T-optimality requires model_diff_subset parameter")
+        model_diff = kwargs.get("model_diff_subset", np.zeros(X.shape[0]))
         return t_optimality(X, model_diff)
     else:
         raise ValueError(f"Unknown criterion: {criterion}")

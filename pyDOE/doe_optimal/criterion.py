@@ -28,6 +28,30 @@ import numpy as np
 from scipy.linalg import inv
 
 
+def regularized_inv(M, reg_param=1e-8):
+    """
+    Compute regularized inverse of matrix M using M_reg = M + reg_param * I.
+
+    Parameters
+    ----------
+    M : ndarray
+        Matrix to invert.
+    reg_param : float, optional
+        Regularization parameter (default 1e-8).
+
+    Returns
+    -------
+    ndarray
+        Regularized inverse of M.
+    """
+    try:
+        return inv(M)
+    except np.linalg.LinAlgError:
+        # Add regularization if matrix is singular
+        M_reg = M + reg_param * np.eye(M.shape[0])
+        return inv(M_reg)
+
+
 def d_optimality(M):
     """
     Compute D-optimality criterion for a given information matrix.
@@ -72,7 +96,7 @@ def a_optimality(M):
     float
         Negative trace of the inverse information matrix.
     """
-    return -float(np.trace(inv(M)))
+    return -float(np.trace(regularized_inv(M)))
 
 
 def i_optimality(M_X, moment_matrix):
@@ -98,7 +122,7 @@ def i_optimality(M_X, moment_matrix):
     float
         Negative trace of moment_matrix @ inv(M_X).
     """
-    return -float(np.trace(moment_matrix @ inv(M_X)))
+    return -float(np.trace(moment_matrix @ regularized_inv(M_X)))
 
 
 def c_optimality(M, c):
@@ -124,7 +148,7 @@ def c_optimality(M, c):
     float
         Negative variance of the linear combination.
     """
-    return -float(c.T @ inv(M) @ c)
+    return -float(c.T @ regularized_inv(M) @ c)
 
 
 def e_optimality(M):
@@ -179,7 +203,7 @@ def g_optimality(M, candidates):
     float
         Negative maximum prediction variance.
     """
-    M_inv = inv(M)
+    M_inv = regularized_inv(M)
     variances = _pred_var_rows(np.asarray(candidates), M_inv)
     return -float(np.max(variances))
 
@@ -200,7 +224,7 @@ def i_pred_variance(M, candidates):
     float
         Average prediction variance over candidates.
     """
-    M_inv = inv(M)
+    M_inv = regularized_inv(M)
     variances = _pred_var_rows(np.asarray(candidates), M_inv)
     return float(np.mean(variances))
 
@@ -228,7 +252,7 @@ def v_optimality(M, test_points):
     float
         Negative average prediction variance.
     """
-    M_inv = inv(M)
+    M_inv = regularized_inv(M)
     variances = _pred_var_rows(np.asarray(test_points), M_inv)
     return -float(np.mean(variances))
 
@@ -284,7 +308,7 @@ def t_optimality(X, model_diff_subset):
         Discrimination value.
     """
     H = X.T @ X
-    H_inv = inv(H)
+    H_inv = regularized_inv(H)
     P = X @ H_inv @ X.T
     d = model_diff_subset.reshape(-1, 1)
     return float((d.T @ P @ d).item())
