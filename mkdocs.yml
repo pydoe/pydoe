@@ -1,0 +1,135 @@
+site_name: PyDOE
+site_description: Design of Experiments for Python
+site_url: https://pydoe.readthedocs.io/
+docs_dir: docs
+site_dir: build/docs
+
+repo_name: pydoe/pydoe
+repo_url: https://github.com/pydoe/pydoe
+
+# Copyright
+copyright: Copyright &copy; 2013–2025 pyDOE
+
+# Configuration
+theme:
+  name: material
+  language: en
+
+  features:
+    # content features
+    - content.code.copy # https://squidfunk.github.io/mkdocs-material/reference/code-blocks/?h=code+copy#code-copy-button
+    - content.code.annotate # https://squidfunk.github.io/mkdocs-material/reference/code-blocks/#code-annotations
+    # navigation features
+    - navigation.instant # https://squidfunk.github.io/mkdocs-material/setup/setting-up-navigation/?h=navigation+instant#instant-loading
+    - navigation.instant.progress # https://squidfunk.github.io/mkdocs-material/setup/setting-up-navigation/?h=navigation+instant#progress-indicator
+    - navigation.tracking # https://squidfunk.github.io/mkdocs-material/setup/setting-up-navigation/?h=navigation+instant#anchor-tracking
+    - navigation.tabs # https://squidfunk.github.io/mkdocs-material/setup/setting-up-navigation/?h=navigation+instant#navigation-tabs
+    - navigation.tabs.sticky # https://squidfunk.github.io/mkdocs-material/setup/setting-up-navigation/?h=navigation+instant#sticky-navigation-tabs
+    - navigation.sections # https://squidfunk.github.io/mkdocs-material/setup/setting-up-navigation/?h=navigation+instant#navigation-sections
+    - navigation.indexes # https://squidfunk.github.io/mkdocs-material/setup/setting-up-navigation/?h=navigation+instant#section-index-pages
+    - toc.follow # https://squidfunk.github.io/mkdocs-material/setup/setting-up-navigation/?h=navigation+instant#anchor-following
+    - navigation.top # https://squidfunk.github.io/mkdocs-material/setup/setting-up-navigation/?h=navigation+instant#back-to-top-button
+    # search features
+    - search.suggest # https://squidfunk.github.io/mkdocs-material/setup/setting-up-site-search/?h=search+highlight#search-suggestions
+    - search.highlight # https://squidfunk.github.io/mkdocs-material/setup/setting-up-site-search/?h=search+highlight#search-highlighting
+    - search.share # https://squidfunk.github.io/mkdocs-material/setup/setting-up-site-search/?h=search+highlight#search-sharing
+
+  # Palette configuration
+  palette:
+    - scheme: default
+      primary: blue grey
+      accent: black
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: blue grey
+      accent: white
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+  # Logo and favicon
+  favicon: assets/images/pydoe.ico
+  logo: assets/images/pydoe-white-outline.svg
+
+  # Font configuration
+  font:
+    text: Roboto
+    code: Roboto Mono
+
+# Navigation structure
+nav:
+  - Get Started:
+    - index.md
+    - Installation: installation.md
+    - Contributing: contributing.md
+    - License: license.md
+    - Credits: credits.md
+  - Theory:
+    - Introduction:
+        - Overview: theory/introduction/index.md
+        - Uses of DOE: theory/introduction/doe-uses.md
+        - Steps of DOE: theory/introduction/doe-steps.md
+  - Reference:
+    - Factorial Designs: reference/factorial.md
+    - Response Surface Designs: reference/response_surface.md
+    - Randomized Designs: reference/randomized.md
+    - Low-Discrepancy Sequences: reference/low_discrepancy_sequences.md
+    - Sampling Designs: reference/sampling_designs.md
+    - Taguchi Designs: reference/taguchi.md
+    - Optimal Designs: reference/doe_optimal.md
+    - Sparse Grid Designs: reference/sparse_grid.md
+
+plugins:
+  - search: # https://squidfunk.github.io/mkdocs-material/plugins/search
+  - minify: # https://github.com/byrnereese/mkdocs-minify-plugin
+      minify_html: true
+
+markdown_extensions:
+  - attr_list
+  - md_in_html
+  - pymdownx.blocks.caption
+  - tables
+  - toc:
+      permalink: true
+      title: Page contents
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      pygments_lang_class: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.arithmatex:
+      generic: true
+
+extra_css:    # https://squidfunk.github.io/mkdocs-material/customization/#additional-css
+  - assets/stylesheets/extra.css
+  - https://unpkg.com/katex@0/dist/katex.min.css
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/pydoe/pydoe
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/org/pydoe
+
+extra_javascript:
+  - assets/javascripts/katex.js
+  - https://unpkg.com/katex@0/dist/katex.min.js
+  - https://unpkg.com/katex@0/dist/contrib/auto-render.min.js
+
+validation:
+  nav:
+    omitted_files: warn
+    not_found: warn
+    absolute_links: warn
+  links:
+    not_found: warn
+    anchors: warn
+    absolute_links: relative_to_docs
+    unrecognized_links: warn
