@@ -7,5 +7,4 @@ MANIFEST
 .idea
 
 .vscode/
-_version.py
 doc/_build
