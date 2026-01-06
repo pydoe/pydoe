@@ -1,4 +1,4 @@
-"""
+r"""
 Optimal Experimental Design (OED)
 =================================
 

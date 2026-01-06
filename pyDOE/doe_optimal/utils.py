@@ -16,7 +16,7 @@ from pyDOE.doe_optimal.criterion import (
 
 
 def _xtx_augmented(X, alpha=0.0, X0=None):
-    """
+    r"""
     Compute augmented information matrix:
 
     $$ X^T X_{\text{aug}} = X^T X + \alpha \left( \frac{X_0^T X_0}{N_0} \right) $$
@@ -46,7 +46,7 @@ def _xtx_augmented(X, alpha=0.0, X0=None):
 
 
 def information_matrix(X, normalized=True, alpha=0.0, X0=None):
-    """
+    r"""
     Compute the information matrix for a design matrix, with optional augmentation.
 
     Parameters

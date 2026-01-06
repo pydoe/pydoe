@@ -1,4 +1,4 @@
-"""
+r"""
 Optimal Experimental Design (OED)
 =================================
 
@@ -53,7 +53,7 @@ def regularized_inv(M, reg_param=1e-8):
 
 
 def d_optimality(M):
-    """
+    r"""
     Compute D-optimality criterion for a given information matrix.
 
     D-optimality maximizes the determinant of the information matrix.
@@ -76,7 +76,7 @@ def d_optimality(M):
 
 
 def a_optimality(M):
-    """
+    r"""
     Compute A-optimality criterion for a given information matrix.
 
     A-optimality minimizes the trace of the inverse information matrix.
@@ -100,7 +100,7 @@ def a_optimality(M):
 
 
 def i_optimality(M_X, moment_matrix):
-    """
+    r"""
     Compute I-optimality criterion for a given information matrix and moment matrix.
 
     I-optimality minimizes the average prediction variance over the design space.
@@ -126,7 +126,7 @@ def i_optimality(M_X, moment_matrix):
 
 
 def c_optimality(M, c):
-    """
+    r"""
     Compute C-optimality criterion for a given information matrix and contrast vector.
 
     C-optimality minimizes the variance of a linear combination of parameters.
@@ -152,7 +152,7 @@ def c_optimality(M, c):
 
 
 def e_optimality(M):
-    """
+    r"""
     Compute E-optimality criterion for a given information matrix.
 
     E-optimality maximizes the smallest eigenvalue of the information matrix.
@@ -181,7 +181,7 @@ def _pred_var_rows(rows, M_inv):
 
 
 def g_optimality(M, candidates):
-    """
+    r"""
     Compute G-optimality criterion for a given information matrix and candidate set.
 
     G-optimality minimizes the maximum prediction variance over the candidate set.
@@ -230,7 +230,7 @@ def i_pred_variance(M, candidates):
 
 
 def v_optimality(M, test_points):
-    """
+    r"""
     Compute V-optimality criterion for a given information matrix and test points.
 
     V-optimality minimizes the average prediction variance over specified test points.
@@ -258,7 +258,7 @@ def v_optimality(M, test_points):
 
 
 def s_optimality(M):
-    """
+    r"""
     Compute S-optimality criterion for a given information matrix.
 
     S-optimality is the determinant divided by the product of column RMS values.
@@ -284,7 +284,7 @@ def s_optimality(M):
 
 
 def t_optimality(X, model_diff_subset):
-    """
+    r"""
     Compute T-optimality criterion for model discrimination at design points.
 
     T-optimality maximizes discrimination between two models at the chosen design points.

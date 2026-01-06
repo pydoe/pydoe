@@ -1,4 +1,4 @@
-"""
+r"""
 Design matrix formation for Optimal Experimental Design (OED).
 
 This module provides functionality to build design matrices for polynomial models
@@ -51,7 +51,7 @@ from typing import Union
 
 
 def build_design_matrix(candidates: np.ndarray, degree: int) -> np.ndarray:
-    """
+    r"""
     Build design matrix X from candidate points for a polynomial model
     of given degree.
 

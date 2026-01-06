@@ -22,7 +22,7 @@ __all__ = ["korobov_sequence"]
 
 
 def korobov_sequence(num_points, dimension, generator_param=None):
-    """
+    r"""
     Generate a Korobov lattice design matrix.
 
     Korobov lattices form a class of low-discrepancy sequences for quasi-Monte Carlo

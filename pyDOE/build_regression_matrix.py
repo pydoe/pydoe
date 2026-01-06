@@ -79,7 +79,7 @@ def build_regression_matrix(H, model, build=None):
                 )
     else:
         # matrix "mode": the number of vars is equal to the number of columns of H
-        nb_var = H.shape[0]  
+        nb_var = H.shape[0]
         VectorMode = False
 
         for i in range(nb_var):

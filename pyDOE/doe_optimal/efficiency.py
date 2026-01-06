@@ -5,7 +5,7 @@ from pyDOE.doe_optimal.criterion import regularized_inv
 
 
 def d_efficiency(X):
-    """
+    r"""
     Compute D-efficiency for a given design matrix.
 
     D-efficiency is defined as:
@@ -26,11 +26,14 @@ def d_efficiency(X):
     """
     M = information_matrix(X, normalized=True, alpha=0.0, X0=None)
     p = X.shape[1]
-    return 100.0 * (np.linalg.det(M) ** (1.0 / p))
+    det = np.linalg.det(M)
+    if det < 0:
+        return 0.0
+    return 100.0 * (det ** (1.0 / p))
 
 
 def a_efficiency(X):
-    """
+    r"""
     Compute A-efficiency for a given design matrix.
 
     A-efficiency is defined as:
