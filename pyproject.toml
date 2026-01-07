@@ -1,53 +1,73 @@
 [build-system]
-requires = ["hatchling", "hatch-vcs"]
+requires = ["hatchling >= 1.26", "hatch-vcs"]
 build-backend = "hatchling.build"
 
 [project]
 name = "pyDOE"
 dynamic = ["version"]
-description = "Design of experiments for Python"
-readme = "README.md"
-authors = [{ name = "Abraham Lee", email = "tisimst@gmail.com" }]
+description = "Design of Experiments for Python"
+authors = [
+    { name = "Abraham Lee", email = "tisimst@gmail.com" },
+    { name = "Rickard Sjoegren", email = "r.sjogren89@gmail.com" }
+]
 maintainers = [
-    { name = "Rickard Sjoegren", email = "r.sjogren89@gmail.com" },
+    { name = "Saud Zahir", email = "m.saud.zahir@gmail.com" },
+    { name = "M Laraib Ali", email = "laraibg786@outlook.com" },
     { name = "Rémi Lafage", email = "remi.lafage@onera.fr" }
 ]
+readme = "README.md"
 license = "BSD-3-Clause"
 keywords = [
-    "DOE",
-    "design of experiments",
-    "experimental design",
-    "optimal design",
-    "taguchi design",
-    "sparse grids",
-    "optimization",
-    "statistics",
-    "python",
+    "DOE", "design of experiments", "experimental design", "optimal design",
+    "taguchi design", "sparse grids", "optimization", "statistics", "python",
 ]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
-    "Intended Audience :: Education",
     "Intended Audience :: Science/Research",
+    "Intended Audience :: Developers",
     "License :: OSI Approved :: BSD License",
-    "Operating System :: OS Independent",
     "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
-    "Topic :: Education",
-    "Topic :: Scientific/Engineering",
-    "Topic :: Scientific/Engineering :: Mathematics",
-    "Topic :: Scientific/Engineering :: Physics",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3 :: Only",
     "Topic :: Software Development",
-    "Topic :: Software Development :: Libraries",
-    "Topic :: Software Development :: Libraries :: Python Modules",
-    "Topic :: Utilities",
+    "Topic :: Scientific/Engineering",
+    "Operating System :: OS Independent",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX",
+    "Operating System :: Unix",
+    "Operating System :: MacOS",
 ]
-dependencies = ["numpy", "scipy"]
+dependencies = [ "numpy >= 1.22", "scipy >= 1.8" ]
+# We pin this two versions behind the latest security release.
+# Testing is performed only on currently maintained Python versions.
+requires-python = ">=3.8"
 
 [project.urls]
 source = "https://github.com/pydoe/pydoe"
+# TODO: add documentation URL
+# TODO: provide changelog URL from docs
+releasenotes = "https://github.com/pydoe/pydoe/releases/latest"
+issues = "https://github.com/pydoe/pydoe/issues"
+
+[dependency-groups]
+dev = [
+  {include-group = "lint"},
+  {include-group = "test"}
+]
+lint = [
+    "ruff==0.14.*",
+]
+test = [
+    "pytest>=8.3.5",
+    "pytest-xdist>=3.6.1",
+]
 
 [tool.hatch.version]
 source = "vcs"
