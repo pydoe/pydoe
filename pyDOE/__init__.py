@@ -21,6 +21,8 @@ The following individuals forked `pyDOE2` and worked on `pyDOE3`:
 - Copyright (C) 2023 - Rémi Lafage
 """
 
+from importlib.metadata import PackageNotFoundError, version
+
 from pyDOE.doe_box_behnken import bbdesign
 from pyDOE.doe_composite import ccdesign
 from pyDOE.doe_cranley_patterson_shift import cranley_patterson_shift
@@ -61,7 +63,10 @@ from pyDOE.grid_designs import sukharev_grid
 from pyDOE.utils import scale_samples
 from pyDOE.var_regression_matrix import var_regression_matrix
 
-from ._version import __version__
+try:
+    __version__ = version(__name__)
+except PackageNotFoundError:
+    __version__ = "unknown"
 
 __all__ = [
     "bbdesign",
@@ -99,5 +104,3 @@ __all__ = [
     "doe_sparse_grid",
     "sparse_grid_dimension",
 ]
-
-from ._version import __version__  # pyright: ignore[reportMissingImports] # noqa
