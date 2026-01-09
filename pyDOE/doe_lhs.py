@@ -278,18 +278,13 @@ def _lhscorrelate(n, samples, iterations, randomstate):
 ################################################################################
 
 
-def _lhsmu(N, samples=None, corr=None, random_state=None, M=5):
-    if random_state is None:
-        random_state = np.random.RandomState()
-    elif not isinstance(random_state, np.random.RandomState):
-        random_state = np.random.RandomState(random_state)
-
+def _lhsmu(N, samples=None, corr=None, randomstate=None, M=5):
     if samples is None:
         samples = N
 
     I = M * samples  # noqa
 
-    rdpoints = random_state.uniform(size=(I, N))
+    rdpoints = randomstate.uniform(size=(I, N))
 
     dist = spatial.distance.cdist(rdpoints, rdpoints, metric="euclidean")
     D_ij = ma.masked_array(dist, mask=np.identity(I))
@@ -332,5 +327,5 @@ def _lhsmu(N, samples=None, corr=None, random_state=None, M=5):
             high = float(l + 1) / samples
 
             l_pos = rank == l
-            H[l_pos] = random_state.uniform(low, high, size=N)
+            H[l_pos] = randomstate.uniform(low, high, size=N)
     return H
