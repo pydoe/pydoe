@@ -6,7 +6,7 @@ from pyDOE.doe_lhs import lhs
 
 
 class TestLhs(unittest.TestCase):
-    def test_lhs1_deprecated(self):
+    def test_lhs_vanilla_deprecated(self):
         expected = [
             [0.12484671, 0.95539205, 0.24399798],
             [0.53288616, 0.38533955, 0.86703834],
@@ -16,7 +16,7 @@ class TestLhs(unittest.TestCase):
             actual = lhs(3, random_state=42)
             np.testing.assert_allclose(actual, expected)
 
-    def test_lhs2_deprecated(self):
+    def test_lhs_deprecated(self):
         expected = [
             [0.06242335, 0.19266575, 0.88202411, 0.89439364],
             [0.19266977, 0.53538985, 0.53030416, 0.49498498],
@@ -29,13 +29,13 @@ class TestLhs(unittest.TestCase):
             actual = lhs(4, samples=6, random_state=42)
             np.testing.assert_allclose(actual, expected)
 
-    def test_lhs3_deprecated(self):
+    def test_lhs_center_deprecated(self):
         expected = [[0.1, 0.9], [0.5, 0.5], [0.7, 0.1], [0.3, 0.7], [0.9, 0.3]]
         with self.assertWarns(DeprecationWarning):
             actual = lhs(2, samples=5, criterion="center", random_state=42)
             np.testing.assert_allclose(actual, expected)
 
-    def test_lhs4_deprecated(self):
+    def test_lhs_maximin_deprecated(self):
         expected = [
             [0.69754389, 0.2997106, 0.96250964],
             [0.10585037, 0.09872038, 0.73157522],
@@ -46,7 +46,7 @@ class TestLhs(unittest.TestCase):
             actual = lhs(3, samples=4, criterion="maximin", random_state=42)
             np.testing.assert_allclose(actual, expected)
 
-    def test_lhs5_deprecated(self):
+    def test_lhs_correlation_deprecated(self):
         expected = [
             [0.4846803, 0.74226839, 0.23305339, 0.97000772],
             [0.98526018, 0.11735023, 0.75803511, 0.20312728],
@@ -60,7 +60,18 @@ class TestLhs(unittest.TestCase):
             )
             np.testing.assert_allclose(actual, expected)
 
-    def test_lhs1(self):
+    def test_lhs_lhsmu_deprecated(self):
+        expected = [
+            [0.78593953, 0.00628584, 0.12728208, 0.96073442],
+            [0.0628712, 0.38151329, 0.83731401, 0.76162408],
+            [0.24985845, 0.9785118, 0.44575963, 0.28207658],
+            [0.90786845, 0.41539598, 0.72668075, 0.10171414],
+            [0.45795029, 0.77429212, 0.35111023, 0.43224426],
+        ]
+        actual = lhs(4, samples=5, criterion="lhsmu", random_state=42)
+        np.testing.assert_allclose(actual, expected, atol=1e-7)
+
+    def test_lhs_vanilla(self):
         expected = [
             [0.25798535, 0.14629281, 0.65854078],
             [0.56578934, 0.9286881, 0.28619931],
@@ -69,7 +80,7 @@ class TestLhs(unittest.TestCase):
         actual = lhs(3, seed=42)
         np.testing.assert_allclose(actual, expected, atol=1e-6)
 
-    def test_lhs2(self):
+    def test_lhs(self):
         expected = [
             [0.60731085, 0.32927039, 0.8046052, 0.98218685],
             [0.35468561, 0.67730288, 0.14309965, 0.77194407],
@@ -81,12 +92,12 @@ class TestLhs(unittest.TestCase):
         actual = lhs(4, samples=6, seed=42)
         np.testing.assert_allclose(actual, expected, atol=1e-6)
 
-    def test_lhs3(self):
+    def test_lhs_center(self):
         expected = [[0.9, 0.1], [0.1, 0.7], [0.5, 0.9], [0.7, 0.5], [0.3, 0.3]]
         actual = lhs(2, samples=5, criterion="center", seed=42)
         np.testing.assert_allclose(actual, expected)
 
-    def test_lhs4(self):
+    def test_lhs_maximin(self):
         expected = [
             [0.91547913, 0.46335077, 0.05364617],
             [0.51457569, 0.10917935, 0.94597455],
@@ -96,7 +107,7 @@ class TestLhs(unittest.TestCase):
         actual = lhs(3, samples=4, criterion="maximin", seed=42)
         np.testing.assert_allclose(actual, expected, atol=1e-6)
 
-    def test_lhs5(self):
+    def test_lhs_correlation(self):
         expected = [
             [0.15479121, 0.49007719, 0.68868284, 0.35721286],
             [0.21883547, 0.39512447, 0.4741596, 0.64544774],
@@ -105,4 +116,15 @@ class TestLhs(unittest.TestCase):
             [0.72877302, 0.81276345, 0.17171958, 0.13947361],
         ]
         actual = lhs(4, samples=5, criterion="correlation", iterations=10, seed=42)
+        np.testing.assert_allclose(actual, expected)
+
+    def test_lhs_lhsmu(self):
+        expected = [
+            [0.66119132, 0.95170391, 0.35575018, 0.41927819],
+            [0.18171614, 0.71584391, 0.94389259, 0.34337804],
+            [0.88641861, 0.2898723, 0.63535456, 0.77132286],
+            [0.58052048, 0.49115526, 0.13994143, 0.05317399],
+            [0.25444831, 0.19383528, 0.44047267, 0.92546177],
+        ]
+        actual = lhs(4, samples=5, criterion="lhsmu", seed=42)
         np.testing.assert_allclose(actual, expected)
