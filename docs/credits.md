@@ -1,6 +1,7 @@
 The evolution of PyDOE reflects contributions from multiple individuals and communities over time.
 
-## Scilab Scidoe
+## ![scidoe](./assets/images/scidoe_logo.png) Scilab Scidoe
+
 The code that eventually became PyDOE was originally developed for Scilab by:
 
 - Copyright (c) 2012–2013, Michael Baudin
@@ -20,6 +21,9 @@ The original Scilab code was converted to Python and packaged as PyDOE by:
 
 This version provided Python users with factorial, fractional factorial, Plackett-Burman, Box-Behnken, central composite, and Latin-hypercube designs.
 
+> Source:  
+<a href="https://github.com/tisimst/pyDOE" style="color: #484848;">github.com/tisimst/pydoe</a>
+
 ## PyDOE2
 PyDOE2 is a fork of PyDOE, created by:
 
@@ -27,7 +31,7 @@ PyDOE2 is a fork of PyDOE, created by:
 
 PyDOE2 added features such as Generalized Subset Designs (GSD) and modernized the codebase.
 
-> Sources:  
+> Source:  
 <a href="https://github.com/clicumu/pyDOE2" style="color: #484848;">github.com/clicumu/pydoe2</a>
 
 ## PyDOE3
@@ -38,7 +42,7 @@ PyDOE3 is a fork of PyDOE2, created by:
 PyDOE3 added several new design families (optimal, sparse, Taguchi, sensitivity), fixed
 long-standing bugs, and continued active development.
 
-> Sources:  
+> Source:  
 <a href="https://github.com/relf/pyDOE3" style="color: #484848;">github.com/relf/pydoe3</a>
 
 > All previous versions and forks, including PyDOE2 and PyDOE3, have now been consolidated under a single active repository: <a href="https://github.com/pydoe/pydoe" style="color: #484848;">github.com/pydoe/pydoe</a>

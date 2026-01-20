@@ -66,6 +66,7 @@ nav:
     - Contributing: contributing.md
     - License: license.md
     - Credits: credits.md
+    - Audience: audience.md
   - Theory:
     - Introduction:
         - Overview: theory/introduction/index.md

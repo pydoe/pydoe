@@ -1036,6 +1036,11 @@ dependencies = [
 
 [package.dev-dependencies]
 dev = [
+    { name = "mkdocs" },
+    { name = "mkdocs-material" },
+    { name = "mkdocs-minify-plugin" },
+    { name = "pymdown-extensions", version = "10.15", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
+    { name = "pymdown-extensions", version = "10.20", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.9'" },
     { name = "pytest", version = "8.3.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
     { name = "pytest", version = "8.4.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version == '3.9.*'" },
     { name = "pytest", version = "9.0.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
@@ -1069,6 +1074,10 @@ requires-dist = [
 
 [package.metadata.requires-dev]
 dev = [
+    { name = "mkdocs", specifier = ">=1.6.1" },
+    { name = "mkdocs-material", specifier = ">=9.7.1" },
+    { name = "mkdocs-minify-plugin", specifier = ">=0.8.0" },
+    { name = "pymdown-extensions", specifier = ">=10.15" },
     { name = "pytest", specifier = ">=8.3.5" },
     { name = "pytest-xdist", specifier = ">=3.6.1" },
     { name = "ruff", specifier = "==0.14.*" },

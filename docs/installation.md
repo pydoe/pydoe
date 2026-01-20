@@ -18,7 +18,7 @@ For using the PyPI package in your project, you can update your configuration fi
 === "requirements.txt"
 
     ```
-    pyDOE>=0.3.0
+    pyDOE>=0.3.8
     ```
 
 ### pip
@@ -121,12 +121,12 @@ Or directly in your conda environment.
     micromamba install -c conda-forge pyDOE
     ```
 
-## [git](https://github.com/relf/pyDOE)
+## [git](https://github.com/pydoe/pyDOE)
 
 Sometimmes release can fall behind the latest changes in the repository. `pip` can directly install from the git repository.
 
 ```bash
-pip install --upgrade "git+github.com/relf/pyDOE.git#egg=pyDOE"
+pip install --upgrade "git+github.com/pydoe/pyDOE.git#egg=pyDOE"
 ```
 
 ## Dependencies

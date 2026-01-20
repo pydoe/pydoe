@@ -43,7 +43,6 @@ More complex forms of experimentation, such as the determination of the correct 
 Many processes are being run at sub-optimal settings, some of them for years, even though each factor has been optimized individually over time. Finding settings that increase yield or decrease the amount of scrap and rework represent opportunities for substantial financial gain. Often, however, one must experiment with multiple inputs to achieve a better output. Section 5.3.3.6 on second-order designs plus material in Section 5.5.3 will be useful for these applications.
 
 ![Pathway up the process response surface to an optimum](../../assets/images/optimum.png)
-<!-- ![Pathway up the process response surface to an optimum](https://www.itl.nist.gov/div898/handbook/pri/section1/gifs/image8dt.gif) -->
 ///caption
 Figure 1 Pathway up the process response surface to an optimum
 ///
@@ -54,29 +53,18 @@ A process may be performing with unacceptable consistency, meaning its internal 
 
 Excessive variation can result from many causes. Sometimes it is due to the lack of having or following standard operating procedures. At other times, excessive variation is due to certain hard-to-control inputs that affect the critical output characteristics of the process. When this latter situation is the case, one may experiment with these hard-to-control factors, looking for a region where the surface is flatter and the process is easier to manage. To take advantage of such flatness in the surface, one must use designs - such as the second-order designs of Section 5.3.3.6 - that permit identification of these features. Contour or surface plots are useful for elucidating the key features of these fitted models. See also 5.5.3.1.4.
 
-<iframe 
-    src="/assets/images/unstable.png" 
-    width="100%" 
-    height="500" 
-    frameborder="0" 
-    style="display: block; margin: 0 auto;">
-</iframe>
-<!-- ![Process before variation reduced](https://www.itl.nist.gov/div898/handbook/pri/section1/gifs/contro2.gif) -->
+
+![Process before variation reduced](../../assets/images/unstable.png)
 ///caption
 Figure 2 Process before variation reduced
 ///
 
 It might be possible to reduce the variation by altering the setpoints (recipe) of the process, so that it runs in a more stable region as expressed in following illustration.
 
-<iframe 
-    src="/assets/images/stable.png" 
-    width="100%" 
-    height="500" 
-    frameborder="0" 
-    style="display: block; margin: 0 auto;">
-</iframe>
-<p style="text-align: center;">Figure 3: Process after variation reduced</p>
-
+![Process after variation reduced](../../assets/images/stable.png)
+///caption
+Figure 3: Process after variation reduced
+///
 
 Finding this new recipe could be the subject of an experiment, especially if there are many input factors that could conceivably affect the output.
 
