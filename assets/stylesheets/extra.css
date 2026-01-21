@@ -1,0 +1,29 @@
+/* Custom styles for pyDOE documentation */
+
+/* Increase the site_name font size in the header */
+.md-header__title {
+    font-size: 30px;   /* adjust as needed */
+}
+
+/* Improved table styling */
+.md-typeset table:not([class]) {
+    border: 1px solid var(--md-default-fg-color--lighter);
+    border-radius: 4px;
+}
+
+/* Better spacing for admonitions */
+.md-typeset .admonition {
+    margin: 1.5625em 0;
+}
+
+/* Improved code inline styling */
+.md-typeset code {
+    padding: 0.1em 0.4em;
+    border-radius: 3px;
+}
+
+/* Better search highlighting */
+mark {
+    background-color: rgba(255, 235, 59, 0.5);
+    border-radius: 2px;
+}
