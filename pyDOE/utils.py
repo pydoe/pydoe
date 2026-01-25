@@ -5,13 +5,17 @@ This module provides common utility functions used across different DOE methods,
 including sample scaling, bounds checking, and other shared functionality.
 """
 
-import numpy as np
 from typing import List, Tuple
+
+import numpy as np
+
 
 __all__ = ["scale_samples"]
 
 
-def scale_samples(samples: np.ndarray, bounds: List[Tuple[float, float]]) -> np.ndarray:
+def scale_samples(
+    samples: np.ndarray, bounds: List[Tuple[float, float]]
+) -> np.ndarray:
     """
     Scale samples from [0, 1] to specified bounds.
 
@@ -32,6 +36,13 @@ def scale_samples(samples: np.ndarray, bounds: List[Tuple[float, float]]) -> np.
     scaled_samples : ndarray of shape (n_samples, n_vars)
         Sample matrix scaled to the specified bounds.
 
+    Raises
+    ------
+    ValueError
+        If the number of bounds does not match the number of variables
+        in samples.
+        If any bound has lower limit greater than or equal to upper limit.
+
     Examples
     --------
     >>> import numpy as np
@@ -47,8 +58,8 @@ def scale_samples(samples: np.ndarray, bounds: List[Tuple[float, float]]) -> np.
 
     if bounds.shape[0] != samples.shape[1]:
         raise ValueError(
-            f"Number of bounds ({bounds.shape[0]}) must match number of variables "
-            f"({samples.shape[1]})"
+            f"Number of bounds ({bounds.shape[0]}) must match "
+            f"number of variables ({samples.shape[1]})"
         )
 
     scaled_samples = np.empty_like(samples)

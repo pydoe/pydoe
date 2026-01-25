@@ -13,15 +13,22 @@ experimental runs required for a given precision.
 
 Key optimality criteria implemented here (see Wikipedia: https://en.wikipedia.org/wiki/Optimal_experimental_design):
 
-- **D-optimality**: Maximizes $$|X'X|$$, giving the most information in parameters.
-- **A-optimality**: Minimizes $$\trace((X'X)^{-1})$$, reducing average parameter variance.
-- **E-optimality**: Maximizes smallest eigenvalue of $$X'X$$, improving worst-case precision.
-- **G-optimality**: Minimizes maximum prediction variance, improving worst-case prediction.
+- **D-optimality**: Maximizes $$|X'X|$$, giving the most information
+in parameters.
+- **A-optimality**: Minimizes $$\trace((X'X)^{-1})$$, reducing average parameter
+variance.
+- **E-optimality**: Maximizes smallest eigenvalue of $$X'X$$, improving
+worst-case precision.
+- **G-optimality**: Minimizes maximum prediction variance, improving
+worst-case prediction.
 - **I-optimality**: Minimizes average prediction variance over the design space.
 - **V-optimality**: Minimizes average prediction variance at specified points.
-- **C-optimality**: Minimizes variance of a chosen linear combination of parameters.
-- **S-optimality**: Maximizes orthogonality and determinant, ensuring balanced design.
-- **T-optimality**: Maximizes difference between competing models at design points.
+- **C-optimality**: Minimizes variance of a chosen linear combination of
+parameters.
+- **S-optimality**: Maximizes orthogonality and determinant, ensuring balanced
+design.
+- **T-optimality**: Maximizes difference between competing models at design
+points.
 """
 
 import numpy as np
@@ -101,10 +108,11 @@ def a_optimality(M):
 
 def i_optimality(M_X, moment_matrix):
     r"""
-    Compute I-optimality criterion for a given information matrix and moment matrix.
+    Compute I-optimality criterion for a given information matrix
+    and moment matrix.
 
-    I-optimality minimizes the average prediction variance over the design space.
-    Returns the negative value for maximization.
+    I-optimality minimizes the average prediction variance over
+    the design space. Returns the negative value for maximization.
 
     The I-optimality criterion is:
 
@@ -127,7 +135,8 @@ def i_optimality(M_X, moment_matrix):
 
 def c_optimality(M, c):
     r"""
-    Compute C-optimality criterion for a given information matrix and contrast vector.
+    Compute C-optimality criterion for a given information matrix
+    and contrast vector.
 
     C-optimality minimizes the variance of a linear combination of parameters.
     Returns the negative value for maximization.
@@ -182,10 +191,11 @@ def _pred_var_rows(rows, M_inv):
 
 def g_optimality(M, candidates):
     r"""
-    Compute G-optimality criterion for a given information matrix and candidate set.
+    Compute G-optimality criterion for a given information matrix
+    and candidate set.
 
-    G-optimality minimizes the maximum prediction variance over the candidate set.
-    Returns the negative value for maximization.
+    G-optimality minimizes the maximum prediction variance over
+    the candidate set. Returns the negative value for maximization.
 
     The G-optimality criterion is:
 
@@ -231,10 +241,11 @@ def i_pred_variance(M, candidates):
 
 def v_optimality(M, test_points):
     r"""
-    Compute V-optimality criterion for a given information matrix and test points.
+    Compute V-optimality criterion for a given information matrix
+    and test points.
 
-    V-optimality minimizes the average prediction variance over specified test points.
-    Returns the negative value for maximization.
+    V-optimality minimizes the average prediction variance over
+    specified test points. Returns the negative value for maximization.
 
     The V-optimality criterion is:
 
@@ -287,7 +298,8 @@ def t_optimality(X, model_diff_subset):
     r"""
     Compute T-optimality criterion for model discrimination at design points.
 
-    T-optimality maximizes discrimination between two models at the chosen design points.
+    T-optimality maximizes discrimination between two models at the chosen
+    design points.
 
     The T-optimality criterion is:
 

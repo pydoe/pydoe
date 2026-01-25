@@ -1,1 +1,1 @@
-from .orthogonal_arrays import ORTHOGONAL_ARRAYS  # noqa: F401
+from .orthogonal_arrays import ORTHOGONAL_ARRAYS as ORTHOGONAL_ARRAYS

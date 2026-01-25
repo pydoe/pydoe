@@ -32,8 +32,8 @@ def repeat_center(n, repeat):
     mat : 2d-array
         The center-point portion of a design matrix (elements all zero).
 
-    Example
-    -------
+    Examples
+    --------
     ::
 
         >>> repeat_center(3, 2)

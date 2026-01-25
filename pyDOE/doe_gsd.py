@@ -115,16 +115,12 @@ def gsd(levels, reduction, n=1):
        2014, and issued August 29, 2017. http://www.google.se/patents/US9746850.
 
     """
-    try:
-        assert all(isinstance(v, int) for v in levels), (
-            "levels has to be sequence of integers"
-        )
-        assert isinstance(reduction, int) and reduction > 1, (
-            "reduction has to be integer larger than 1"
-        )
-        assert isinstance(n, int) and n > 0, "n has to be positive integer"
-    except AssertionError as e:
-        raise ValueError(e)
+    if not all(isinstance(v, int) for v in levels):
+        raise ValueError("levels has to be sequence of integers")
+    if not (isinstance(reduction, int) and reduction > 1):
+        raise ValueError("reduction has to be integer larger than 1")
+    if not (isinstance(n, int) and n > 0):
+        raise ValueError("n has to be positive integer")
 
     partitions = _make_partitions(levels, reduction)
     latin_square = _make_latin_square(reduction)
@@ -132,10 +128,11 @@ def gsd(levels, reduction, n=1):
 
     try:
         designs = [
-            _map_partitions_to_design(partitions, oa) - 1 for oa in orthogonal_arrays
+            _map_partitions_to_design(partitions, oa) - 1
+            for oa in orthogonal_arrays
         ]
-    except ValueError:
-        raise ValueError("reduction too large compared to factor levels")
+    except ValueError as e:
+        raise ValueError("reduction too large compared to factor levels") from e
 
     if n == 1:
         return designs[0]
@@ -147,41 +144,60 @@ def _make_orthogonal_arrays(latin_square, n_cols):
     """
     Augment latin-square to the specified number of columns to produce
     an orthogonal array.
+
+    Returns
+    -------
+    list
+        List of orthogonal array matrices.
     """
 
     first_row = latin_square[0]
-    A_matrices = [np.array([[v]]) for v in first_row]
+    a_matrices = [np.array([[v]]) for v in first_row]
 
-    while A_matrices[0].shape[1] < n_cols:
-        new_A_matrices = list()
+    while a_matrices[0].shape[1] < n_cols:
+        new_a_matrices = list()
 
-        for i, A_matrix in enumerate(A_matrices):
+        for i, _ in enumerate(a_matrices):
             sub_a = list()
-            for constant, other_A in zip(
-                first_row, np.array(A_matrices)[latin_square[i]]
+            for constant, other_a in zip(
+                first_row, np.array(a_matrices)[latin_square[i]]
             ):
-                constant_vec = np.repeat(constant, len(other_A))[:, np.newaxis]
-                combined = np.hstack([constant_vec, other_A])
+                constant_vec = np.repeat(constant, len(other_a))[:, np.newaxis]
+                combined = np.hstack([constant_vec, other_a])
                 sub_a.append(combined)
 
-            new_A_matrices.append(np.vstack(sub_a))
+            new_a_matrices.append(np.vstack(sub_a))
 
-        A_matrices = new_A_matrices
+        a_matrices = new_a_matrices
 
-        if A_matrices[0].shape[1] == n_cols:
+        if a_matrices[0].shape[1] == n_cols:
             break
 
-    return A_matrices
+    return a_matrices
 
 
 def _map_partitions_to_design(partitions, orthogonal_array):
     """
     Map partitioned factor to final design using orthogonal-array produced
     by augmenting latin square.
+
+    Returns
+    -------
+    list
+        List of valid mappings from partitions to design points.
+
+    Raises
+    ------
+    ValueError
+        If orthogonal array indexing does not match partition structure.
     """
-    assert (
-        len(partitions) == orthogonal_array.max() + 1 and orthogonal_array.min() == 0
-    ), "Orthogonal array indexing does not match partition structure"
+    if not (
+        len(partitions) == orthogonal_array.max() + 1
+        and orthogonal_array.min() == 0
+    ):
+        raise ValueError(
+            "Orthogonal array indexing does not match partition structure"
+        )
 
     mappings = list()
     for row in orthogonal_array:
@@ -198,6 +214,11 @@ def _map_partitions_to_design(partitions, orthogonal_array):
 def _make_partitions(factor_levels, num_partitions):
     """
     Balanced partitioning of factors.
+
+    Returns
+    -------
+    list
+        List of partitions for each factor.
     """
     partitions = list()
     for partition_i in range(1, num_partitions + 1):

@@ -16,6 +16,7 @@ Abraham Lee.
 import numpy as np
 from scipy.linalg import hankel, toeplitz
 
+
 __all__ = ["pbdesign"]
 
 
@@ -59,14 +60,22 @@ def pbdesign(n):
                [-1.,  1., -1.,  1., -1.],
                [ 1.,  1.,  1.,  1.,  1.]])
 
+    Raises
+    ------
+    ValueError
+        If n is not a positive integer or input is invalid.
     """
-    assert n > 0, "Number of factors must be a positive integer"
+    if n <= 0:
+        raise ValueError("Number of factors must be a positive integer")
     keep = int(n)
-    n = 4 * (int(n / 4) + 1)  # calculate the correct number of rows (multiple of 4)
+    n = 4 * (
+        int(n / 4) + 1
+    )  # calculate the correct number of rows (multiple of 4)
     f, e = np.frexp([n, n / 12.0, n / 20.0])
     k = [idx for idx, val in enumerate(np.logical_and(f == 0.5, e > 0)) if val]
 
-    assert isinstance(n, int) and k != [], "Invalid inputs. n must be a multiple of 4."
+    if not (isinstance(n, int) and k != []):
+        raise ValueError("Invalid inputs. n must be a multiple of 4.")
 
     k = k[0]
     e = e[k] - 1
@@ -74,78 +83,70 @@ def pbdesign(n):
     if k == 0:  # N = 1*2**e
         H = np.ones((1, 1))
     elif k == 1:  # N = 12*2**e
-        H = np.vstack(
-            (
-                np.ones((1, 12)),
-                np.hstack(
-                    (
-                        np.ones((11, 1)),
-                        toeplitz(
-                            [-1, -1, 1, -1, -1, -1, 1, 1, 1, -1, 1],
-                            [-1, 1, -1, 1, 1, 1, -1, -1, -1, 1, -1],
-                        ),
-                    )
+        H = np.vstack((
+            np.ones((1, 12)),
+            np.hstack((
+                np.ones((11, 1)),
+                toeplitz(
+                    [-1, -1, 1, -1, -1, -1, 1, 1, 1, -1, 1],
+                    [-1, 1, -1, 1, 1, 1, -1, -1, -1, 1, -1],
                 ),
-            )
-        )
+            )),
+        ))
     elif k == 2:  # N = 20*2**e
-        H = np.vstack(
-            (
-                np.ones((1, 20)),
-                np.hstack(
-                    (
-                        np.ones((19, 1)),
-                        hankel(
-                            [
-                                -1,
-                                -1,
-                                1,
-                                1,
-                                -1,
-                                -1,
-                                -1,
-                                -1,
-                                1,
-                                -1,
-                                1,
-                                -1,
-                                1,
-                                1,
-                                1,
-                                1,
-                                -1,
-                                -1,
-                                1,
-                            ],
-                            [
-                                1,
-                                -1,
-                                -1,
-                                1,
-                                1,
-                                -1,
-                                -1,
-                                -1,
-                                -1,
-                                1,
-                                -1,
-                                1,
-                                -1,
-                                1,
-                                1,
-                                1,
-                                1,
-                                -1,
-                                -1,
-                            ],
-                        ),
-                    )
+        H = np.vstack((
+            np.ones((1, 20)),
+            np.hstack((
+                np.ones((19, 1)),
+                hankel(
+                    [
+                        -1,
+                        -1,
+                        1,
+                        1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        1,
+                        -1,
+                        1,
+                        -1,
+                        1,
+                        1,
+                        1,
+                        1,
+                        -1,
+                        -1,
+                        1,
+                    ],
+                    [
+                        1,
+                        -1,
+                        -1,
+                        1,
+                        1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        1,
+                        -1,
+                        1,
+                        -1,
+                        1,
+                        1,
+                        1,
+                        1,
+                        -1,
+                        -1,
+                    ],
                 ),
-            )
-        )
+            )),
+        ))
 
     # Kronecker product construction
-    for i in range(e):
+    for _ in range(e):
         H = np.vstack((np.hstack((H, H)), np.hstack((H, -H))))
 
     # Reduce the size of the matrix as needed

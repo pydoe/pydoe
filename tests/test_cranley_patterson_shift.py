@@ -1,5 +1,7 @@
 import unittest
+
 import numpy as np
+
 from pyDOE import cranley_patterson_shift
 
 

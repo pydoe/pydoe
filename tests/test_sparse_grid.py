@@ -1,9 +1,7 @@
 import numpy as np
 import pytest
-from pyDOE.doe_sparse_grid import (
-    doe_sparse_grid,
-    sparse_grid_dimension,
-)
+
+from pyDOE.doe_sparse_grid import doe_sparse_grid, sparse_grid_dimension
 
 
 class TestSparseGridExamples:
@@ -26,16 +24,21 @@ class TestSparseGridExamples:
         assert len(design) == expected_points
         assert design.shape[1] == dims
 
-        # Test function evaluation like in spdemo.m (scale points to [0,2] x [-1,1])
+        # Test function evaluation like in spdemo.m
+        # (scale points to [0,2] x [-1,1])
         def test_function(x, y):
             return 1.0 / ((x * 2 - 0.3) ** 4 + (y * 3 - 0.7) ** 2 + 1)
 
         # Scale design from [0,1] to [0,2] x [-1,1] for function evaluation
         design_scaled = design.copy()
         design_scaled[:, 0] = design[:, 0] * 2  # Scale x from [0,1] to [0,2]
-        design_scaled[:, 1] = design[:, 1] * 2 - 1  # Scale y from [0,1] to [-1,1]
+        design_scaled[:, 1] = (
+            design[:, 1] * 2 - 1
+        )  # Scale y from [0,1] to [-1,1]
 
-        function_values = test_function(design_scaled[:, 0], design_scaled[:, 1])
+        function_values = test_function(
+            design_scaled[:, 0], design_scaled[:, 1]
+        )
         assert np.all(np.isfinite(function_values))
         assert np.all(function_values > 0)
 
@@ -89,10 +92,12 @@ class TestSparseGridExamples:
             c = np.random.rand(dims) * 5 + 1  # Parameters c_i
             w = np.random.rand(dims)  # Parameters w_i
 
-            def product_peak(points):
+            def product_peak(points, _c=c, _w=w, _dims=dims):
                 result = np.ones(len(points))
-                for i in range(dims):
-                    result *= 1.0 / (c[i] ** (-2) + (points[:, i] - w[i]) ** 2)
+                for i in range(_dims):
+                    result *= 1.0 / (
+                        _c[i] ** (-2) + (points[:, i] - _w[i]) ** 2
+                    )
                 return result
 
             values = product_peak(design)
@@ -136,7 +141,8 @@ class TestSparseGridExamples:
             # Test actual grid generation
             design = doe_sparse_grid(level, dims)
             assert len(design) == expected, (
-                f"Grid generation ({level}, {dims}): expected {expected}, got {len(design)}"
+                f"Grid generation ({level}, {dims}): expected {expected},"
+                f" got {len(design)}"
             )
 
     def test_grid_type_variations(self):

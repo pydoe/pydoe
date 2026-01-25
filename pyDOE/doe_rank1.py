@@ -1,5 +1,6 @@
 import numpy as np
 
+
 __all__ = ["rank1_lattice"]
 
 
@@ -7,9 +8,9 @@ def rank1_lattice(num_points, dimension, generator_vector=None):
     """
     Generate a rank-1 lattice design matrix.
 
-    Rank-1 lattices are quasi-random designs used for numerical integration and
-    high-dimensional sampling. This algorithm generates deterministic points with
-    linear runtime.
+    Rank-1 lattices are quasi-random designs used for numerical integration
+    and high-dimensional sampling. This algorithm generates deterministic
+    points with linear runtime.
 
     Parameters
     ----------
@@ -18,8 +19,8 @@ def rank1_lattice(num_points, dimension, generator_vector=None):
     dimension : int
         The dimensionality of the space.
     generator_vector : array_like of int, optional
-        A generator vector of length `dimension`. If None, one is randomly generated
-        using integers in [2, num_points).
+        A generator vector of length `dimension`. If None, one is randomly
+        generated using integers in [2, num_points).
 
     Returns
     -------
@@ -35,6 +36,11 @@ def rank1_lattice(num_points, dimension, generator_vector=None):
 
     where `i` is the point index, `z` is the generator vector, and `n` is the
     total number of points. All operations are performed modulo `num_points`.
+
+    Raises
+    ------
+    ValueError
+        If generator_vector shape does not match dimension.
     """
     if generator_vector is None:
         generator_vector = np.random.randint(2, num_points, dimension)
@@ -42,11 +48,13 @@ def rank1_lattice(num_points, dimension, generator_vector=None):
     generator_vector = np.asarray(generator_vector) % num_points
     if generator_vector.shape != (dimension,):
         raise ValueError(
-            f"Expected generator_vector of shape ({dimension},), got {generator_vector.shape}"
+            f"Expected generator_vector of shape ({dimension},), "
+            f"got {generator_vector.shape}"
         )
 
     points = np.array(
-        [(i * generator_vector) % num_points for i in range(num_points)], dtype=int
+        [(i * generator_vector) % num_points for i in range(num_points)],
+        dtype=int,
     )
 
     return points

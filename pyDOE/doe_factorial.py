@@ -21,14 +21,15 @@ import string
 import numpy as np
 from scipy.special import binom
 
+
 __all__ = [
-    "fullfact",
+    "alias_vector_indices",
     "ff2n",
     "fracfact",
+    "fracfact_aliasing",
     "fracfact_by_res",
     "fracfact_opt",
-    "fracfact_aliasing",
-    "alias_vector_indices",
+    "fullfact",
 ]
 
 
@@ -47,8 +48,8 @@ def fullfact(levels):
     mat : 2d-array
         The design matrix with coded levels 0 to k-1 for a k-level factor
 
-    Example
-    -------
+    Examples
+    --------
     ::
 
         >>> fullfact([2, 4, 3])
@@ -110,7 +111,7 @@ def ff2n(n_factors: int) -> np.ndarray:
     mat : 2d-array
         The design matrix with coded levels -1 and 1
 
-    Example
+    Examples
     -------
     ::
 
@@ -123,12 +124,28 @@ def ff2n(n_factors: int) -> np.ndarray:
                [ 1., -1.,  1.],
                [ 1.,  1., -1.],
                [ 1.,  1.,  1.]])
+
+    Returns
+    -------
+    mat : 2d-array
+        The full factorial design matrix
     """
     return np.array(list(itertools.product([-1.0, 1.0], repeat=n_factors)))
 
 
 def validate_generator(n_factors: int, generator: str) -> str:
-    """Validates the generator and thows an error if it is not valid."""
+    """Validates the generator and thows an error if it is not valid.
+
+    Returns
+    -------
+    str
+        The validated generator string.
+
+    Raises
+    ------
+    ValueError
+        If the generator is invalid.
+    """
 
     if len(generator.split(" ")) != n_factors:
         raise ValueError("Generator does not match the number of factors.")
@@ -152,7 +169,9 @@ def validate_generator(n_factors: int, generator: str) -> str:
         != string.ascii_lowercase[: len(idx_main)]
     ):
         raise ValueError(
-            f"Use the letters `{' '.join(string.ascii_lowercase[: len(idx_main)])}` for the main factors."
+            "Use the letters "
+            f"`{' '.join(string.ascii_lowercase[: len(idx_main)])}` "
+            "for the main factors."
         )
 
     # Indices of letter combinations.
@@ -166,7 +185,8 @@ def validate_generator(n_factors: int, generator: str) -> str:
     if len(idx_combi) != len({generators[i] for i in idx_combi}):
         raise ValueError("Generators are not unique.")
 
-    # Check that only letters are used in the combinations that are also single letters (main factors)
+    # Check that only letters are used in the combinations
+    # that are also single letters (main factors)
     if not all(
         set(item).issubset({generators[i] for i in idx_main})
         for item in [generators[i] for i in idx_combi]
@@ -248,7 +268,9 @@ def fracfact(gen) -> np.ndarray:
                [ 1.,  1., -1.,  1.,  1.]])
 
     """
-    gen = validate_generator(n_factors=gen.count(" ") + 1, generator=gen.lower())
+    gen = validate_generator(
+        n_factors=gen.count(" ") + 1, generator=gen.lower()
+    )
 
     generators = [item for item in re.split(r"\-|\s|\+", gen) if item]
     lengthes = [len(i) for i in generators]
@@ -354,7 +376,9 @@ def fracfact_by_res(n, res):
     """
     # Determine minimum required number of base-factors.
     min_fac = next(
-        itertools.dropwhile(lambda n_: _n_fac_at_res(n_, res) < n, range(res - 1, n)),
+        itertools.dropwhile(
+            lambda n_: _n_fac_at_res(n_, res) < n, range(res - 1, n)
+        ),
         None,
     )
 
@@ -383,22 +407,14 @@ def fracfact_by_res(n, res):
     return fracfact(gen)
 
 
-def _grep(haystack, needle):
-    try:
-        haystack[0]
-    except (TypeError, AttributeError):
-        return [0] if needle in haystack else []
-    else:
-        locs = []
-        for idx, item in enumerate(haystack):
-            if needle in item:
-                locs += [idx]
-        return locs
-
-
 def _n_fac_at_res(n, res):
     """Calculate number of possible factors for fractional factorial
     design with `n` base factors at resolution `res`.
+
+    Returns
+    -------
+    int
+        The number of possible factors for the given resolution.
     """
     return sum(binom(n, r) for r in range(res - 1, n)) + n
 
@@ -406,7 +422,7 @@ def _n_fac_at_res(n, res):
 ################################################################################
 
 
-def fracfact_opt(n_factors, n_erased, max_attempts=0):
+def fracfact_opt(n_factors, n_erased, max_attempts=0):  # noqa: PLR0914
     """
     Find the optimal generator string for a 2-level fractional-factorial design
     with the specified number of factors and erased factors.
@@ -436,6 +452,11 @@ def fracfact_opt(n_factors, n_erased, max_attempts=0):
     alias_vector : 1d numpy.array
         The vector with the cost of the design in term of aliasings.
         More details in fracfact_aliasing().
+
+    Raises
+    ------
+    ValueError
+        If the number of factors is invalid or too many factors are erased.
     """
 
     def n_comb(n, k):
@@ -453,7 +474,9 @@ def fracfact_opt(n_factors, n_erased, max_attempts=0):
         raise ValueError("Number of erased factors must be non-negative")
 
     n_main_factors = n_factors - n_erased
-    n_aliases = sum((n_comb(n_main_factors, n) for n in range(2, n_main_factors + 1)))
+    n_aliases = sum(
+        n_comb(n_main_factors, n) for n in range(2, n_main_factors + 1)
+    )
 
     if n_erased > n_comb(n_aliases, n_erased):
         raise ValueError("Too many erased factors to create aliasing")
@@ -463,7 +486,8 @@ def fracfact_opt(n_factors, n_erased, max_attempts=0):
     main_factors = range(n_main_factors)
     main_design = " ".join([all_names[f] for f in main_factors])
     aliases = itertools.chain.from_iterable(
-        (itertools.combinations(main_factors, n) for n in range(2, n_main_factors + 1))
+        itertools.combinations(main_factors, n)
+        for n in range(2, n_main_factors + 1)
     )
 
     aliases = sorted(list(aliases), key=lambda a: (len(a), a), reverse=True)
@@ -479,12 +503,16 @@ def fracfact_opt(n_factors, n_erased, max_attempts=0):
     )
 
     for aliasing in all_combinations:
-        aliasing_design = " ".join(
-            ["".join([all_names[f] for f in a]) for a in aliasing]
-        )
+        aliasing_design = " ".join([
+            "".join([all_names[f] for f in a]) for a in aliasing
+        ])
         complete_design = main_design + " " + aliasing_design
         design = fracfact(complete_design)
-        assert design.shape == design_shape
+        if design.shape != design_shape:
+            raise ValueError(
+                f"Design shape {design.shape} does not "
+                f"match expected {design_shape}"
+            )
         alias_map, alias_vector = fracfact_aliasing(design)
         if list(alias_vector) < list(best_vector):
             best_design = complete_design
@@ -522,8 +550,13 @@ def fracfact_aliasing(design):
 
         The entry in alias_matrix[i,j] (i<=j) shows how many aliasings where
         created among i-th order interactions and j-th order interactions.
+
+    Raises
+    ------
+    ValueError
+        If the design is too large (more than 20 factors).
     """
-    n_rounds, n_factors = design.shape
+    _n_rounds, n_factors = design.shape
 
     if n_factors > 20:
         raise ValueError("Design too big, use 20 factors or less")
@@ -531,35 +564,38 @@ def fracfact_aliasing(design):
     all_names = string.ascii_lowercase
     factors = range(n_factors)
     all_combinations = itertools.chain.from_iterable(
-        (itertools.combinations(factors, n) for n in range(1, n_factors + 1))
+        itertools.combinations(factors, n) for n in range(1, n_factors + 1)
     )
     aliases = {}
 
     for combination in all_combinations:
         contrast = np.prod(design[:, combination], axis=1)
         contrast.flags.writeable = False
-        aliases[contrast.data.tobytes()] = aliases.get(contrast.data.tobytes(), [])
+        aliases[contrast.data.tobytes()] = aliases.get(
+            contrast.data.tobytes(), []
+        )
         aliases[contrast.data.tobytes()].append(combination)
 
     aliases_list = []
     for alias in aliases.values():
         aliases_list.append(sorted(alias, key=lambda a: (len(a), a)))
-    aliases_list = sorted(aliases_list, key=lambda list: ([len(a) for a in list], list))
-
-    aliases_readable = []
-    alias_matrix = np.zeros(
-        (
-            n_factors,
-            n_factors,
-        )
+    aliases_list = sorted(
+        aliases_list, key=lambda lst: ([len(a) for a in lst], lst)
     )
 
+    aliases_readable = []
+    alias_matrix = np.zeros((n_factors, n_factors))
+
     for alias in aliases_list:
-        alias_readable = " = ".join(["".join([all_names[f] for f in a]) for a in alias])
+        alias_readable = " = ".join([
+            "".join([all_names[f] for f in a]) for a in alias
+        ])
         aliases_readable.append(alias_readable)
         for sizes in itertools.combinations([len(a) for a in alias], 2):
-            assert sizes[0] >= 0 and sizes[1] >= 0
-            assert sizes[0] <= sizes[1]
+            if not (sizes[0] >= 0 and sizes[1] >= 0):
+                raise ValueError(f"Invalid alias sizes: {sizes}")
+            if sizes[0] > sizes[1]:
+                raise ValueError(f"Alias sizes not in order: {sizes}")
             alias_matrix[sizes[0] - 1, sizes[1] - 1] += 1
 
     alias_vector = alias_matrix[alias_vector_indices(n_factors)]
@@ -585,12 +621,17 @@ def alias_vector_indices(n_factors):
         with n_factor rows/columns. This function returns a different indice
         order than numpy.triu_indices, as it puts the indices representing the
         most serious aliasings first, to help in the optimization procedure.
+
+    Raises
+    ------
+    ValueError
+        If the design is too large (more than 20 factors).
     """
     if n_factors > 20:
         raise ValueError("Design too big, use 20 factors or less")
 
     indices = list(itertools.combinations_with_replacement(range(n_factors), 2))
-    indices = sorted(indices, key=lambda i: max(i))
+    indices = sorted(indices, key=max)
 
     rows = np.asarray([i[0] for i in indices])
     cols = np.asarray([i[1] for i in indices])

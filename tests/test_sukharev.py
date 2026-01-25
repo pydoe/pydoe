@@ -1,5 +1,7 @@
 import unittest
+
 import numpy as np
+
 from pyDOE.grid_designs import sukharev_grid
 
 
@@ -12,14 +14,12 @@ class TestSukharevGrid(unittest.TestCase):
 
     def test_2d_case(self):
         actual = sukharev_grid(4, 2)
-        expected = np.array(
-            [
-                [0.25, 0.25],
-                [0.25, 0.75],
-                [0.75, 0.25],
-                [0.75, 0.75],
-            ]
-        )
+        expected = np.array([
+            [0.25, 0.25],
+            [0.25, 0.75],
+            [0.75, 0.25],
+            [0.75, 0.75],
+        ])
         np.testing.assert_allclose(actual, expected, atol=1e-12)
         self.assertEqual(actual.shape, (4, 2))
 
@@ -31,7 +31,7 @@ class TestSukharevGrid(unittest.TestCase):
         self.assertTrue(np.all(actual < 1))
 
     def test_invalid_num_points(self):
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(ValueError):
             sukharev_grid(3, 2)  # 3 ** (1/2) is not integer
 
 

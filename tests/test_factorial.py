@@ -123,7 +123,8 @@ class TestFactorial(unittest.TestCase):
             ],
         )
         np.testing.assert_array_equal(
-            ffo_doe[2], np.array([0.0, 0.0, 3.0, 4.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+            ffo_doe[2],
+            np.array([0.0, 0.0, 3.0, 4.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
         )
 
 
@@ -138,6 +139,8 @@ class TestFactorial(unittest.TestCase):
         (2, "ab ac", "At least one unconfounded main factor is needed."),
     ],
 )
-def test_validate_generator_invalid(n_factors: int, generator: str, message: str):
+def test_validate_generator_invalid(
+    n_factors: int, generator: str, message: str
+):
     with pytest.raises(ValueError, match=message):
         validate_generator(n_factors, generator)

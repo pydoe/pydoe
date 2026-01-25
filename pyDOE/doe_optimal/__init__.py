@@ -35,7 +35,7 @@ we can model our system by estimating the regression parameters using:
 
 $$\hat{\beta} = (X^{T}X)^{-1}X^{T}y$$
 
-Example:
+Examples
 --------
 >>> import numpy as np
 >>> from pyDOE.doe_optimal import optimal_design, generate_candidate_set
@@ -49,66 +49,67 @@ Example:
 ...     n_points=10,
 ...     degree=2,
 ...     criterion="D",
-...     method="detmax"
+...     method="detmax",
 ... )
 """
 
-from pyDOE.doe_optimal.optimal import optimal_design
+from pyDOE.doe_optimal.algorithms import (
+    detmax,
+    fedorov,
+    modified_fedorov,
+    sequential_dykstra,
+    simple_exchange_wynn_mitchell,
+)
+from pyDOE.doe_optimal.criterion import (
+    a_optimality,
+    c_optimality,
+    d_optimality,
+    e_optimality,
+    g_optimality,
+    i_optimality,
+    s_optimality,
+    t_optimality,
+    v_optimality,
+)
+from pyDOE.doe_optimal.efficiency import a_efficiency, d_efficiency
 from pyDOE.doe_optimal.model import (
     build_design_matrix,
     build_uniform_moment_matrix,
     generate_candidate_set,
 )
-from pyDOE.doe_optimal.algorithms import (
-    sequential_dykstra,
-    simple_exchange_wynn_mitchell,
-    fedorov,
-    modified_fedorov,
-    detmax,
-)
-from pyDOE.doe_optimal.criterion import (
-    d_optimality,
-    a_optimality,
-    i_optimality,
-    c_optimality,
-    e_optimality,
-    g_optimality,
-    v_optimality,
-    s_optimality,
-    t_optimality,
-)
-from pyDOE.doe_optimal.efficiency import d_efficiency, a_efficiency
-from pyDOE.doe_optimal.utils import information_matrix, criterion_value
+from pyDOE.doe_optimal.optimal import optimal_design
+from pyDOE.doe_optimal.utils import criterion_value, information_matrix
+
 
 __author__ = "Saud Zahir"
 
 __all__ = [
-    # Main functions
-    "optimal_design",
-    "generate_candidate_set",
+    "a_efficiency",
+    "a_optimality",
     # Model building
     "build_design_matrix",
     "build_uniform_moment_matrix",
+    "c_optimality",
+    "criterion_value",
+    # Efficiency measures
+    "d_efficiency",
+    # Optimality criteria
+    "d_optimality",
+    "detmax",
+    "e_optimality",
+    "fedorov",
+    "g_optimality",
+    "generate_candidate_set",
+    "i_optimality",
+    # Utilities
+    "information_matrix",
+    "modified_fedorov",
+    # Main functions
+    "optimal_design",
+    "s_optimality",
     # Algorithms
     "sequential_dykstra",
     "simple_exchange_wynn_mitchell",
-    "fedorov",
-    "modified_fedorov",
-    "detmax",
-    # Optimality criteria
-    "d_optimality",
-    "a_optimality",
-    "i_optimality",
-    "c_optimality",
-    "e_optimality",
-    "g_optimality",
-    "v_optimality",
-    "s_optimality",
     "t_optimality",
-    # Efficiency measures
-    "d_efficiency",
-    "a_efficiency",
-    # Utilities
-    "information_matrix",
-    "criterion_value",
+    "v_optimality",
 ]

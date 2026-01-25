@@ -1,7 +1,8 @@
 """
-Inspired by Taguchi design methodology and orthogonal arrays developed by Genichi Taguchi,
-this code provides utilities for generating Taguchi arrays, building experimental designs,
-and computing Signal-to-Noise Ratios, based on orthogonal array libraries.
+Inspired by Taguchi design methodology and orthogonal arrays
+developed by Genichi Taguchi, this code provides utilities for
+generating Taguchi arrays, building experimental designs, and
+computing Signal-to-Noise Ratios, based on orthogonal array libraries.
 
 Sources of orthogonal arrays:
 
@@ -11,22 +12,26 @@ Sources of orthogonal arrays:
       https://neilsloane.com/oadir/
 
 References:
-    - Taguchi G., Chowdhury S., Wu Y. (2005). "Taguchi's Quality Engineering Handbook." Wiley.
+    - Taguchi G., Chowdhury S., Wu Y. (2005). "Taguchi's Quality Engineering
+    Handbook." Wiley.
     - Montgomery D. C. (2017). "Design and Analysis of Experiments." Wiley.
     - [What are Taguchi designs?](https://www.itl.nist.gov/div898/handbook/pri/section5/pri56.htm)
 """
 
-import numpy as np
 from enum import Enum, unique
 from typing import List, Literal
+
+import numpy as np
+
 from pyDOE.orthogonal_arrays import ORTHOGONAL_ARRAYS
 
+
 __all__ = [
+    "TaguchiObjective",
+    "compute_snr",
     "get_orthogonal_array",
     "list_orthogonal_arrays",
     "taguchi_design",
-    "TaguchiObjective",
-    "compute_snr",
 ]
 
 ORTHOGONAL_ARRAY_NAMES = Literal[
@@ -93,7 +98,8 @@ def taguchi_design(
     oa_name: ORTHOGONAL_ARRAY_NAMES, levels_per_factor: List[List]
 ) -> np.ndarray:
     """
-    Generate a Taguchi design matrix using an orthogonal array and factor levels.
+    Generate a Taguchi design matrix using an orthogonal array and
+    factor levels.
 
     Parameters
     ----------

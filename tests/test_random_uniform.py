@@ -1,5 +1,7 @@
 import unittest
+
 import numpy as np
+
 from pyDOE import random_uniform
 
 
@@ -21,15 +23,13 @@ class TestRandomUniform(unittest.TestCase):
 
     def test_random_uniform_reproducible(self):
         """Test reproducibility with same random seed."""
-        expected = np.array(
-            [
-                [0.77395605, 0.43887844, 0.85859792],
-                [0.69736803, 0.09417735, 0.97562235],
-                [0.7611397, 0.78606431, 0.12811363],
-                [0.45038594, 0.37079802, 0.92676499],
-                [0.64386512, 0.82276161, 0.4434142],
-            ]
-        )
+        expected = np.array([
+            [0.77395605, 0.43887844, 0.85859792],
+            [0.69736803, 0.09417735, 0.97562235],
+            [0.7611397, 0.78606431, 0.12811363],
+            [0.45038594, 0.37079802, 0.92676499],
+            [0.64386512, 0.82276161, 0.4434142],
+        ])
 
         actual = random_uniform(5, 3, seed=42)
 
@@ -101,7 +101,7 @@ class TestRandomUniform(unittest.TestCase):
             self.assertTrue(np.all(result < 1.0))
 
     def test_random_uniform_independence(self):
-        """Test that different calls produce different results (when not seeded)."""
+        """Test that different calls produce different results (not seeded)."""
         # Don't set seed for this test
         result1 = random_uniform(10, 3)
         result2 = random_uniform(10, 3)

@@ -1,5 +1,7 @@
 import unittest
+
 import numpy as np
+
 from pyDOE import random_k_means
 
 
@@ -8,7 +10,9 @@ class TestRandomKMeans(unittest.TestCase):
         """Test basic functionality with reproducible random state."""
         num_points = 5
         dimension = 2
-        result = random_k_means(num_points=num_points, dimension=dimension, seed=42)
+        result = random_k_means(
+            num_points=num_points, dimension=dimension, seed=42
+        )
 
         # Check output shape
         self.assertEqual(result.shape, (num_points, dimension))
@@ -17,21 +21,23 @@ class TestRandomKMeans(unittest.TestCase):
         self.assertTrue(np.all((0.0 <= result) & (result <= 1.0)))
 
         # Check reproducibility
-        result2 = random_k_means(num_points=num_points, dimension=dimension, seed=42)
+        result2 = random_k_means(
+            num_points=num_points, dimension=dimension, seed=42
+        )
         np.testing.assert_allclose(result, result2)
 
     def test_random_k_means_reproducible_output(self):
         """Test specific expected output for known random state."""
-        expected = np.array(
-            [
-                [0.68138275, 0.30072643],
-                [0.85733, 0.71384485],
-                [0.23305099, 0.77871437],
-                [0.68103389, 0.82427319],
-                [0.26336031, 0.26282146],
-            ]
+        expected = np.array([
+            [0.68138275, 0.30072643],
+            [0.85733, 0.71384485],
+            [0.23305099, 0.77871437],
+            [0.68103389, 0.82427319],
+            [0.26336031, 0.26282146],
+        ])
+        actual = random_k_means(
+            num_points=5, dimension=2, num_steps=100, seed=42
         )
-        actual = random_k_means(num_points=5, dimension=2, num_steps=100, seed=42)
         np.testing.assert_allclose(actual, expected, rtol=1e-6)
 
     def test_random_k_means_with_initial_points(self):
@@ -61,9 +67,13 @@ class TestRandomKMeans(unittest.TestCase):
 
     def test_random_k_means_num_steps(self):
         """Test with different number of steps."""
-        result1 = random_k_means(num_points=3, dimension=2, num_steps=10, seed=42)
+        result1 = random_k_means(
+            num_points=3, dimension=2, num_steps=10, seed=42
+        )
 
-        result2 = random_k_means(num_points=3, dimension=2, num_steps=1000, seed=42)
+        result2 = random_k_means(
+            num_points=3, dimension=2, num_steps=1000, seed=42
+        )
 
         # Both should be valid
         self.assertEqual(result1.shape, (3, 2))
@@ -108,7 +118,10 @@ class TestRandomKMeans(unittest.TestCase):
             random_k_means(
                 num_points=2,
                 dimension=2,
-                initial_points=np.array([[0.1, 0.2], [1.5, 0.8]]),  # Outside range
+                initial_points=np.array([
+                    [0.1, 0.2],
+                    [1.5, 0.8],
+                ]),  # Outside range
             )
 
     def test_random_k_means_single_point(self):
@@ -120,7 +133,9 @@ class TestRandomKMeans(unittest.TestCase):
 
     def test_random_k_means_large_num_points(self):
         """Test with larger number of points."""
-        result = random_k_means(num_points=50, dimension=2, num_steps=100, seed=42)
+        result = random_k_means(
+            num_points=50, dimension=2, num_steps=100, seed=42
+        )
 
         self.assertEqual(result.shape, (50, 2))
         self.assertTrue(np.all((0.0 <= result) & (result <= 1.0)))

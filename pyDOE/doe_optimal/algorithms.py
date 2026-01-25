@@ -10,55 +10,70 @@ iteratively selects or exchanges points to optimize a chosen criterion
 (e.g., D-, A-, I-optimality).
 
 References:
-    - Atkinson, A. C., Donev, A. N., & Tobias, R. D. (2007). "Optimum Experimental Designs, with SAS." Oxford University Press.
+    - Atkinson, A. C., Donev, A. N., & Tobias, R. D. (2007).
+    "Optimum Experimental Designs, with SAS." Oxford University Press.
     - Montgomery D. C. (2017). "Design and Analysis of Experiments." Wiley.
-    - Mitchell, T. J. (1974). "An Algorithm for the Construction of 'D-Optimal' Experimental Designs." Technometrics, 16(2), 203-210.
-    - Wynn, H. P. (1972). "The Sequential Generation of D-Optimal Experimental Designs." Annals of Mathematical Statistics, 41(5), 1655-1664.
+    - Mitchell, T. J. (1974). "An Algorithm for the Construction of 'D-Optimal'
+    Experimental Designs." Technometrics, 16(2), 203-210.
+    - Wynn, H. P. (1972). "The Sequential Generation of D-Optimal Experimental
+    Designs." Annals of Mathematical Statistics, 41(5), 1655-1664.
     - Fedorov, V. V. (1972). "Theory of Optimal Experiments." Academic Press.
 
 Algorithms
 ----------
 Sequential Dykstra Algorithm
-    The Sequential Dykstra algorithm is a method used for constructing D-optimal designs.
-    It operates by iteratively selecting points from a candidate set to maximize the determinant
-    of the information matrix, which corresponds to minimizing the variance of the estimated
-    model parameters. This algorithm is known for its speed but may sometimes converge to local optima.
+    The Sequential Dykstra algorithm is a method used for constructing D-optimal
+    designs. It operates by iteratively selecting points from a candidate set to
+    maximize the determinant of the information matrix, which corresponds to
+    minimizing the variance of the estimated model parameters. This algorithm is
+    known for its speed but may sometimes converge to local optima.
 
 Simple Exchange (Wynn-Mitchell) Algorithm
-    The Simple Exchange algorithm, attributed to Mitchell and Miller (1970) and Wynn (1972), starts
-    with an initial design and iteratively exchanges one point at a time. In each iteration, the
-    algorithm removes a point that contributes least to the chosen optimality criterion and adds a
-    new point from the candidate set that improves the criterion. This process continues until no
-    further improvements can be made.
+    The Simple Exchange algorithm, attributed to Mitchell and Miller (1970) and
+    Wynn (1972), starts with an initial design and iteratively exchanges one
+    point at a time. In each iteration, the algorithm removes a point that
+    contributes least to the chosen optimality criterion and adds a new point
+    from the candidate set that improves the criterion. This process continues
+    until no further improvements can be made.
 
 Fedorov Algorithm
-    The Fedorov algorithm (1972) is a simultaneous exchange method. In each iteration, the algorithm
-    evaluates all possible exchanges between points in the current design and points in the candidate
-    set. It then selects the exchange that most improves the optimality criterion. This approach can
-    be computationally intensive but is effective for finding globally optimal designs.
+    The Fedorov algorithm (1972) is a simultaneous exchange method. In each
+    iteration, the algorithm evaluates all possible exchanges between points
+    in the current design and points in the candidate set. It then selects the
+    exchange that most improves the optimality criterion. This approach can be
+    computationally intensive but is effective for finding globally optimal
+    designs.
 
 Modified Fedorov Algorithm
-    The Modified Fedorov algorithm is a variant of the Fedorov algorithm that allows for the inclusion
-    of pre-specified points in the design. This modification ensures that certain points, which may be
-    of particular interest or importance, are included in the final design while still optimizing the
-    overall efficiency. It is particularly useful when some experimental runs are mandatory.
+    The Modified Fedorov algorithm is a variant of the Fedorov algorithm that
+    allows for the inclusion of pre-specified points in the design. This
+    modification ensures that certain points, which may be of particular
+    interest or importance, are included in the final design while still
+    optimizing the overall efficiency. It is particularly useful when some
+    experimental runs are mandatory.
 
 DETMAX Algorithm
-    The DETMAX algorithm, developed by Mitchell (1974), is designed to construct D-optimal designs by
-    maximizing the determinant of the information matrix. It starts with an initial design and iteratively
-    adds or removes points to improve the determinant. This method is widely used due to its effectiveness
+    The DETMAX algorithm, developed by Mitchell (1974), is designed to construct
+    D-optimal designs by maximizing the determinant of the information matrix.
+    It starts with an initial design and iteratively adds or removes points to
+    improve the determinant. This method is widely used due to its effectiveness
     in producing highly efficient designs.
 """
 
 from typing import Literal
+
 import numpy as np
 
-from pyDOE.doe_optimal.model import build_design_matrix, build_uniform_moment_matrix
+from pyDOE.doe_optimal.model import (
+    build_design_matrix,
+    build_uniform_moment_matrix,
+)
 from pyDOE.doe_optimal.utils import (
     _best_single_add,
     _best_single_drop,
     criterion_value,
 )
+
 
 # ------------------- Algorithms -----------------
 
@@ -90,9 +105,15 @@ def sequential_dykstra(
     -------
     design : ndarray of shape (n_points, k)
         Selected design points.
+
+    Raises
+    ------
+    ValueError
+        If n_points is less than 1.
     """
     candidates = np.asarray(candidates, dtype=float)
-    assert n_points >= 1
+    if n_points < 1:
+        raise ValueError("n_points must be at least 1")
     # Precompute for I- and A-opt
     X0 = build_design_matrix(candidates, degree)
     M_moment = build_uniform_moment_matrix(X0)
@@ -104,15 +125,14 @@ def sequential_dykstra(
         j_best, _ = _best_single_add(
             design, remaining, degree, criterion, X0, alpha, M_moment
         )
-        if j_best < 0:  # fallback
-            j_best = 0
+        j_best = max(j_best, 0)
         design = np.vstack([design, remaining[j_best]])
         remaining = np.delete(remaining, j_best, axis=0)
 
     return design
 
 
-def simple_exchange_wynn_mitchell(
+def simple_exchange_wynn_mitchell(  # noqa: PLR0913, PLR0917
     candidates: np.ndarray,
     n_points: int,
     degree: int,
@@ -121,7 +141,8 @@ def simple_exchange_wynn_mitchell(
     max_iter: int = 200,
 ) -> np.ndarray:
     """
-    Construct an optimal design using the simple exchange (Wynn-Mitchell) algorithm.
+    Construct an optimal design using the simple exchange (Wynn-Mitchell)
+    algorithm.
 
     Parameters
     ----------
@@ -157,17 +178,21 @@ def simple_exchange_wynn_mitchell(
 
     for _ in range(max_iter):
         # Drop
-        drop_idx, _ = _best_single_drop(design, degree, criterion, X0, alpha, M_moment)
-        # Remove from pool those already in design except the one we plan to drop
-        # Using exact match; for numeric safety, use all rows then filter after equality check
+        drop_idx, _ = _best_single_drop(
+            design, degree, criterion, X0, alpha, M_moment
+        )
+        # Remove from pool those already in design except the one
+        # we plan to drop. Using exact match; for numeric safety,
+        # use all rows then filter after equality check
         design_wo = np.delete(design, drop_idx, axis=0)
 
         # Add
         mask = np.ones(len(candidates), dtype=bool)
-        # Mark rows equal to rows in design_wo as not available (basic filtering)
+        # Mark rows equal to rows in design_wo as not
+        # available (basic filtering)
         for r in design_wo:
             eq = np.all(np.isclose(candidates, r, atol=1e-12), axis=1)
-            mask = mask & (~eq)
+            mask &= ~eq
         pool_avail = candidates[mask]
 
         add_idx, cand_score = _best_single_add(
@@ -183,7 +208,7 @@ def simple_exchange_wynn_mitchell(
     return design
 
 
-def fedorov(
+def fedorov(  # noqa: PLR0913, PLR0917
     candidates: np.ndarray,
     n_points: int,
     degree: int,
@@ -232,7 +257,7 @@ def fedorov(
         mask = np.ones(len(candidates), dtype=bool)
         for r in design:
             eq = np.all(np.isclose(candidates, r, atol=1e-12), axis=1)
-            mask = mask & (~eq)
+            mask &= ~eq
         pool = candidates[mask]
 
         # evaluate all swaps (i in design, j in pool)
@@ -256,7 +281,7 @@ def fedorov(
     return design
 
 
-def modified_fedorov(
+def modified_fedorov(  # noqa: PLR0913, PLR0917
     candidates: np.ndarray,
     n_points: int,
     degree: int,
@@ -331,7 +356,7 @@ def modified_fedorov(
     return design
 
 
-def detmax(
+def detmax(  # noqa: PLR0913, PLR0914, PLR0917
     candidates: np.ndarray,
     n_points: int,
     degree: int,
@@ -340,7 +365,8 @@ def detmax(
     max_iter: int = 100,
 ) -> np.ndarray:
     """
-    Construct an optimal design using the DETMAX algorithm (exchange with excursions).
+    Construct an optimal design using the DETMAX algorithm
+    (exchange with excursions).
 
     Parameters
     ----------
@@ -402,7 +428,7 @@ def detmax(
             continue
 
         # Excursion: add best extra, then drop worst
-        add_idx, add_score = _best_single_add(
+        add_idx, _add_score = _best_single_add(
             design, pool, degree, criterion, X0, alpha, M_moment
         )
         if add_idx < 0:

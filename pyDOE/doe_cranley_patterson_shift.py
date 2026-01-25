@@ -12,11 +12,13 @@ where randomized replicates are desirable.
 
 References
 ----------
-Cranley, R., and Patterson, T. N. L. 1976. "Randomization of Number Theoretic Methods
-for Multiple Integration." *SIAM Journal on Numerical Analysis*, 13(6): 904-914.
+Cranley, R., and Patterson, T. N. L. 1976. "Randomization of Number Theoretic
+Methods for Multiple Integration." *SIAM Journal on Numerical Analysis*,
+13(6): 904-914.
 """
 
 import numpy as np
+
 
 __all__ = ["cranley_patterson_shift"]
 
@@ -40,10 +42,16 @@ def cranley_patterson_shift(points, seed=None):
     shifted_points : ndarray of shape (n_samples, n_dimensions)
         Rotated point set, wrapped into the unit hypercube.
 
+    Raises
+    ------
+    ValueError
+        If input `points` is not a 2D array.
+
     References
     ----------
-    Cranley, R., and Patterson, T. N. L. 1976. "Randomization of Number Theoretic Methods
-    for Multiple Integration." *SIAM Journal on Numerical Analysis*, 13(6): 904-914.
+    Cranley, R., and Patterson, T. N. L. 1976. "Randomization of Number
+    Theoretic Methods for Multiple Integration." *SIAM Journal on Numerical
+    Analysis*, 13(6): 904-914.
     """
     points = np.asarray(points)
     if points.ndim != 2:
