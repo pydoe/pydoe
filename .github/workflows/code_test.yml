@@ -43,8 +43,8 @@ jobs:
           versions=$(curl -fsSL https://endoflife.date/api/v1/products/python/ \
                      | jq '[ .result.releases[] | select(.isEol == false) | .label ]')
 
-          echo "supported-versions=$(echo $versions |jq -c '.|@json')"        >> $GITHUB_OUTPUT
-          echo "bound-versions=$(echo $versions |jq -c '[.[0],.[-1]]|@json')" >> $GITHUB_OUTPUT
+          echo "supported-versions=$(echo $versions |jq -c '.')"        >> $GITHUB_OUTPUT
+          echo "bound-versions=$(echo $versions |jq -c '[.[0],.[-1]]')" >> $GITHUB_OUTPUT
 
   basic-test:
     needs: setup
@@ -98,7 +98,7 @@ jobs:
     if: ${{ fromJson(inputs.test-all-versions) }}
     runs-on: ${{ matrix.os }}
     env:
-      UV_PYTHON: ${{ fromJson(matrix.py-version) }}
+      UV_PYTHON: ${{ matrix.py-version }}
     strategy:
       matrix:
         os: [ ubuntu-latest ]

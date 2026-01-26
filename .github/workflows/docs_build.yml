@@ -13,10 +13,6 @@ on:
       run-id:
         value: ${{ github.run_id }}
 
-concurrency:
-  group: ${{ github.workflow }}/${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   build:
     name: Build Docs
@@ -42,11 +38,19 @@ jobs:
           | tee -a $GITHUB_OUTPUT
 
       - name: Upload Docs Artifacts
+        if: ${{ ! inputs.deploy }}
         uses: actions/upload-artifact@v6
         with:
           name: ${{ steps.artifact-name.outputs.artifact-name }}
           path: build/docs
           if-no-files-found: error
+
+      - name: Upload Pages Artifacts
+        uses: actions/upload-pages-artifact@v4
+        if: ${{ inputs.deploy }}
+        with:
+          name: ${{ steps.artifact-name.outputs.artifact-name }}
+          path: build/docs
 
   deploy:
     name: Deploy Docs

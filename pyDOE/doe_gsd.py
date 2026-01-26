@@ -166,7 +166,7 @@ def _make_orthogonal_arrays(
         for i, _ in enumerate(a_matrices):
             sub_a = list()
             for constant, other_a in zip(
-                first_row, np.array(a_matrices)[latin_square[i]]
+                first_row, np.array(a_matrices)[latin_square[i]], strict=True
             ):
                 constant_vec = np.repeat(constant, len(other_a))[:, np.newaxis]
                 combined = np.hstack([constant_vec, other_a])

@@ -8,10 +8,6 @@ on:
       run-id:
         value: ${{ github.run_id }}
 
-concurrency:
-  group: ${{ github.workflow }}/${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   build:
     name: Build Dist

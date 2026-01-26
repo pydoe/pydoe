@@ -18,6 +18,9 @@ jobs:
     uses: ./.github/workflows/build.yml
 
   test_simple:
+    concurrency:
+      group: ${{ github.ref }} - tests
+      cancel-in-progress: true
     needs: build
     if: ${{ ! github.event.pull_request.draft && github.event.pull_request.requested_reviewers[0] == null }}
     uses: ./.github/workflows/code_test.yml
@@ -27,6 +30,9 @@ jobs:
 
   test_full:
     needs: build
+    concurrency:
+      group: ${{ github.ref }} - tests
+      cancel-in-progress: true
     if: &reviewers_condition ${{ ! github.event.pull_request.draft && github.event.pull_request.requested_reviewers[0] != null }}
     uses: ./.github/workflows/code_test.yml
     with:
@@ -35,5 +41,11 @@ jobs:
       test-all-versions: true
 
   docs_build:
+    concurrency:
+      group: ${{ github.ref }} - docs
+      cancel-in-progress: true
+    permissions:
+      pages: write     # to deploy to GitHub Pages
+      id-token: write  # to verify the deployment
     if: *reviewers_condition
     uses: ./.github/workflows/docs_build.yml

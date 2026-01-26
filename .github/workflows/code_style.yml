@@ -26,8 +26,7 @@ jobs:
           args: --version
 
       - name: Enforce Lint
-        id: ruff-lint
-        run: ruff check --output-format=github .
+        run: ruff check .
 
       - name: Enforce Format
         run: |
