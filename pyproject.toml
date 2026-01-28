@@ -116,14 +116,18 @@ select = [
 ]
 
 # NOTE:
-#     Rule N999 is currently ignored, but in version 1.0.0
+#     * Rule N999 is currently ignored, but in version 1.0.0
 #     and above it will be enforced.
+#     * Rule UP006 and UP007 are ignored to maintain compatibility
+#     with Python version 3.8 which will be dropped in version 1.0.0
 ignore = [
     "N803",      # [pep8-naming](https://docs.astral.sh/ruff/rules/invalid-argument-name/)
     "N806",      # [pep8-naming](https://docs.astral.sh/ruff/rules/non-lowercase-variable-in-function/)
     "N999",      # [pep8-naming](https://docs.astral.sh/ruff/rules/invalid-module-name/)
     "PLR2004",   # [pylint](https://docs.astral.sh/ruff/rules/magic-value-comparison/)
     "S311",      # [flake8-bandit](https://docs.astral.sh/ruff/rules/suspicious-non-cryptographic-random-usage/)
+    "UP006",     # [pyupgrade](https://docs.astral.sh/ruff/rules/non-pep585-annotation/)
+    "UP007",     # [pyupgrade](https://docs.astral.sh/ruff/rules/non-pep604-annotation-union/)
 ]
 
 [tool.ruff.lint.per-file-ignores]
