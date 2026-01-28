@@ -127,7 +127,7 @@ ignore = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/**/*.py" = [
+"tests/*.py" = [
     "S101",       # [flake8-bandit](https://docs.astral.sh/ruff/rules/assert/)
     "N802",       # [pep8-naming](https://docs.astral.sh/ruff/rules/invalid-function-name/)
     "N803",       # [pep8-naming](https://docs.astral.sh/ruff/rules/invalid-argument-name/)
