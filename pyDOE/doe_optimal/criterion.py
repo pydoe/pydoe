@@ -35,7 +35,7 @@ import numpy as np
 from scipy.linalg import inv
 
 
-def regularized_inv(M, reg_param=1e-8):
+def regularized_inv(M: np.ndarray, reg_param: float = 1e-8) -> np.ndarray:
     """
     Compute regularized inverse of matrix M using M_reg = M + reg_param * I.
 
@@ -59,7 +59,7 @@ def regularized_inv(M, reg_param=1e-8):
         return inv(M_reg)
 
 
-def d_optimality(M):
+def d_optimality(M: np.ndarray) -> float:
     r"""
     Compute D-optimality criterion for a given information matrix.
 
@@ -82,7 +82,7 @@ def d_optimality(M):
     return float(np.linalg.det(M))
 
 
-def a_optimality(M):
+def a_optimality(M: np.ndarray) -> float:
     r"""
     Compute A-optimality criterion for a given information matrix.
 
@@ -106,7 +106,7 @@ def a_optimality(M):
     return -float(np.trace(regularized_inv(M)))
 
 
-def i_optimality(M_X, moment_matrix):
+def i_optimality(M_X: np.ndarray, moment_matrix: np.ndarray) -> float:
     r"""
     Compute I-optimality criterion for a given information matrix
     and moment matrix.
@@ -133,7 +133,7 @@ def i_optimality(M_X, moment_matrix):
     return -float(np.trace(moment_matrix @ regularized_inv(M_X)))
 
 
-def c_optimality(M, c):
+def c_optimality(M: np.ndarray, c: np.ndarray) -> float:
     r"""
     Compute C-optimality criterion for a given information matrix
     and contrast vector.
@@ -160,7 +160,7 @@ def c_optimality(M, c):
     return -float(c.T @ regularized_inv(M) @ c)
 
 
-def e_optimality(M):
+def e_optimality(M: np.ndarray) -> float:
     r"""
     Compute E-optimality criterion for a given information matrix.
 
@@ -183,13 +183,13 @@ def e_optimality(M):
     return float(np.min(np.linalg.eigvalsh(M)))
 
 
-def _pred_var_rows(rows, M_inv):
+def _pred_var_rows(rows: np.ndarray, M_inv: np.ndarray) -> np.ndarray:
     # rows: array of shape (m, p); M_inv: (p, p)
     # returns vector of x M_inv x^T for each row x
     return np.einsum("ij,jk,ik->i", rows, M_inv, rows)
 
 
-def g_optimality(M, candidates):
+def g_optimality(M: np.ndarray, candidates: np.ndarray) -> float:
     r"""
     Compute G-optimality criterion for a given information matrix
     and candidate set.
@@ -218,7 +218,7 @@ def g_optimality(M, candidates):
     return -float(np.max(variances))
 
 
-def i_pred_variance(M, candidates):
+def i_pred_variance(M: np.ndarray, candidates: np.ndarray) -> float:
     """
     (Aux) Average prediction variance over candidates (for diagnostics).
 
@@ -239,7 +239,7 @@ def i_pred_variance(M, candidates):
     return float(np.mean(variances))
 
 
-def v_optimality(M, test_points):
+def v_optimality(M: np.ndarray, test_points: np.ndarray) -> float:
     r"""
     Compute V-optimality criterion for a given information matrix
     and test points.
@@ -268,7 +268,7 @@ def v_optimality(M, test_points):
     return -float(np.mean(variances))
 
 
-def s_optimality(M):
+def s_optimality(M: np.ndarray) -> float:
     r"""
     Compute S-optimality criterion for a given information matrix.
 
@@ -294,7 +294,7 @@ def s_optimality(M):
     return float(np.linalg.det(M) / np.prod(col_rms))
 
 
-def t_optimality(X, model_diff_subset):
+def t_optimality(X: np.ndarray, model_diff_subset: np.ndarray) -> float:
     r"""
     Compute T-optimality criterion for model discrimination at design points.
 

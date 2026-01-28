@@ -16,7 +16,7 @@ Abraham Lee.
 import numpy as np
 
 
-def repeat_center(n, repeat):
+def repeat_center(n: int, repeat: int) -> np.ndarray:
     """
     Create the center-point portion of a design matrix
 

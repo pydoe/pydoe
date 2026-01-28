@@ -6,7 +6,7 @@ import numpy as np
 __all__ = ["sukharev_grid"]
 
 
-def sukharev_grid(num_points, dimension):
+def sukharev_grid(num_points: int, dimension: int) -> np.ndarray:
     """Create Sukharev grid in unit hypercube.
 
     Special property of this grid is that points are not placed on the

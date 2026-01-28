@@ -20,7 +20,7 @@ from scipy.linalg import hankel, toeplitz
 __all__ = ["pbdesign"]
 
 
-def pbdesign(n):
+def pbdesign(n: int) -> np.ndarray:
     """
     Generate a Plackett-Burman design
 

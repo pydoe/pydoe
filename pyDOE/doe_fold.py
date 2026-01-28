@@ -19,7 +19,7 @@ import numpy as np
 __all__ = ["fold"]
 
 
-def fold(H, columns=None):
+def fold(H: np.ndarray, columns: np.ndarray = None) -> np.ndarray:
     """
     Fold a design to reduce confounding effects.
 

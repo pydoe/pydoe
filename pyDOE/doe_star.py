@@ -13,10 +13,18 @@ Much thanks goes to these individuals. It has been converted to Python by
 Abraham Lee.
 """
 
+from __future__ import annotations
+
+from typing import Literal, Tuple, Union
+
 import numpy as np
 
 
-def star(n, alpha="faced", center=(1, 1)):
+def star(
+    n: int,
+    alpha: Literal["faced", "orthogonal", "rotatable"] = "faced",
+    center: Union[np.ndarray[int], Tuple[int]] = (1, 1),
+) -> Tuple[np.ndarray, float]:
     """
     Create the star points of various design matrices
 

@@ -2,12 +2,17 @@
 Copyright (C) 2018 - Rickard Sjoegren
 """
 
+from __future__ import annotations
+
 import itertools
+from typing import Tuple
 
 import numpy as np
 
 
-def gsd(levels, reduction, n=1):
+def gsd(
+    levels: np.ndarray, reduction: int, n: int = 1
+) -> Tuple[np.ndarray, list[np.ndarray]]:
     """
     Create a Generalized Subset Design (GSD).
 
@@ -140,7 +145,9 @@ def gsd(levels, reduction, n=1):
         return designs[:n]
 
 
-def _make_orthogonal_arrays(latin_square, n_cols):
+def _make_orthogonal_arrays(
+    latin_square: np.ndarray, n_cols: int
+) -> list[np.ndarray]:
     """
     Augment latin-square to the specified number of columns to produce
     an orthogonal array.
@@ -176,7 +183,9 @@ def _make_orthogonal_arrays(latin_square, n_cols):
     return a_matrices
 
 
-def _map_partitions_to_design(partitions, orthogonal_array):
+def _map_partitions_to_design(
+    partitions: np.ndarray, orthogonal_array: np.ndarray
+) -> np.ndarray:
     """
     Map partitioned factor to final design using orthogonal-array produced
     by augmenting latin square.
@@ -211,7 +220,7 @@ def _map_partitions_to_design(partitions, orthogonal_array):
     return np.vstack(mappings)
 
 
-def _make_partitions(factor_levels, num_partitions):
+def _make_partitions(factor_levels: np.ndarray, num_partitions: int) -> list:
     """
     Balanced partitioning of factors.
 
@@ -238,7 +247,7 @@ def _make_partitions(factor_levels, num_partitions):
     return partitions
 
 
-def _make_latin_square(n):
+def _make_latin_square(n: int) -> np.ndarray:
     numbers = np.arange(n)
     latin_square = np.vstack([np.roll(numbers, -i) for i in range(n)])
     return latin_square

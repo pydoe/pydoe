@@ -4,7 +4,7 @@ from pyDOE.doe_optimal.criterion import regularized_inv
 from pyDOE.doe_optimal.utils import information_matrix
 
 
-def d_efficiency(X):
+def d_efficiency(X: np.ndarray) -> float:
     r"""
     Compute D-efficiency for a given design matrix.
 
@@ -32,7 +32,7 @@ def d_efficiency(X):
     return 100.0 * (det ** (1.0 / p))
 
 
-def a_efficiency(X):
+def a_efficiency(X: np.ndarray) -> float:
     r"""
     Compute A-efficiency for a given design matrix.
 

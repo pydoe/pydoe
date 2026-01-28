@@ -170,7 +170,7 @@ def simple_exchange_wynn_mitchell(  # noqa: PLR0913, PLR0917
 
     design = sequential_dykstra(candidates, n_points, degree, criterion, alpha)
 
-    def score(des):
+    def score(des: np.ndarray) -> float:
         X = build_design_matrix(des, degree)
         return criterion_value(X, criterion, X0, alpha, M_moment)
 
@@ -245,7 +245,7 @@ def fedorov(  # noqa: PLR0913, PLR0917
 
     design = sequential_dykstra(candidates, n_points, degree, criterion, alpha)
 
-    def score(des):
+    def score(des: np.ndarray) -> float:
         X = build_design_matrix(des, degree)
         return criterion_value(X, criterion, X0, alpha, M_moment)
 
@@ -318,7 +318,7 @@ def modified_fedorov(  # noqa: PLR0913, PLR0917
 
     design = sequential_dykstra(candidates, n_points, degree, criterion, alpha)
 
-    def score(des):
+    def score(des: np.ndarray) -> float:
         X = build_design_matrix(des, degree)
         return criterion_value(X, criterion, X0, alpha, M_moment)
 
@@ -396,7 +396,7 @@ def detmax(  # noqa: PLR0913, PLR0914, PLR0917
         candidates, n_points, degree, criterion, alpha
     )
 
-    def score(des):
+    def score(des: np.ndarray) -> float:
         X = build_design_matrix(des, degree)
         return criterion_value(X, criterion, X0, alpha, M_moment)
 

@@ -4,7 +4,9 @@ import numpy as np
 __all__ = ["rank1_lattice"]
 
 
-def rank1_lattice(num_points, dimension, generator_vector=None):
+def rank1_lattice(
+    num_points: int, dimension: int, generator_vector: np.ndarray = None
+) -> np.ndarray:
     """
     Generate a rank-1 lattice design matrix.
 

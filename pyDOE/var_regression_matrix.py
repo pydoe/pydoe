@@ -18,7 +18,9 @@ import numpy as np
 from .build_regression_matrix import build_regression_matrix
 
 
-def var_regression_matrix(H, x, model, sigma=1):
+def var_regression_matrix(
+    H: np.ndarray, x: np.ndarray, model: str, sigma: float = 1
+) -> float:
     """
     Compute the variance of the 'regression error'.
 

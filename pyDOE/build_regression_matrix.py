@@ -13,10 +13,14 @@ Much thanks goes to these individuals. It has been converted to Python by
 Abraham Lee.
 """
 
+from __future__ import annotations
+
+from typing import Any, Generator
+
 import numpy as np
 
 
-def grep(haystack, needle):
+def grep(haystack: list, needle: str) -> Generator[Any, Any, None]:
     start = 0
     while True:
         start = haystack.find(needle, start)
@@ -26,7 +30,9 @@ def grep(haystack, needle):
         start += len(needle)
 
 
-def build_regression_matrix(H, model, build=None):  # noqa: PLR0912
+def build_regression_matrix(  # noqa: PLR0912
+    H: np.ndarray, model: str, build: np.ndarray[np.bool_] = None
+) -> np.ndarray:
     """
     Build a regression matrix using a DOE matrix and a list of monomials.
 

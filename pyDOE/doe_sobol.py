@@ -18,6 +18,8 @@ evaluation of integrals.” *Zh. Vych. Mat. Mat. Fiz.*, 7: 784-802 (in Russian);
 *U.S.S.R. Comput. Maths. Math. Phys.*, 7: 86-112 (in English).
 """
 
+from typing import Optional
+
 import numpy as np
 from scipy.stats import qmc
 
@@ -26,8 +28,15 @@ __all__ = ["sobol_sequence"]
 
 
 def sobol_sequence(  # noqa: PLR0913
-    n, d, *, scramble=False, seed=None, bounds=None, skip=0, use_pow_of_2=True
-):
+    n: int,
+    d: int,
+    *,
+    scramble: bool = False,
+    seed: Optional[int] = None,
+    bounds: np.ndarray = None,
+    skip: int = 0,
+    use_pow_of_2: bool = True,
+) -> np.ndarray:
     """
     Generate a Sobol' sequence (quasi-random design matrix).
 

@@ -24,7 +24,9 @@ import numpy as np
 __all__ = ["halton_sequence"]
 
 
-def halton_sequence(num_points, dimension, skip=0):
+def halton_sequence(
+    num_points: int, dimension: int, skip: int = 0
+) -> np.ndarray:
     """
     Generate a Halton sequence in a given dimension.
 
@@ -61,7 +63,7 @@ def halton_sequence(num_points, dimension, skip=0):
     return samples
 
 
-def van_der_corput(index, base):
+def van_der_corput(index: int, base: int) -> float:
     """
     Compute a single value of the van der Corput sequence.
 
@@ -90,7 +92,7 @@ def van_der_corput(index, base):
     return result
 
 
-def next_primes(n):
+def next_primes(n: int) -> list:
     """
     Generate the first `n` prime numbers.
 
@@ -114,7 +116,7 @@ def next_primes(n):
     return primes
 
 
-def is_prime(n):
+def is_prime(n: int) -> bool:
     """
     Check whether a number is prime.
 

@@ -1,10 +1,16 @@
+from typing import Optional, Union
+
 import numpy as np
 
 
 __all__ = ["random_uniform"]
 
 
-def random_uniform(num_points, dimension, seed=None):
+def random_uniform(
+    num_points: int,
+    dimension: int,
+    seed: Optional[Union[int, np.random.Generator]] = None,
+) -> np.ndarray:
     """
     Generate random samples from a uniform distribution over [0, 1).
 

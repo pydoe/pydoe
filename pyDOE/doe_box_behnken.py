@@ -13,6 +13,8 @@ Much thanks goes to these individuals. It has been converted to Python by
 Abraham Lee.
 """
 
+from typing import Optional
+
 import numpy as np
 
 from pyDOE.doe_factorial import ff2n
@@ -22,7 +24,7 @@ from pyDOE.doe_repeat_center import repeat_center
 __all__ = ["bbdesign"]
 
 
-def bbdesign(n, center=None):
+def bbdesign(n: int, center: Optional[int] = None) -> np.ndarray:
     """
     Create a Box-Behnken design
 

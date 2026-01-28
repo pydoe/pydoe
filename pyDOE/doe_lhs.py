@@ -13,6 +13,7 @@ Much thanks goes to these individuals. It has been converted to Python by
 Abraham Lee.
 """
 
+from typing import Literal, Optional, Union
 from warnings import warn
 
 import numpy as np
@@ -24,14 +25,25 @@ __all__ = ["lhs"]
 
 
 def lhs(  # noqa: PLR0912, PLR0913, PLR0917
-    n,
-    samples=None,
-    criterion=None,
-    iterations=None,
-    random_state=None,
-    correlation_matrix=None,
-    seed=None,
-):
+    n: int,
+    samples: Optional[int] = None,
+    criterion: Optional[
+        Literal[
+            "center",
+            "c",
+            "maximin",
+            "m",
+            "centermaximin",
+            "cm",
+            "correlation",
+            "corr",
+        ]
+    ] = None,
+    iterations: Optional[int] = None,
+    random_state: Optional[Union[np.random.RandomState, int]] = None,
+    correlation_matrix: np.ndarray = None,
+    seed: Optional[Union[int, np.random.Generator]] = None,
+) -> np.ndarray:
     """
     Generate a latin-hypercube design
 
@@ -193,7 +205,11 @@ def lhs(  # noqa: PLR0912, PLR0913, PLR0917
 ################################################################################
 
 
-def _lhsclassic(n, samples, randomstate):
+def _lhsclassic(
+    n: int,
+    samples: int,
+    randomstate: Union[np.random.RandomState, np.random.Generator],
+) -> np.ndarray:
     # Generate the intervals
     cut = np.linspace(0, 1, samples + 1)
 
@@ -220,7 +236,11 @@ def _lhsclassic(n, samples, randomstate):
 ################################################################################
 
 
-def _lhscentered(n, samples, randomstate):
+def _lhscentered(
+    n: int,
+    samples: int,
+    randomstate: Union[np.random.RandomState, np.random.Generator],
+) -> np.ndarray:
     # Generate the intervals
     cut = np.linspace(0, 1, samples + 1)
 
@@ -245,7 +265,13 @@ def _lhscentered(n, samples, randomstate):
 ################################################################################
 
 
-def _lhsmaximin(n, samples, iterations, lhstype, randomstate):
+def _lhsmaximin(
+    n: int,
+    samples: int,
+    iterations: int,
+    lhstype: str,
+    randomstate: Union[np.random.RandomState, np.random.Generator],
+) -> np.ndarray:
     maxdist = 0
 
     # Maximize the minimum distance between points
@@ -266,7 +292,12 @@ def _lhsmaximin(n, samples, iterations, lhstype, randomstate):
 ################################################################################
 
 
-def _lhscorrelate(n, samples, iterations, randomstate):
+def _lhscorrelate(
+    n: int,
+    samples: int,
+    iterations: int,
+    randomstate: Union[np.random.RandomState, np.random.Generator],
+) -> np.ndarray:
     mincorr = np.inf
 
     # Minimize the components correlation coefficients
@@ -284,7 +315,13 @@ def _lhscorrelate(n, samples, iterations, randomstate):
 ################################################################################
 
 
-def _lhsmu(N, samples=None, corr=None, randomstate=None, M=5):  # noqa: PLR0914
+def _lhsmu(  # noqa: PLR0914
+    N: int,
+    samples: Optional[int] = None,
+    corr: np.ndarray = None,
+    randomstate: Union[np.random.RandomState, np.random.Generator] = None,
+    M: int = 5,
+) -> np.ndarray:
     if samples is None:
         samples = N
 

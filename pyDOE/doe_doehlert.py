@@ -28,7 +28,9 @@ import numpy as np
 __all__ = ["doehlert_shell_design", "doehlert_simplex_design"]
 
 
-def doehlert_shell_design(num_factors, num_center_points=1):
+def doehlert_shell_design(
+    num_factors: int, num_center_points: int = 1
+) -> np.ndarray:
     """
     Generate a Doehlert design matrix for a given number of factors
     using a shell approach.
@@ -86,7 +88,7 @@ def doehlert_shell_design(num_factors, num_center_points=1):
     return np.array(design_points)
 
 
-def doehlert_simplex_design(num_factors):
+def doehlert_simplex_design(num_factors: int) -> np.ndarray:
     """
     Generate a Doehlert design matrix using a simplex-based approach.
 

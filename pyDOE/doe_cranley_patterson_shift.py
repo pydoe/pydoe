@@ -17,13 +17,17 @@ Methods for Multiple Integration." *SIAM Journal on Numerical Analysis*,
 13(6): 904-914.
 """
 
+from typing import Optional
+
 import numpy as np
 
 
 __all__ = ["cranley_patterson_shift"]
 
 
-def cranley_patterson_shift(points, seed=None):
+def cranley_patterson_shift(
+    points: np.ndarray, seed: Optional[int] = None
+) -> np.ndarray:
     """
     Apply Cranley-Patterson rotation to quasi-random points.
 

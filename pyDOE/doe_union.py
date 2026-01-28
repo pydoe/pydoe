@@ -16,7 +16,7 @@ Abraham Lee.
 import numpy as np
 
 
-def union(H1, H2):
+def union(H1: np.ndarray, H2: np.ndarray) -> np.ndarray:
     """
     Join two matrices by stacking them on top of each other.
 

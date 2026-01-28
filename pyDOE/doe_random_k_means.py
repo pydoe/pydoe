@@ -1,17 +1,18 @@
+from typing import Callable, Optional, Union
 from warnings import warn
 
 import numpy as np
 
 
 def random_k_means(  # noqa: PLR0913, PLR0917
-    num_points,
-    dimension,
-    num_steps=None,
-    initial_points=None,
-    callback=None,
-    random_state=None,
-    seed=None,
-):
+    num_points: int,
+    dimension: int,
+    num_steps: Optional[int] = None,
+    initial_points: np.ndarray = None,
+    callback: Optional[Callable] = None,
+    random_state: Optional[int] = None,
+    seed: Optional[Union[int, np.random.Generator]] = None,
+) -> np.ndarray:
     """
     MacQueen's K-Means algorithm.
 

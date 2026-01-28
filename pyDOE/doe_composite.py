@@ -13,6 +13,12 @@ Much thanks goes to these individuals. It has been converted to Python by
 Abraham Lee.
 """
 
+from __future__ import annotations
+
+from typing import Literal, Tuple, Union
+
+import numpy as np
+
 from pyDOE.doe_factorial import ff2n
 from pyDOE.doe_repeat_center import repeat_center
 from pyDOE.doe_star import star
@@ -22,7 +28,14 @@ from pyDOE.doe_union import union
 __all__ = ["ccdesign"]
 
 
-def ccdesign(n, center=(4, 4), alpha="orthogonal", face="circumscribed"):
+def ccdesign(
+    n: int,
+    center: Union[np.ndarray[int], Tuple[int]] = (4, 4),
+    alpha: Literal["orthogonal", "o", "rotatable", "r"] = "orthogonal",
+    face: Literal[
+        "circumscribed", "ccc", "inscribed", "cci", "faced", "ccf"
+    ] = "circumscribed",
+) -> np.ndarray:
     """
     Central composite design
 
