@@ -56,7 +56,11 @@ class TestLhs(unittest.TestCase):
         ]
         with self.assertWarns(DeprecationWarning):
             actual = lhs(
-                4, samples=5, criterion="correlation", iterations=10, random_state=42
+                4,
+                samples=5,
+                criterion="correlation",
+                iterations=10,
+                random_state=42,
             )
             np.testing.assert_allclose(actual, expected)
 
@@ -115,7 +119,9 @@ class TestLhs(unittest.TestCase):
             [0.91091696, 0.76455232, 0.96552623, 0.585353],
             [0.72877302, 0.81276345, 0.17171958, 0.13947361],
         ]
-        actual = lhs(4, samples=5, criterion="correlation", iterations=10, seed=42)
+        actual = lhs(
+            4, samples=5, criterion="correlation", iterations=10, seed=42
+        )
         np.testing.assert_allclose(actual, expected)
 
     def test_lhs_lhsmu(self):

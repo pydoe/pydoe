@@ -18,6 +18,7 @@ import numpy as np
 from pyDOE.doe_factorial import ff2n
 from pyDOE.doe_repeat_center import repeat_center
 
+
 __all__ = ["bbdesign"]
 
 
@@ -40,8 +41,8 @@ def bbdesign(n, center=None):
     mat : 2d-array
         The design matrix
 
-    Example
-    -------
+    Examples
+    --------
     ::
 
         >>> bbdesign(3)
@@ -61,8 +62,13 @@ def bbdesign(n, center=None):
                [ 0.,  0.,  0.],
                [ 0.,  0.,  0.]])
 
+    Raises
+    ------
+    ValueError
+        If n is less than 3.
     """
-    assert n >= 3, "Number of variables must be at least 3"
+    if n < 3:
+        raise ValueError("Number of variables must be at least 3")
 
     # First, compute a factorial DOE with 2 parameters
     H_fact = ff2n(2)
@@ -71,19 +77,23 @@ def bbdesign(n, center=None):
     # We made a factorial design on each pair of dimensions
     # - So, we created a factorial design with two factors
     # - Make two loops
-    Index = 0
+    index = 0
     nb_lines = int((0.5 * n * (n - 1)) * H_fact.shape[0])
     H = repeat_center(n, nb_lines)
 
     for i in range(n - 1):
         for j in range(i + 1, n):
-            Index = Index + 1
-            H[max([0, (Index - 1) * H_fact.shape[0]]) : Index * H_fact.shape[0], i] = (
-                H_fact[:, 0]
-            )
-            H[max([0, (Index - 1) * H_fact.shape[0]]) : Index * H_fact.shape[0], j] = (
-                H_fact[:, 1]
-            )
+            index += 1
+            H[
+                max([0, (index - 1) * H_fact.shape[0]]) : index
+                * H_fact.shape[0],
+                i,
+            ] = H_fact[:, 0]
+            H[
+                max([0, (index - 1) * H_fact.shape[0]]) : index
+                * H_fact.shape[0],
+                j,
+            ] = H_fact[:, 1]
 
     if center is None:
         if n <= 16:

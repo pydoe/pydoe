@@ -1,6 +1,7 @@
 The evolution of PyDOE reflects contributions from multiple individuals and communities over time.
 
-## ![scidoe](./assets/images/scidoe_logo.png) Scilab Scidoe
+## Scilab Scidoe
+![scidoe](./assets/images/scidoe-logo.png)
 
 The code that eventually became PyDOE was originally developed for Scilab by:
 
@@ -15,6 +16,9 @@ The code that eventually became PyDOE was originally developed for Scilab by:
 <a href="https://atoms.scilab.org/toolboxes/scidoe" style="color: #484848;">atoms.scilab.org/toolboxes/scidoe</a>
 
 ## PyDOE
+![PyDOE](./assets/images/pydoe-banner.svg#only-light)
+![PyDOE](./assets/images/pydoe-banner-white.svg#only-dark)
+
 The original Scilab code was converted to Python and packaged as PyDOE by:
 
 - Copyright (c) 2014, Abraham D. Lee

@@ -13,18 +13,17 @@ Much thanks goes to these individuals. It has been converted to Python by
 Abraham Lee.
 """
 
-import numpy as np
-from scipy import spatial
-from scipy import stats
-from scipy import linalg
-from numpy import ma
-
 from warnings import warn
+
+import numpy as np
+from numpy import ma
+from scipy import linalg, spatial, stats
+
 
 __all__ = ["lhs"]
 
 
-def lhs(
+def lhs(  # noqa: PLR0912, PLR0913, PLR0917
     n,
     samples=None,
     criterion=None,
@@ -52,9 +51,10 @@ def lhs(
     iterations : int
         The number of iterations in the maximin and correlations algorithms
         (Default: 5).
-    randomstate : np.random.RandomState, int
-         DEPRECATED! It will be removed in a future release. Use seed parameter instead.
+    random_state : np.random.RandomState, int
          Random state (or seed-number) which controls the seed and random draws
+         DEPRECATED! It will be removed in a future release.
+         Use seed parameter instead.
     correlation_matrix : ndarray
          Enforce correlation between factors (only used in lhsmu)
     seed : int or np.random.Generator
@@ -66,8 +66,13 @@ def lhs(
         An n-by-samples design matrix that has been normalized so factor values
         are uniformly spaced between zero and one.
 
-    Example
-    -------
+    Raises
+    ------
+    ValueError
+        If input parameters are invalid.
+
+    Examples
+    --------
     A 3-factor design (defaults to 3 samples)::
 
         >>> lhs(3, seed=42)
@@ -146,7 +151,7 @@ def lhs(
         samples = n
 
     if criterion is not None:
-        if criterion.lower() not in (
+        if criterion.lower() not in {
             "center",
             "c",
             "maximin",
@@ -156,8 +161,8 @@ def lhs(
             "correlation",
             "corr",
             "lhsmu",
-        ):
-            raise ValueError('Invalid value for "criterion": {}'.format(criterion))
+        }:
+            raise ValueError(f'Invalid value for "criterion": {criterion}')
 
     else:
         H = _lhsclassic(n, samples, random_state)
@@ -168,13 +173,15 @@ def lhs(
         iterations = 5
 
     if H is None:
-        if criterion.lower() in ("center", "c"):
+        if criterion.lower() in {"center", "c"}:
             H = _lhscentered(n, samples, random_state)
-        elif criterion.lower() in ("maximin", "m"):
+        elif criterion.lower() in {"maximin", "m"}:
             H = _lhsmaximin(n, samples, iterations, "maximin", random_state)
-        elif criterion.lower() in ("centermaximin", "cm"):
-            H = _lhsmaximin(n, samples, iterations, "centermaximin", random_state)
-        elif criterion.lower() in ("correlation", "corr"):
+        elif criterion.lower() in {"centermaximin", "cm"}:
+            H = _lhsmaximin(
+                n, samples, iterations, "centermaximin", random_state
+            )
+        elif criterion.lower() in {"correlation", "corr"}:
             H = _lhscorrelate(n, samples, iterations, random_state)
         elif criterion.lower() in ("lhsmu"):
             # as specified by the paper. M is set to 5
@@ -225,12 +232,12 @@ def _lhscentered(n, samples, randomstate):
     )
     a = cut[:samples]
     b = cut[1 : samples + 1]
-    _center = (a + b) / 2
+    center = (a + b) / 2
 
     # Make the random pairings
     H = np.zeros_like(u)
     for j in range(n):
-        H[:, j] = randomstate.permutation(_center)
+        H[:, j] = randomstate.permutation(center)
 
     return H
 
@@ -242,16 +249,16 @@ def _lhsmaximin(n, samples, iterations, lhstype, randomstate):
     maxdist = 0
 
     # Maximize the minimum distance between points
-    for i in range(iterations):
+    for _ in range(iterations):
         if lhstype == "maximin":
-            Hcandidate = _lhsclassic(n, samples, randomstate)
+            H_candidate = _lhsclassic(n, samples, randomstate)
         else:
-            Hcandidate = _lhscentered(n, samples, randomstate)
+            H_candidate = _lhscentered(n, samples, randomstate)
 
-        d = spatial.distance.pdist(Hcandidate, "euclidean")
+        d = spatial.distance.pdist(H_candidate, "euclidean")
         if maxdist < np.min(d):
             maxdist = np.min(d)
-            H = Hcandidate.copy()
+            H = H_candidate.copy()
 
     return H
 
@@ -263,13 +270,13 @@ def _lhscorrelate(n, samples, iterations, randomstate):
     mincorr = np.inf
 
     # Minimize the components correlation coefficients
-    for i in range(iterations):
+    for _ in range(iterations):
         # Generate a random LHS
-        Hcandidate = _lhsclassic(n, samples, randomstate)
-        R = np.corrcoef(Hcandidate.T)
+        H_candidate = _lhsclassic(n, samples, randomstate)
+        R = np.corrcoef(H_candidate.T)
         if np.max(np.abs(R[R != 1])) < mincorr:
             mincorr = np.max(np.abs(R - np.eye(R.shape[0])))
-            H = Hcandidate.copy()
+            H = H_candidate.copy()
 
     return H
 
@@ -277,11 +284,11 @@ def _lhscorrelate(n, samples, iterations, randomstate):
 ################################################################################
 
 
-def _lhsmu(N, samples=None, corr=None, randomstate=None, M=5):
+def _lhsmu(N, samples=None, corr=None, randomstate=None, M=5):  # noqa: PLR0914
     if samples is None:
         samples = N
 
-    I = M * samples  # noqa
+    I = M * samples  # noqa: E741
 
     rdpoints = randomstate.uniform(size=(I, N))
 
@@ -306,10 +313,14 @@ def _lhsmu(N, samples=None, corr=None, randomstate=None, M=5):
 
     if corr is not None:
         # check if covariance matrix is valid
-        assert type(corr) is np.ndarray
-        assert corr.ndim == 2
-        assert corr.shape[0] == corr.shape[1]
-        assert corr.shape[0] == N
+        if type(corr) is not np.ndarray:
+            raise TypeError("corr must be a numpy array")
+        if corr.ndim != 2:
+            raise ValueError("corr must be 2-dimensional")
+        if corr.shape[0] != corr.shape[1]:
+            raise ValueError("corr must be square matrix")
+        if corr.shape[0] != N:
+            raise ValueError(f"corr shape {corr.shape[0]} does not match N={N}")
 
         norm_u = stats.norm().ppf(rdpoints)
         L = linalg.cholesky(corr, lower=True)
@@ -321,7 +332,7 @@ def _lhsmu(N, samples=None, corr=None, randomstate=None, M=5):
         H = np.zeros_like(rdpoints, dtype=float)
         rank = np.argsort(rdpoints, axis=0)
 
-        for l in range(samples):  # noqa
+        for l in range(samples):  # noqa: E741
             low = float(l) / samples
             high = float(l + 1) / samples
 

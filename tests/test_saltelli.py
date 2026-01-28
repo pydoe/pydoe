@@ -1,6 +1,8 @@
 import unittest
-import numpy as np
 import warnings
+
+import numpy as np
+
 from pyDOE.doe_saltelli import saltelli_sampling
 from pyDOE.utils import scale_samples
 
@@ -38,7 +40,9 @@ class TestSaltelliSampling(unittest.TestCase):
         self.assertTrue(np.all(scaled_samples[:, 2] <= 1.5))
 
     def test_saltelli_no_second_order(self):
-        samples = saltelli_sampling(num_vars=3, N=4, calc_second_order=False, seed=42)
+        samples = saltelli_sampling(
+            num_vars=3, N=4, calc_second_order=False, seed=42
+        )
 
         expected_shape = (4 * (3 + 2), 3)
         self.assertEqual(samples.shape, expected_shape)
@@ -53,7 +57,9 @@ class TestSaltelliSampling(unittest.TestCase):
         np.testing.assert_array_equal(samples1, samples2)
 
     def test_saltelli_scrambling(self):
-        samples_scrambled = saltelli_sampling(num_vars=2, N=4, scramble=True, seed=42)
+        samples_scrambled = saltelli_sampling(
+            num_vars=2, N=4, scramble=True, seed=42
+        )
 
         samples_unscrambled = saltelli_sampling(
             num_vars=2, N=4, scramble=False, seed=42
@@ -115,7 +121,9 @@ class TestSaltelliSampling(unittest.TestCase):
 
     def test_saltelli_matrix_structure(self):
         N = 2
-        samples = saltelli_sampling(num_vars=2, N=N, calc_second_order=False, seed=42)
+        samples = saltelli_sampling(
+            num_vars=2, N=N, calc_second_order=False, seed=42
+        )
 
         expected_shape = (N * (2 + 2), 2)
         self.assertEqual(samples.shape, expected_shape)

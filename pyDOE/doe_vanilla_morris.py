@@ -26,16 +26,15 @@ References
 """
 
 from typing import Optional
+
 import numpy as np
+
 
 __all__ = ["morris_sampling"]
 
 
 def morris_sampling(
-    num_vars: int,
-    N: int,
-    num_levels: int = 4,
-    seed: Optional[int] = None,
+    num_vars: int, N: int, num_levels: int = 4, seed: Optional[int] = None
 ) -> np.ndarray:
     """
     Generate samples using the Morris Method (Vanilla, no optimization).
@@ -55,6 +54,11 @@ def morris_sampling(
     -------
     samples : ndarray
         Matrix of shape (N * (num_vars + 1), num_vars) with Morris samples.
+
+    Raises
+    ------
+    ValueError
+        If num_levels is not even.
     """
     if num_levels % 2 != 0:
         raise ValueError("num_levels must be an even number")

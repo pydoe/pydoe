@@ -1,32 +1,34 @@
 import unittest
+
 import numpy as np
+
 from pyDOE.doe_optimal import (
-    optimal_design,
-    generate_candidate_set,
+    a_efficiency,
+    a_optimality,
     build_design_matrix,
     build_uniform_moment_matrix,
+    c_optimality,
+    criterion_value,
+    d_efficiency,
+    d_optimality,
+    detmax,
+    e_optimality,
+    fedorov,
+    g_optimality,
+    generate_candidate_set,
+    i_optimality,
+    information_matrix,
+    modified_fedorov,
+    optimal_design,
+    s_optimality,
     sequential_dykstra,
     simple_exchange_wynn_mitchell,
-    fedorov,
-    modified_fedorov,
-    detmax,
-    d_optimality,
-    a_optimality,
-    i_optimality,
-    c_optimality,
-    e_optimality,
-    g_optimality,
-    v_optimality,
-    s_optimality,
     t_optimality,
-    d_efficiency,
-    a_efficiency,
-    information_matrix,
-    criterion_value,
+    v_optimality,
 )
 
 
-class TestOptimalDesign(unittest.TestCase):
+class TestOptimalDesign(unittest.TestCase):  # noqa: PLR0904
     def setUp(self):
         np.random.seed(42)
         self.candidates_2d = generate_candidate_set(
@@ -62,25 +64,13 @@ class TestOptimalDesign(unittest.TestCase):
 
     def test_build_design_matrix_linear(self):
         points = np.array([[0, 0], [1, 0], [0, 1], [1, 1]])
-        expected = np.array(
-            [
-                [1, 0, 0],
-                [1, 1, 0],
-                [1, 0, 1],
-                [1, 1, 1],
-            ]
-        )
+        expected = np.array([[1, 0, 0], [1, 1, 0], [1, 0, 1], [1, 1, 1]])
         actual = build_design_matrix(points, degree=1)
         np.testing.assert_allclose(actual, expected)
 
     def test_build_design_matrix_quadratic(self):
         points = np.array([[0, 0], [1, 1]])
-        expected = np.array(
-            [
-                [1, 0, 0, 0, 0, 0],
-                [1, 1, 1, 1, 1, 1],
-            ]
-        )
+        expected = np.array([[1, 0, 0, 0, 0, 0], [1, 1, 1, 1, 1, 1]])
         actual = build_design_matrix(points, degree=2)
         np.testing.assert_allclose(actual, expected)
 
@@ -378,7 +368,7 @@ class TestOptimalDesign(unittest.TestCase):
         self.assertEqual(info["p_columns"], expected_params)
 
     def test_3d_design_space(self):
-        design, info = optimal_design(
+        design, _info = optimal_design(
             candidates=self.candidates_3d,
             n_points=15,
             degree=2,
@@ -396,7 +386,7 @@ class TestOptimalDesign(unittest.TestCase):
 
     def test_error_handling_insufficient_points(self):
         try:
-            design, info = optimal_design(
+            design, _info = optimal_design(
                 candidates=self.candidates_2d[:10],
                 n_points=3,
                 degree=1,
@@ -404,7 +394,7 @@ class TestOptimalDesign(unittest.TestCase):
                 method="sequential",
             )
             self.assertEqual(design.shape, (3, 2))
-        except Exception as e:
+        except (ValueError, RuntimeError) as e:
             self.assertIn("singular", str(e).lower())
 
     def test_error_handling_unknown_criterion(self):
@@ -448,7 +438,7 @@ class TestOptimalDesign(unittest.TestCase):
         self.assertAlmostEqual(info1["score"], info2["score"])
 
     def test_augmentation_parameter_effect(self):
-        design1, info1 = optimal_design(
+        design1, _info1 = optimal_design(
             candidates=self.candidates_2d,
             n_points=8,
             degree=2,
@@ -457,7 +447,7 @@ class TestOptimalDesign(unittest.TestCase):
             alpha=0.0,
         )
 
-        design2, info2 = optimal_design(
+        design2, _info2 = optimal_design(
             candidates=self.candidates_2d,
             n_points=8,
             degree=2,
@@ -469,7 +459,7 @@ class TestOptimalDesign(unittest.TestCase):
         self.assertFalse(np.allclose(design1, design2))
 
     def test_efficiency_bounds(self):
-        design, info = optimal_design(
+        _design, info = optimal_design(
             candidates=self.candidates_2d,
             n_points=10,
             degree=2,
@@ -488,7 +478,8 @@ class TestOptimalDesign(unittest.TestCase):
         for criterion in criteria:
             with self.subTest(criterion=criterion):
                 try:
-                    # Use more design points and lower degree to avoid singular matrices
+                    # Use more design points and lower degree to
+                    # avoid singular matrices
                     design, info = optimal_design(
                         candidates=self.candidates_2d,
                         n_points=10,  # More points
@@ -526,15 +517,21 @@ class TestOptimalDesign(unittest.TestCase):
 
                     print(
                         f"Criterion {criterion}: Score={info['score']:.4f}, "
-                        f"D_eff={info['D_eff']:.2f}%, A_eff={info['A_eff']:.2f}%"
+                        f"D_eff={info['D_eff']:.2f}%, "
+                        f"A_eff={info['A_eff']:.2f}%"
                     )
 
-                except Exception as e:
-                    # For problematic criteria, try with even more regularization
-                    if criterion in ["C", "V", "T"] and "singular" in str(e).lower():
+                except (ValueError, RuntimeError) as e:
+                    # For problematic criteria, try with
+                    # even more regularization
+                    if (
+                        criterion in {"C", "V", "T"}
+                        and "singular" in str(e).lower()
+                    ):
                         try:
                             print(
-                                f"Retrying criterion {criterion} with higher regularization..."
+                                f"Retrying criterion {criterion} "
+                                "with higher regularization ..."
                             )
                             design, info = optimal_design(
                                 candidates=self.candidates_2d,
@@ -549,22 +546,24 @@ class TestOptimalDesign(unittest.TestCase):
                             self.assertEqual(design.shape, (12, 2))
                             self.assertEqual(info["criterion"], criterion)
                             print(
-                                f"Criterion {criterion} (retry): Score={info['score']:.4f}, "
-                                f"D_eff={info['D_eff']:.2f}%, A_eff={info['A_eff']:.2f}%"
+                                f"Criterion {criterion} (retry): "
+                                f"Score={info['score']:.4f}, "
+                                f"D_eff={info['D_eff']:.2f}%, "
+                                f"A_eff={info['A_eff']:.2f}%"
                             )
 
-                        except Exception as e2:
+                        except (ValueError, RuntimeError) as e2:
                             print(
-                                f"Criterion {criterion} failed even with regularization: {str(e2)}"
+                                f"Criterion {criterion} failed even with"
+                                f" regularization: {e2!s}"
                             )
                             # Don't fail the test, just report the issue
-                            pass
                     else:
-                        self.fail(f"Failed for criterion {criterion}: {str(e)}")
+                        self.fail(f"Failed for criterion {criterion}: {e!s}")
 
     def test_robust_criteria_individually(self):
         # Test D-optimality
-        design, info = optimal_design(
+        _, info = optimal_design(
             candidates=self.candidates_2d,
             n_points=8,
             degree=2,
@@ -576,7 +575,7 @@ class TestOptimalDesign(unittest.TestCase):
         self.assertFalse(np.isnan(info["score"]))
 
         # Test A-optimality
-        design, info = optimal_design(
+        _, info = optimal_design(
             candidates=self.candidates_2d,
             n_points=8,
             degree=2,
@@ -588,7 +587,7 @@ class TestOptimalDesign(unittest.TestCase):
         self.assertFalse(np.isnan(info["score"]))
 
         # Test I-optimality
-        design, info = optimal_design(
+        _, info = optimal_design(
             candidates=self.candidates_2d,
             n_points=8,
             degree=2,
@@ -600,7 +599,7 @@ class TestOptimalDesign(unittest.TestCase):
         self.assertFalse(np.isnan(info["score"]))
 
         # Test E-optimality
-        design, info = optimal_design(
+        _, info = optimal_design(
             candidates=self.candidates_2d,
             n_points=8,
             degree=2,
@@ -612,7 +611,7 @@ class TestOptimalDesign(unittest.TestCase):
         self.assertFalse(np.isnan(info["score"]))
 
         # Test G-optimality
-        design, info = optimal_design(
+        _, info = optimal_design(
             candidates=self.candidates_2d,
             n_points=10,
             degree=2,
@@ -624,7 +623,7 @@ class TestOptimalDesign(unittest.TestCase):
         self.assertFalse(np.isnan(info["score"]))
 
         # Test S-optimality
-        design, info = optimal_design(
+        _, info = optimal_design(
             candidates=self.candidates_2d,
             n_points=8,
             degree=2,
@@ -636,7 +635,7 @@ class TestOptimalDesign(unittest.TestCase):
         self.assertFalse(np.isnan(info["score"]))
 
         # Test C-optimality (linear model to avoid singularity)
-        design, info = optimal_design(
+        _, info = optimal_design(
             candidates=self.candidates_2d,
             n_points=6,
             degree=1,  # Linear model
@@ -648,7 +647,7 @@ class TestOptimalDesign(unittest.TestCase):
         self.assertFalse(np.isnan(info["score"]))
 
         # Test V-optimality (linear model)
-        design, info = optimal_design(
+        _, info = optimal_design(
             candidates=self.candidates_2d,
             n_points=8,
             degree=1,  # Linear model
@@ -661,7 +660,7 @@ class TestOptimalDesign(unittest.TestCase):
 
         # Test T-optimality (linear model) - handle potential singularity
         try:
-            design, info = optimal_design(
+            _, info = optimal_design(
                 candidates=self.candidates_2d,
                 n_points=8,
                 degree=1,  # Linear model
@@ -673,9 +672,10 @@ class TestOptimalDesign(unittest.TestCase):
             self.assertFalse(np.isnan(info["score"]))
         except Exception as e:
             if "singular" in str(e).lower():
-                print(f"T-optimality test skipped due to singularity issue: {str(e)}")
+                print(
+                    f"T-optimality test skipped due to singularity issue: {e!s}"
+                )
                 # This is expected for T-optimality in some cases
-                pass
             else:
                 raise e
 
@@ -705,12 +705,13 @@ class TestOptimalDesign(unittest.TestCase):
         print("-" * 60)
         for criterion, result in results.items():
             print(
-                f"{criterion:8} | {result['score']:10.4f} | {result['D_eff']:6.2f} | "
+                f"{criterion:8} | {result['score']:10.4f} | "
+                f"{result['D_eff']:6.2f} | "
                 f"{result['A_eff']:6.2f} | {result['n_unique']:13}"
             )
 
         # All should produce valid designs
-        for criterion, result in results.items():
+        for _, result in results.items():
             self.assertGreaterEqual(result["D_eff"], 0)
             self.assertGreaterEqual(result["A_eff"], 0)
             self.assertGreaterEqual(
@@ -747,9 +748,10 @@ class TestOptimalDesign(unittest.TestCase):
                         self.assertEqual(info["method"], method)
                         self.assertFalse(np.isnan(info["score"]))
 
-                    except Exception as e:
+                    except (ValueError, RuntimeError) as e:
                         self.fail(
-                            f"Failed for criterion {criterion} with method {method}: {str(e)}"
+                            f"Failed for criterion {criterion} with "
+                            f"method {method}: {e!s}"
                         )
 
     def test_criterion_specific_parameters(self):
@@ -811,8 +813,8 @@ class TestOptimalDesign(unittest.TestCase):
                     self.assertEqual(info["criterion"], criterion)
                     self.assertFalse(np.isnan(info["score"]))
 
-                except Exception as e:
-                    self.fail(f"Failed for criterion {criterion} in 3D: {str(e)}")
+                except (ValueError, RuntimeError) as e:
+                    self.fail(f"Failed for criterion {criterion} in 3D: {e!s}")
 
     def test_criteria_convergence(self):
         criteria = ["D", "A", "I"]
@@ -820,7 +822,7 @@ class TestOptimalDesign(unittest.TestCase):
         for criterion in criteria:
             with self.subTest(criterion=criterion):
                 # Short run
-                design1, info1 = optimal_design(
+                _design1, _info1 = optimal_design(
                     candidates=self.candidates_2d,
                     n_points=6,
                     degree=2,
@@ -830,7 +832,7 @@ class TestOptimalDesign(unittest.TestCase):
                 )
 
                 # Longer run
-                design2, info2 = optimal_design(
+                _design2, _info2 = optimal_design(
                     candidates=self.candidates_2d,
                     n_points=6,
                     degree=2,
@@ -839,14 +841,14 @@ class TestOptimalDesign(unittest.TestCase):
                     max_iter=100,
                 )
 
-    def test_all_nine_criteria_comprehensive_with_regularization(self):
+    def test_all_nine_criteria_comprehensive_with_regularization(self):  # noqa: PLR0912, PLR0915
         criteria = ["D", "A", "I", "C", "E", "G", "V", "S", "T"]
         results = {}
 
         for criterion in criteria:
             with self.subTest(criterion=criterion):
                 try:
-                    if criterion in ["D", "A", "I", "E", "G", "S"]:
+                    if criterion in {"D", "A", "I", "E", "G", "S"}:
                         # Robust criteria - use standard settings
                         design, info = optimal_design(
                             candidates=self.candidates_2d,
@@ -908,18 +910,23 @@ class TestOptimalDesign(unittest.TestCase):
 
                     print(
                         f"{criterion}-optimality: Score={info['score']:8.4f}, "
-                        f"D_eff={info['D_eff']:5.1f}%, A_eff={info['A_eff']:5.1f}%, "
+                        f"D_eff={info['D_eff']:5.1f}%, "
+                        f"A_eff={info['A_eff']:5.1f}%, "
                         f"Method={info['method']}, Alpha={info['alpha']}"
                     )
 
-                except Exception as e:
+                except (ValueError, RuntimeError) as e:
                     results[criterion] = {"success": False, "error": str(e)}
-                    print(f"{criterion}-optimality: FAILED - {str(e)}")
+                    print(f"{criterion}-optimality: FAILED - {e!s}")
                     # Don't fail the test, just record the failure
 
         # Summary
-        successful_criteria = [c for c, r in results.items() if r.get("success", False)]
-        failed_criteria = [c for c, r in results.items() if not r.get("success", False)]
+        successful_criteria = [
+            c for c, r in results.items() if r.get("success", False)
+        ]
+        failed_criteria = [
+            c for c, r in results.items() if not r.get("success", False)
+        ]
 
         print("\n" + "=" * 50)
         print("Summary")
@@ -931,7 +938,9 @@ class TestOptimalDesign(unittest.TestCase):
 
         # Performance comparison table
         if successful_criteria:
-            print("Criterion | Score      | D-Eff  | A-Eff  | Method      | Alpha")
+            print(
+                "Criterion | Score      | D-Eff  | A-Eff  | Method      | Alpha"
+            )
             print("-" * 70)
             for criterion in successful_criteria:
                 r = results[criterion]
@@ -957,11 +966,13 @@ class TestOptimalDesign(unittest.TestCase):
                     self.assertEqual(design.shape[1], 3)  # 3D design space
                     self.assertFalse(np.isnan(info["score"]))
                     print(
-                        f"{criterion}-optimality (3D): D_eff={info['D_eff']:5.1f}%, A_eff={info['A_eff']:5.1f}%"
+                        f"{criterion}-optimality (3D): "
+                        f"D_eff={info['D_eff']:5.1f}%, "
+                        f"A_eff={info['A_eff']:5.1f}%"
                     )
 
-                except Exception as e:
-                    print(f"{criterion}-optimality (3D): {str(e)}")
+                except (ValueError, RuntimeError) as e:
+                    print(f"{criterion}-optimality (3D): {e!s}")
 
         algorithms = [
             "sequential",
@@ -983,21 +994,26 @@ class TestOptimalDesign(unittest.TestCase):
                         max_iter=30,
                     )
                     print(
-                        f"{algorithm:15}: D_eff={info['D_eff']:5.1f}%, A_eff={info['A_eff']:5.1f}%"
+                        f"{algorithm:15}: D_eff={info['D_eff']:5.1f}%, "
+                        f"A_eff={info['A_eff']:5.1f}%"
                     )
-                except Exception as e:
-                    print(f"{algorithm:15}: {str(e)}")
+                except (ValueError, RuntimeError) as e:
+                    print(f"{algorithm:15}: {e!s}")
 
         # Ensure at least the robust criteria work
         self.assertGreaterEqual(
-            len(successful_criteria), 6, "At least 6 robust criteria should work"
+            len(successful_criteria),
+            6,
+            "At least 6 robust criteria should work",
         )
 
         # Ensure no infinite or NaN scores for successful criteria
         for criterion in successful_criteria:
             score = results[criterion]["score"]
             self.assertFalse(np.isnan(score), f"{criterion} produced NaN score")
-            self.assertFalse(np.isinf(score), f"{criterion} produced infinite score")
+            self.assertFalse(
+                np.isinf(score), f"{criterion} produced infinite score"
+            )
 
 
 if __name__ == "__main__":

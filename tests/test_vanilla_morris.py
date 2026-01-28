@@ -1,5 +1,7 @@
 import unittest
+
 import numpy as np
+
 from pyDOE.doe_vanilla_morris import morris_sampling
 from pyDOE.utils import scale_samples
 
@@ -53,7 +55,9 @@ class TestMorrisSampling(unittest.TestCase):
         with self.assertRaises(ValueError) as context:
             morris_sampling(num_vars=2, N=1, num_levels=5, seed=42)
 
-        self.assertIn("num_levels must be an even number", str(context.exception))
+        self.assertIn(
+            "num_levels must be an even number", str(context.exception)
+        )
 
     def test_morris_trajectory_structure(self):
         samples = morris_sampling(num_vars=2, N=1, num_levels=4, seed=42)
@@ -67,7 +71,8 @@ class TestMorrisSampling(unittest.TestCase):
             self.assertEqual(
                 non_zero_diffs,
                 1,
-                f"Points {i} and {i + 1} should differ in exactly one coordinate",
+                f"Points {i} and {i + 1} should differ "
+                "in exactly one coordinate",
             )
 
     def test_morris_large_dimension(self):

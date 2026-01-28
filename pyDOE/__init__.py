@@ -47,10 +47,7 @@ from pyDOE.doe_random_uniform import random_uniform
 from pyDOE.doe_rank1 import rank1_lattice
 from pyDOE.doe_saltelli import saltelli_sampling
 from pyDOE.doe_sobol import sobol_sequence
-from pyDOE.doe_sparse_grid import (
-    doe_sparse_grid,
-    sparse_grid_dimension,
-)
+from pyDOE.doe_sparse_grid import doe_sparse_grid, sparse_grid_dimension
 from pyDOE.doe_taguchi import (
     TaguchiObjective,
     compute_snr,
@@ -63,44 +60,45 @@ from pyDOE.grid_designs import sukharev_grid
 from pyDOE.utils import scale_samples
 from pyDOE.var_regression_matrix import var_regression_matrix
 
-try:
+
+try:  # noqa: RUF067
     __version__ = version(__name__)
 except PackageNotFoundError:
     __version__ = "unknown"
 
 __all__ = [
+    "TaguchiObjective",
+    "alias_vector_indices",
     "bbdesign",
     "ccdesign",
-    "fullfact",
-    "ff2n",
-    "fracfact",
-    "fracfact_by_res",
-    "fracfact_opt",
-    "fracfact_aliasing",
-    "alias_vector_indices",
-    "lhs",
-    "fold",
-    "pbdesign",
-    "var_regression_matrix",
-    "gsd",
-    "taguchi_design",
-    "TaguchiObjective",
     "compute_snr",
-    "list_orthogonal_arrays",
-    "get_orthogonal_array",
+    "cranley_patterson_shift",
+    "doe_sparse_grid",
     "doehlert_shell_design",
     "doehlert_simplex_design",
-    "sukharev_grid",
-    "cranley_patterson_shift",
+    "ff2n",
+    "fold",
+    "fracfact",
+    "fracfact_aliasing",
+    "fracfact_by_res",
+    "fracfact_opt",
+    "fullfact",
+    "get_orthogonal_array",
+    "gsd",
     "halton_sequence",
-    "sobol_sequence",
-    "rank1_lattice",
     "korobov_sequence",
+    "lhs",
+    "list_orthogonal_arrays",
+    "morris_sampling",
+    "pbdesign",
     "random_k_means",
     "random_uniform",
-    "morris_sampling",
+    "rank1_lattice",
     "saltelli_sampling",
     "scale_samples",
-    "doe_sparse_grid",
+    "sobol_sequence",
     "sparse_grid_dimension",
+    "sukharev_grid",
+    "taguchi_design",
+    "var_regression_matrix",
 ]

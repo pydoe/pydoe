@@ -17,13 +17,12 @@ Interpolation Toolbox by:
 """
 
 import itertools
-import numpy as np
 from typing import Literal
 
-__all__ = [
-    "doe_sparse_grid",
-    "sparse_grid_dimension",
-]
+import numpy as np
+
+
+__all__ = ["doe_sparse_grid", "sparse_grid_dimension"]
 
 
 def doe_sparse_grid(
@@ -42,13 +41,18 @@ def doe_sparse_grid(
         Sparse grid level. Higher levels provide more points.
     n_factors : int
         Number of factors/dimensions in the design space.
-    grid_type : {'clenshaw_curtis', 'chebyshev', 'gauss_patterson'}, default 'clenshaw_curtis'
-        Type of 1D grid points to use.
+    grid_type : {'clenshaw_curtis', 'chebyshev', 'gauss_patterson'},
+                default 'clenshaw_curtis' Type of 1D grid points to use.
 
     Returns
     -------
     design : ndarray of shape (n_points, n_factors)
         Sparse grid design points in the unit hypercube [0, 1]^n_factors.
+
+    Raises
+    ------
+    ValueError
+        If n_level is negative or n_factors is less than 1.
 
     References
     ----------
@@ -81,6 +85,11 @@ def sparse_grid_dimension(n_level: int, n_factors: int) -> int:
     -------
     n_points : int
         Number of points in the sparse grid.
+
+    Raises
+    ------
+    ValueError
+        If n_level is negative or n_factors is less than 1.
     """
     if n_level < 0:
         raise ValueError("n_level must be non-negative")
@@ -90,11 +99,23 @@ def sparse_grid_dimension(n_level: int, n_factors: int) -> int:
     return _spdim_formula(n_level, n_factors)
 
 
-def _spdim_formula(n: int, d: int) -> int:
+def _spdim_formula(n: int, d: int) -> int:  # noqa: PLR0911
     """
     Sparse grid dimension formulas from MATLAB spinterp spdim function.
 
     Based on Schreiber (2000) polynomial formulas.
+
+    Parameters
+    ----------
+    n : int
+        Sparse grid level.
+    d : int
+        Number of dimensions.
+
+    Returns
+    -------
+    int
+        Number of points in the sparse grid.
     """
     if n == 0:
         return 1
@@ -108,12 +129,22 @@ def _spdim_formula(n: int, d: int) -> int:
         return round((2 * d**4 + 4 * d**3 + 22 * d**2 + 20 * d) / 3) + 1
     elif n == 5:
         return (
-            round((4 * d**5 + 10 * d**4 + 100 * d**3 + 170 * d**2 + 196 * d) / 15) + 1
+            round(
+                (4 * d**5 + 10 * d**4 + 100 * d**3 + 170 * d**2 + 196 * d) / 15
+            )
+            + 1
         )
     elif n == 6:
         return (
             round(
-                (4 * d**6 + 12 * d**5 + 190 * d**4 + 480 * d**3 + 1246 * d**2 + 948 * d)
+                (
+                    4 * d**6
+                    + 12 * d**5
+                    + 190 * d**4
+                    + 480 * d**3
+                    + 1246 * d**2
+                    + 948 * d
+                )
                 / 45
             )
             + 1
@@ -136,7 +167,7 @@ def _spdim_formula(n: int, d: int) -> int:
         )
 
 
-def _generate_sparse_grid_points(
+def _generate_sparse_grid_points(  # noqa: PLR0912
     n_level: int, n_factors: int, grid_type: str
 ) -> np.ndarray:
     target_count = _spdim_formula(n_level, n_factors)
@@ -159,14 +190,14 @@ def _generate_sparse_grid_points(
                 points.append(point)
 
     # Level 2+: structured interior points
-    if n_level >= 2:
+    if n_level >= 2:  # noqa: PLR1702
         grid_size = min(n_level + 2, 7)
         coords = np.linspace(0, 1, grid_size)
 
         # Single-dimension variations
         for dim in range(n_factors):
             for coord in coords:
-                if coord not in [0.0, 0.5, 1.0]:
+                if coord not in {0.0, 0.5, 1.0}:
                     point = [0.5] * n_factors
                     point[dim] = coord
                     points.append(point)

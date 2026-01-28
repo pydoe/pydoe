@@ -3,23 +3,23 @@ This module implements the Doehlert experimental design.
 
 An alternative and very useful design for fitting second-order models
 is the uniform shell design proposed by Doehlert in 1970 (Doehlert 1970).
-Doehlert designs are particularly advantageous for optimizing multiple variables,
-offering a more efficient alternative to central composite designs. They require
-fewer experimental runs while maintaining flexibility to explore the experimental
-domain effectively.
+Doehlert designs are particularly advantageous for optimizing multiple
+variables, offering a more efficient alternative to central composite designs.
+They require fewer experimental runs while maintaining flexibility to explore
+the experimental domain effectively.
 
-The Doehlert design defines a spherical experimental domain and emphasizes uniform
-space filling. Although the resulting matrix is neither orthogonal nor rotatable,
-its variance properties are generally acceptable and do not compromise its
-effectiveness in practical applications.
+The Doehlert design defines a spherical experimental domain and emphasizes
+uniform space filling. Although the resulting matrix is neither orthogonal
+nor rotatable, its variance properties are generally acceptable and do not
+compromise its effectiveness in practical applications.
 
 References
 ----------
-Doehlert, David H. 1970. “Uniform Shell Designs.” *Applied Statistics* 19 (3): 231.
-https://doi.org/10.2307/2346327
+Doehlert, David H. 1970. “Uniform Shell Designs.” *Applied Statistics*
+19 (3): 231. https://doi.org/10.2307/2346327
 
-Implementation of simplex design (`version 1.0.0`, 11 July 2015) by Moritz von Stosch
-https://www.mathworks.com/matlabcentral/fileexchange/54048-doehlert-design
+Implementation of simplex design (`version 1.0.0`, 11 July 2015) by Moritz von
+Stosch https://www.mathworks.com/matlabcentral/fileexchange/54048-doehlert-design
 """
 
 import numpy as np
@@ -30,7 +30,8 @@ __all__ = ["doehlert_shell_design", "doehlert_simplex_design"]
 
 def doehlert_shell_design(num_factors, num_center_points=1):
     """
-    Generate a Doehlert design matrix for a given number of factors using a shell approach.
+    Generate a Doehlert design matrix for a given number of factors
+    using a shell approach.
 
     Parameters
     ----------
@@ -50,6 +51,11 @@ def doehlert_shell_design(num_factors, num_center_points=1):
         - $$k$$ the number of factors,
         - $$C$$ the number of center points.
 
+    Raises
+    ------
+    ValueError
+        If num_factors is less than 1.
+
     Notes
     -----
     This function implements the "uniform shell" approach originally proposed by
@@ -57,8 +63,8 @@ def doehlert_shell_design(num_factors, num_center_points=1):
 
     References
     ----------
-    Doehlert, David H. 1970. “Uniform Shell Designs.” *Applied Statistics* 19 (3): 231.
-    https://doi.org/10.2307/2346327
+    Doehlert, David H. 1970. “Uniform Shell Designs.” *Applied Statistics*
+    19 (3): 231. https://doi.org/10.2307/2346327
     """
     if num_factors < 1:
         raise ValueError("Number of factors must be at least 1.")
@@ -106,8 +112,8 @@ def doehlert_simplex_design(num_factors):
 
     References
     ----------
-    Implementation of simplex design (`version 1.0.0`, 11 July 2015) by Moritz von Stosch
-    https://www.mathworks.com/matlabcentral/fileexchange/54048-doehlert-design
+    Implementation of simplex design (`version 1.0.0`, 11 July 2015) by Moritz
+    von Stosch https://www.mathworks.com/matlabcentral/fileexchange/54048-doehlert-design
     """
     simplex_matrix = np.zeros((num_factors + 1, num_factors))
 
@@ -116,7 +122,9 @@ def doehlert_simplex_design(num_factors):
             if j == i:
                 simplex_matrix[i, j - 1] = np.sqrt(i + 1) / np.sqrt(2 * i)
             else:
-                simplex_matrix[i, i - j] = 1 / np.sqrt(2 * (i - (j - 1)) * (i - j))
+                simplex_matrix[i, i - j] = 1 / np.sqrt(
+                    2 * (i - (j - 1)) * (i - j)
+                )
 
     extra_points = []
     for i in range(num_factors + 1):

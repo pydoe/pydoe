@@ -1,8 +1,9 @@
 """
-Provides a collection of commonly used Taguchi orthogonal arrays (OA) for robust design experiments.
+Provides a collection of commonly used Taguchi orthogonal arrays (OA)
+for robust design experiments.
 
-Each array defines a set of experiments using a reduced, statistically balanced design,
-enabling efficient exploration of multiple factors and levels.
+Each array defines a set of experiments using a reduced, statistically
+balanced design, enabling efficient exploration of multiple factors and levels.
 
 References
 ----------
@@ -16,8 +17,10 @@ References
 
 """
 
-import numpy as np
 from pathlib import Path
+
+import numpy as np
+
 
 ORTHOGONAL_ARRAYS_DIR = Path(__file__).resolve().parent
 
@@ -91,7 +94,9 @@ L_16_4_5 = np.loadtxt(f"{ORTHOGONAL_ARRAYS_DIR}/L_16_4_5.oa", dtype=int) - 1
 #
 # Reference: https://www.itl.nist.gov/div898/software/dataplot/dex/L18.DAT
 
-L_18_6_1_3_6 = np.loadtxt(f"{ORTHOGONAL_ARRAYS_DIR}/L_18_6_1_3_6.oa", dtype=int) - 1
+L_18_6_1_3_6 = (
+    np.loadtxt(f"{ORTHOGONAL_ARRAYS_DIR}/L_18_6_1_3_6.oa", dtype=int) - 1
+)
 
 #   $$ L_{25}(5^6) $$
 # Taguchi L25 Orthogonal Design
@@ -111,7 +116,9 @@ L_25_5_6 = np.loadtxt(f"{ORTHOGONAL_ARRAYS_DIR}/L_25_5_6.oa", dtype=int) - 1
 #
 # Reference: https://www.itl.nist.gov/div898/software/dataplot/dex/L27.DAT
 
-L_27_2_1_3_12 = np.loadtxt(f"{ORTHOGONAL_ARRAYS_DIR}/L_27_2_1_3_12.oa", dtype=int) - 1
+L_27_2_1_3_12 = (
+    np.loadtxt(f"{ORTHOGONAL_ARRAYS_DIR}/L_27_2_1_3_12.oa", dtype=int) - 1
+)
 
 #   $$ L_{32}(2^{31}) $$
 # Taguchi L32 Orthogonal Design
@@ -132,7 +139,9 @@ L_32_2_31 = np.loadtxt(f"{ORTHOGONAL_ARRAYS_DIR}/L_32_2_31.oa", dtype=int) - 1
 #
 # Reference: https://www.itl.nist.gov/div898/software/dataplot/dex/L32B.DAT
 
-L_32_2_1_4_9 = np.loadtxt(f"{ORTHOGONAL_ARRAYS_DIR}/L_32_2_1_4_9.oa", dtype=int) - 1
+L_32_2_1_4_9 = (
+    np.loadtxt(f"{ORTHOGONAL_ARRAYS_DIR}/L_32_2_1_4_9.oa", dtype=int) - 1
+)
 
 
 #   $$ L_{36}(3^{23}) $$
@@ -153,7 +162,9 @@ L_36_3_23 = np.loadtxt(f"{ORTHOGONAL_ARRAYS_DIR}/L_36_3_23.oa", dtype=int) - 1
 #
 # Reference: https://www.itl.nist.gov/div898/software/dataplot/dex/L50.DAT
 
-L_50_2_1_5_11 = np.loadtxt(f"{ORTHOGONAL_ARRAYS_DIR}/L_50_2_1_5_11.oa", dtype=int) - 1
+L_50_2_1_5_11 = (
+    np.loadtxt(f"{ORTHOGONAL_ARRAYS_DIR}/L_50_2_1_5_11.oa", dtype=int) - 1
+)
 
 #   $$ L_{54}(2^1 3^{25}) $$
 # Taguchi L54 Orthogonal Design
@@ -163,7 +174,9 @@ L_50_2_1_5_11 = np.loadtxt(f"{ORTHOGONAL_ARRAYS_DIR}/L_50_2_1_5_11.oa", dtype=in
 #
 # Reference: https://www.itl.nist.gov/div898/software/dataplot/dex/L54.DAT
 
-L_54_2_1_3_25 = np.loadtxt(f"{ORTHOGONAL_ARRAYS_DIR}/L_54_2_1_3_25.oa", dtype=int) - 1
+L_54_2_1_3_25 = (
+    np.loadtxt(f"{ORTHOGONAL_ARRAYS_DIR}/L_54_2_1_3_25.oa", dtype=int) - 1
+)
 
 #   $$ L_{64}(2^{31}) $$
 # Taguchi L64 Orthogonal Design

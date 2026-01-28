@@ -1,4 +1,5 @@
 from typing import Literal, Tuple
+
 import numpy as np
 
 from pyDOE.doe_optimal.algorithms import (
@@ -8,12 +9,15 @@ from pyDOE.doe_optimal.algorithms import (
     sequential_dykstra,
     simple_exchange_wynn_mitchell,
 )
-from pyDOE.doe_optimal.model import build_design_matrix, build_uniform_moment_matrix
+from pyDOE.doe_optimal.efficiency import a_efficiency, d_efficiency
+from pyDOE.doe_optimal.model import (
+    build_design_matrix,
+    build_uniform_moment_matrix,
+)
 from pyDOE.doe_optimal.utils import criterion_value
-from pyDOE.doe_optimal.efficiency import d_efficiency, a_efficiency
 
 
-def optimal_design(
+def optimal_design(  # noqa: PLR0913, PLR0917
     candidates: np.ndarray,
     n_points: int,
     degree: int,
@@ -25,7 +29,8 @@ def optimal_design(
     max_iter: int = 200,
 ) -> Tuple[np.ndarray, dict]:
     """
-    Generate an optimal experimental design using a specified algorithm and criterion.
+    Generate an optimal experimental design using a specified
+    algorithm and criterion.
 
     Parameters
     ----------
@@ -37,8 +42,9 @@ def optimal_design(
         Polynomial degree of the model.
     criterion : {'D', 'A', 'I'}, optional
         Optimality criterion to maximize (default is 'D').
-    method : {'sequential', 'simple_exchange', 'fedorov', 'modified_fedorov', 'detmax'}, optional
-        Algorithm to use for design generation (default is 'detmax').
+    method : {'sequential', 'simple_exchange', 'fedorov', 'modified_fedorov',
+              'detmax'}, optional. Algorithm to use for design generation
+              (default is 'detmax').
     alpha : float, optional
         Augmentation parameter for information matrix (default is 0.0).
     max_iter : int, optional
@@ -59,22 +65,33 @@ def optimal_design(
         - 'A_eff': A-efficiency
         - 'p_columns': number of model parameters
         - 'n_runs': number of runs in the design
+
+    Raises
+    ------
+    ValueError
+        If an unknown method or criterion is specified.
     """
     # Choose algorithm
     if method == "sequential":
-        design = sequential_dykstra(candidates, n_points, degree, criterion, alpha)
+        design = sequential_dykstra(
+            candidates, n_points, degree, criterion, alpha
+        )
     elif method == "simple_exchange":
         design = simple_exchange_wynn_mitchell(
             candidates, n_points, degree, criterion, alpha, max_iter
         )
     elif method == "fedorov":
-        design = fedorov(candidates, n_points, degree, criterion, alpha, max_iter)
+        design = fedorov(
+            candidates, n_points, degree, criterion, alpha, max_iter
+        )
     elif method == "modified_fedorov":
         design = modified_fedorov(
             candidates, n_points, degree, criterion, alpha, max_iter
         )
     elif method == "detmax":
-        design = detmax(candidates, n_points, degree, criterion, alpha, max_iter)
+        design = detmax(
+            candidates, n_points, degree, criterion, alpha, max_iter
+        )
     else:
         raise ValueError("Unknown method.")
 

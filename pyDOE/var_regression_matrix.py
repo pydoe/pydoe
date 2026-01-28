@@ -14,6 +14,7 @@ Abraham Lee.
 """
 
 import numpy as np
+
 from .build_regression_matrix import build_regression_matrix
 
 
@@ -38,6 +39,11 @@ def var_regression_matrix(H, x, model, sigma=1):
     var : scalar
         The variance of the regression error, evaluated at ``x``.
 
+    Raises
+    ------
+    ValueError
+        If model and DOE are incompatible.
+
     """
     x = np.atleast_2d(x)
     H = np.atleast_2d(H)
@@ -49,5 +55,7 @@ def var_regression_matrix(H, x, model, sigma=1):
         raise ValueError("model and DOE don't suit together")
 
     x_mod = build_regression_matrix(x, model)
-    var = sigma**2 * np.dot(np.dot(x_mod.T, np.linalg.inv(np.dot(H.T, H))), x_mod)
+    var = sigma**2 * np.dot(
+        np.dot(x_mod.T, np.linalg.inv(np.dot(H.T, H))), x_mod
+    )
     return var

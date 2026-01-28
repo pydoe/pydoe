@@ -33,8 +33,8 @@ def union(H1, H2):
         The new matrix that contains the rows of ``H1`` on top of the rows of
         ``H2``.
 
-    Example
-    -------
+    Examples
+    --------
     ::
 
         >>> union(np.eye(2), 2 * np.eye(2))

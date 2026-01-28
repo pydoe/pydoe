@@ -1,22 +1,25 @@
 """
-This module implements the Halton sequence, a low-discrepancy quasirandom sequence
-used in numerical integration, sampling, and global optimization tasks.
+This module implements the Halton sequence, a low-discrepancy
+quasirandom sequence used in numerical integration, sampling,
+and global optimization tasks.
 
-The Halton sequence generates points in a unit hypercube [0, 1]^d using radical
-inversion with respect to a sequence of prime number bases. It is especially
-useful in high-dimensional integration where uniformity and low correlation
-between sample points are desired.
+The Halton sequence generates points in a unit hypercube [0, 1]^d
+using radical inversion with respect to a sequence of prime number
+bases. It is especially useful in high-dimensional integration where
+uniformity and low correlation between sample points are desired.
 
-Each dimension in the Halton sequence uses a unique base (a prime number), and
-points are computed using the van der Corput sequence in that base.
+Each dimension in the Halton sequence uses a unique base (a prime number),
+and points are computed using the van der Corput sequence in that base.
 
 References
 ----------
-Halton, J. H. (1964). "Algorithm 247: Radical-inverse quasi-random point sequence."
-*Communications of the ACM*, 7(12), 701. https://doi.org/10.1145/355588.365104
+Halton, J. H. (1964). "Algorithm 247: Radical-inverse quasi-random point
+sequence." *Communications of the ACM*, 7(12), 701.
+https://doi.org/10.1145/355588.365104
 """
 
 import numpy as np
+
 
 __all__ = ["halton_sequence"]
 
@@ -27,8 +30,8 @@ def halton_sequence(num_points, dimension, skip=0):
 
     The Halton sequence is a low-discrepancy, quasi-random point set commonly
     used in numerical integration, sampling, and global optimization. Each
-    dimension uses a different prime base to generate values via the van der Corput
-    sequence.
+    dimension uses a different prime base to generate values via the van der
+    Corput sequence.
 
     Parameters
     ----------

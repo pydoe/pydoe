@@ -1,8 +1,9 @@
 r"""
 Design matrix formation for Optimal Experimental Design (OED).
 
-This module provides functionality to build design matrices for polynomial models
-of various degrees, which are essential for optimal design of experiments.
+This module provides functionality to build design matrices
+for polynomial models of various degrees, which are essential
+for optimal design of experiments.
 
 References:
     - https://en.wikipedia.org/wiki/Design_matrix
@@ -15,14 +16,15 @@ Model formation:
 
     - Quadratic: $y = \beta_0 + \sum_{i=1}^k \beta_i x_i + \sum_{i=1}^k \beta_{ii} x_i^2 + \sum_{i<j} \beta_{ij} x_i x_j$
 
-where $k$ is the number of factors, $x_i$ are the input variables, and $\beta$ are the model parameters.
+where $k$ is the number of factors, $x_i$ are the input variables, and $\beta$
+are the model parameters.
 
 For a linear model with 2 factors x1, x2:
 
 $$y = \beta_0 + \beta_1 x_1 + \beta_2 x_2$$
 
 The corresponding design matrix X:
-$$X = 
+$$X =
 \begin{bmatrix}
 1 & x_1 & x_2 \\
 1 & -1 & -1 \\
@@ -35,7 +37,7 @@ For a quadratic model with 2 factors:
 $$y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_{11} x_1^2 + \beta_{22} x_2^2 + \beta_{12} x_1 x_2$$
 
 The corresponding quadratic design matrix X:
-$$X = 
+$$X =
 \begin{bmatrix}
 1 & x_1 & x_2 & x_1^2 & x_2^2 & x_1 x_2 \\
 1 & -1 & -1 & 1 & 1 & 1 \\
@@ -43,11 +45,12 @@ $$X =
 1 & 1 & -1 & 1 & 1 & -1 \\
 1 & 1 & 1 & 1 & 1 & 1 \\
 \end{bmatrix}$$
-"""
+"""  # noqa: E501
 
 import itertools
+from typing import Optional, Union
+
 import numpy as np
-from typing import Union
 
 
 def build_design_matrix(candidates: np.ndarray, degree: int) -> np.ndarray:
@@ -72,7 +75,7 @@ def build_design_matrix(candidates: np.ndarray, degree: int) -> np.ndarray:
     ValueError
         If degree is less than 1.
 
-    NOTE
+    Notes
     -----
     The design matrix encodes the relationship between model parameters
     and input variables.
@@ -87,7 +90,7 @@ def build_design_matrix(candidates: np.ndarray, degree: int) -> np.ndarray:
 
     where $k$ is the number of factors, $x_i$ are the input variables, and $\beta$ are
     the model parameters.
-    """
+    """  # noqa: E501
     candidates = np.asarray(candidates, dtype=float)
     n_points, n_factors = candidates.shape
 
@@ -115,7 +118,9 @@ def build_design_matrix(candidates: np.ndarray, degree: int) -> np.ndarray:
     if degree >= 3:
         # Cubic terms and higher order interactions
         for d in range(3, degree + 1):
-            for combo in itertools.combinations_with_replacement(range(n_factors), d):
+            for combo in itertools.combinations_with_replacement(
+                range(n_factors), d
+            ):
                 term = np.ones(n_points)
                 for factor_idx in combo:
                     term *= candidates[:, factor_idx]
@@ -145,7 +150,7 @@ def build_uniform_moment_matrix(X0: np.ndarray) -> np.ndarray:
 
 def generate_candidate_set(
     n_factors: int,
-    bounds: Union[tuple, list] = None,
+    bounds: Optional[Union[tuple, list]] = None,
     n_levels: int = 3,
     grid_type: str = "full_factorial",
 ) -> np.ndarray:

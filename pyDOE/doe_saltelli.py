@@ -1,12 +1,13 @@
 """
-This module implements Saltelli's sampling scheme based on Sobol' sequences for
-global sensitivity analysis. It enables estimation of first-order, total-order, and
-(second-order optional) Sobol' sensitivity indices. The implementation relies on a
-custom Sobol' sequence generator based on `scipy.stats.qmc.Sobol`.
+This module implements Saltelli's sampling scheme based on Sobol' sequences
+for global sensitivity analysis. It enables estimation of first-order,
+total-order, and (second-order optional) Sobol' sensitivity indices. The
+implementation relies on a custom Sobol' sequence generator based on
+`scipy.stats.qmc.Sobol`.
 
 Compared to random or Latin Hypercube sampling, this method provides better
-convergence for variance-based sensitivity analysis using quasi-random low-discrepancy
-sequences.
+convergence for variance-based sensitivity analysis using quasi-random
+low-discrepancy sequences.
 
 References
 ----------
@@ -34,18 +35,22 @@ References
    (Accessed: 20 April 2021)
 """
 
-import numpy as np
 import math
 import warnings
 from typing import Optional
+
+import numpy as np
+
 from pyDOE.doe_sobol import sobol_sequence
+
 
 __all__ = ["saltelli_sampling"]
 
 
-def saltelli_sampling(
+def saltelli_sampling(  # noqa: PLR0913
     num_vars: int,
     N: int,
+    *,
     calc_second_order: bool = True,
     skip_values: Optional[int] = None,
     scramble: bool = False,
@@ -72,14 +77,17 @@ def saltelli_sampling(
     Returns
     -------
     np.ndarray
-        Matrix of shape (N * (2 * num_vars + 2), num_vars) if calc_second_order=True,
-        or (N * (num_vars + 2), num_vars) otherwise. Contains Saltelli samples in [0, 1].
+        Matrix of shape (N * (2 * num_vars + 2), num_vars)
+        if calc_second_order=True, or (N * (num_vars + 2), num_vars)
+        otherwise. Contains Saltelli samples in [0, 1].
     """
     D = num_vars
 
     if not ((N & (N - 1)) == 0 and N != 0):
         warnings.warn(
-            f"N = {N} is not a power of 2. This may affect Sobol sequence convergence."
+            f"N = {N} is not a power of 2. "
+            + "This may affect Sobol sequence convergence.",
+            stacklevel=2,
         )
 
     if skip_values is None:

@@ -41,8 +41,13 @@ def star(n, alpha="faced", center=(1, 1)):
     a : scalar
         The alpha value to scale the star points with.
 
-    Example
-    -------
+    Raises
+    ------
+    ValueError
+        If ``alpha`` is not one of the accepted strings.
+
+    Examples
+    --------
     ::
 
         >>> star(3)
@@ -68,7 +73,7 @@ def star(n, alpha="faced", center=(1, 1)):
         nc = 2**n  # number of factorial points
         a = nc ** (0.25)  # value of alpha in rotatable design
     else:
-        raise ValueError('Invalid value for "alpha": {:}'.format(alpha))
+        raise ValueError(f'Invalid value for "alpha": {alpha}')
 
     # Create the actual matrix now.
     H = np.zeros((2 * n, n))

@@ -1,8 +1,9 @@
-import numpy as np
 from warnings import warn
 
+import numpy as np
 
-def random_k_means(
+
+def random_k_means(  # noqa: PLR0913, PLR0917
     num_points,
     dimension,
     num_steps=None,
@@ -23,11 +24,13 @@ def random_k_means(
     num_steps : int, optional
         Number of iterations. Defaults to 100 * num_points.
     initial_points : array_like, optional
-        Initial cluster centers. If None, random points in [0, 1]^dimension are used.
+        Initial cluster centers. If None, random points in [0, 1]^dimension
+        are used.
     callback : callable, optional
         Function called at each step with current cluster centers.
     random_state : int, optional
-        (Deprecated) Random seed for reproducibility. Use `seed` parameter instead.
+        (Deprecated) Random seed for reproducibility. Use `seed` parameter
+        instead.
     seed : int or np.random.Generator, optional
         Random seed or np.random.Generator for reproducibility.
 
@@ -35,6 +38,11 @@ def random_k_means(
     -------
     cluster_centers : np.ndarray
         Array of shape (num_points, dimension) containing the cluster centers.
+
+    Raises
+    ------
+    ValueError
+        If input parameters are invalid.
     """
     if random_state is not None:
         warn(
@@ -62,7 +70,9 @@ def random_k_means(
     else:
         cluster_centers = np.array(initial_points)
         if cluster_centers.shape != (num_points, dimension):
-            raise ValueError("initial_points must have shape (num_points, dimension)")
+            raise ValueError(
+                "initial_points must have shape (num_points, dimension)"
+            )
         if not np.all((0.0 <= cluster_centers) & (cluster_centers <= 1.0)):
             raise ValueError("initial_points must be in [0, 1]^dimension")
 

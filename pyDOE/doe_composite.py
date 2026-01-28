@@ -18,6 +18,7 @@ from pyDOE.doe_repeat_center import repeat_center
 from pyDOE.doe_star import star
 from pyDOE.doe_union import union
 
+
 __all__ = ["ccdesign"]
 
 
@@ -82,8 +83,13 @@ def ccdesign(n, center=(4, 4), alpha="orthogonal", face="circumscribed"):
     mat : 2d-array
         The design matrix with coded levels -1 and 1
 
-    Example
-    -------
+    Raises
+    ------
+    ValueError
+        If input parameters are invalid.
+
+    Examples
+    --------
     ::
 
         >>> ccdesign(3)
@@ -113,49 +119,47 @@ def ccdesign(n, center=(4, 4), alpha="orthogonal", face="circumscribed"):
 
     """
     # Check inputs
-    assert isinstance(n, int) and n > 1, '"n" must be an integer greater than 1.'
-    assert alpha.lower() in (
-        "orthogonal",
-        "o",
-        "rotatable",
-        "r",
-    ), 'Invalid value for "alpha": {:}'.format(alpha)
-    assert face.lower() in (
+    if not (isinstance(n, int) and n > 1):
+        raise ValueError('"n" must be an integer greater than 1.')
+    if alpha.lower() not in {"orthogonal", "o", "rotatable", "r"}:
+        raise ValueError(f'Invalid value for "alpha": {alpha}')
+    if face.lower() not in {
         "circumscribed",
         "ccc",
         "inscribed",
         "cci",
         "faced",
         "ccf",
-    ), 'Invalid value for "face": {:}'.format(face)
+    }:
+        raise ValueError(f'Invalid value for "face": {face}')
 
     nc = len(center)
     if nc != 2:
         raise ValueError(
-            'Invalid number of values for "center" (expected 2, but got {:})'.format(nc)
+            f'Invalid number of values for "center" (expected 2, but got {nc})'
         )
 
     # Orthogonal Design
-    if alpha.lower() in ("orthogonal", "o"):
+    if alpha.lower() in {"orthogonal", "o"}:
         H2, a = star(n, alpha="orthogonal", center=center)
 
     # Rotatable Design
-    if alpha.lower() in ("rotatable", "r"):
+    if alpha.lower() in {"rotatable", "r"}:
         H2, a = star(n, alpha="rotatable")
 
     # Inscribed CCD
-    if face.lower() in ("inscribed", "cci"):
+    if face.lower() in {"inscribed", "cci"}:
         H1 = ff2n(n)
-        H1 = H1 / a  # Scale down the factorial points
+        H1 /= a  # Scale down the factorial points
         H2, a = star(n)
 
     # Faced CCD
-    if face.lower() in ("faced", "ccf"):
+    if face.lower() in {"faced", "ccf"}:
         H2, a = star(n)  # Value of alpha is always 1 in Faced CCD
         H1 = ff2n(n)
 
     # Circumscribed CCD
-    if face.lower() in ("circumscribed", "ccc"):
+    if face.lower() in {"circumscribed", "ccc"}:
         H1 = ff2n(n)
 
     C1 = repeat_center(n, center[0])

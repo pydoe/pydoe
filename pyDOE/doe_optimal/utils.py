@@ -1,17 +1,21 @@
 from typing import Optional, Tuple
+
 import numpy as np
 
-from pyDOE.doe_optimal.model import build_design_matrix, build_uniform_moment_matrix
 from pyDOE.doe_optimal.criterion import (
-    d_optimality,
     a_optimality,
-    i_optimality,
     c_optimality,
+    d_optimality,
     e_optimality,
     g_optimality,
-    v_optimality,
+    i_optimality,
     s_optimality,
     t_optimality,
+    v_optimality,
+)
+from pyDOE.doe_optimal.model import (
+    build_design_matrix,
+    build_uniform_moment_matrix,
 )
 
 
@@ -36,18 +40,19 @@ def _xtx_augmented(X, alpha=0.0, X0=None):
     -------
     ndarray of shape (p, p)
         Augmented information matrix.
-    """
+    """  # noqa: E501
     H = X.T @ X
     if alpha and X0 is not None and len(X0) > 0:
         N0 = X0.shape[0]
         H0 = (X0.T @ X0) / N0
-        H = H + alpha * H0
+        H = H + alpha * H0  # noqa: PLR6104
     return H
 
 
-def information_matrix(X, normalized=True, alpha=0.0, X0=None):
+def information_matrix(X, *, normalized=True, alpha=0.0, X0=None):
     r"""
-    Compute the information matrix for a design matrix, with optional augmentation.
+    Compute the information matrix for a design matrix,
+    with optional augmentation.
 
     Parameters
     ----------
@@ -64,13 +69,13 @@ def information_matrix(X, normalized=True, alpha=0.0, X0=None):
     -------
     ndarray of shape (p, p)
         Information matrix.
-    """
+    """  # noqa: E501
     n = X.shape[0]
     H_aug = _xtx_augmented(X, alpha=alpha, X0=X0)
     return H_aug / n if normalized else H_aug
 
 
-def criterion_value(X, criterion, X0=None, alpha=0.0, M_moment=None, **kwargs):
+def criterion_value(X, criterion, X0=None, alpha=0.0, M_moment=None, **kwargs):  # noqa: PLR0911
     """
     Compute the value of a specified optimality criterion for a design matrix.
 
@@ -97,6 +102,11 @@ def criterion_value(X, criterion, X0=None, alpha=0.0, M_moment=None, **kwargs):
     -------
     float
         Value of the specified criterion.
+
+    Raises
+    ------
+    ValueError
+        If an unknown criterion is specified.
     """
     M = information_matrix(X, normalized=True, alpha=alpha, X0=X0)
     p = X.shape[1]
@@ -129,7 +139,7 @@ def criterion_value(X, criterion, X0=None, alpha=0.0, M_moment=None, **kwargs):
         raise ValueError(f"Unknown criterion: {criterion}")
 
 
-def _best_single_add(
+def _best_single_add(  # noqa: PLR0913, PLR0917
     current: np.ndarray,
     pool: np.ndarray,
     degree: int,
@@ -139,7 +149,8 @@ def _best_single_add(
     M_moment: Optional[np.ndarray],
 ) -> Tuple[int, float]:
     """
-    Among candidates in 'pool', find index that maximizes criterion if added to 'current'.
+    Among candidates in 'pool', find index that maximizes criterion
+    if added to 'current'.
 
     Parameters
     ----------
@@ -166,22 +177,22 @@ def _best_single_add(
         Best criterion value achieved.
     """
     if len(pool) == 0:
-        Xcur = build_design_matrix(current, degree)
-        base = criterion_value(Xcur, criterion, X0_model, alpha, M_moment)
+        X_cur = build_design_matrix(current, degree)
+        base = criterion_value(X_cur, criterion, X0_model, alpha, M_moment)
         return -1, base
 
     best_idx, best_val = -1, -np.inf
     for j in range(pool.shape[0]):
         trial = np.vstack([current, pool[j]])
-        Xtrial = build_design_matrix(trial, degree)
-        val = criterion_value(Xtrial, criterion, X0_model, alpha, M_moment)
+        X_trial = build_design_matrix(trial, degree)
+        val = criterion_value(X_trial, criterion, X0_model, alpha, M_moment)
         if val > best_val:
             best_val = val
             best_idx = j
     return best_idx, best_val
 
 
-def _best_single_drop(
+def _best_single_drop(  # noqa: PLR0913, PLR0917
     current: np.ndarray,
     degree: int,
     criterion: str,
@@ -215,14 +226,14 @@ def _best_single_drop(
         Best criterion value achieved after drop.
     """
     if current.shape[0] <= 1:
-        Xcur = build_design_matrix(current, degree)
-        return -1, criterion_value(Xcur, criterion, X0_model, alpha, M_moment)
+        X_cur = build_design_matrix(current, degree)
+        return -1, criterion_value(X_cur, criterion, X0_model, alpha, M_moment)
 
     best_idx, best_val = 0, -np.inf
     for i in range(current.shape[0]):
         trial = np.delete(current, i, axis=0)
-        Xtrial = build_design_matrix(trial, degree)
-        val = criterion_value(Xtrial, criterion, X0_model, alpha, M_moment)
+        X_trial = build_design_matrix(trial, degree)
+        val = criterion_value(X_trial, criterion, X0_model, alpha, M_moment)
         if val > best_val:
             best_val = val
             best_idx = i
