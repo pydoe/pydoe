@@ -15,8 +15,9 @@ This implementation is based on a simplified rank-1 lattice formulation and
 uses a linear-time algorithm.
 """
 
+from __future__ import annotations
+
 import random
-from typing import Optional
 
 import numpy as np
 
@@ -27,7 +28,7 @@ __all__ = ["korobov_sequence"]
 
 
 def korobov_sequence(
-    num_points: int, dimension: int, generator_param: Optional[int] = None
+    num_points: int, dimension: int, generator_param: int | None = None
 ) -> np.ndarray:
     r"""
     Generate a Korobov lattice design matrix.

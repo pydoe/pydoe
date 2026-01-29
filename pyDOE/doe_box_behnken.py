@@ -13,7 +13,7 @@ Much thanks goes to these individuals. It has been converted to Python by
 Abraham Lee.
 """
 
-from typing import Optional
+from __future__ import annotations
 
 import numpy as np
 
@@ -24,7 +24,7 @@ from pyDOE.doe_repeat_center import repeat_center
 __all__ = ["bbdesign"]
 
 
-def bbdesign(n: int, center: Optional[int] = None) -> np.ndarray:
+def bbdesign(n: int, center: int | None = None) -> np.ndarray:
     """
     Create a Box-Behnken design
 

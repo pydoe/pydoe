@@ -47,8 +47,9 @@ $$X =
 \end{bmatrix}$$
 """  # noqa: E501
 
+from __future__ import annotations
+
 import itertools
-from typing import Optional, Union
 
 import numpy as np
 
@@ -150,7 +151,7 @@ def build_uniform_moment_matrix(X0: np.ndarray) -> np.ndarray:
 
 def generate_candidate_set(
     n_factors: int,
-    bounds: Optional[Union[tuple, list]] = None,
+    bounds: tuple | list | None = None,
     n_levels: int = 3,
     grid_type: str = "full_factorial",
 ) -> np.ndarray:

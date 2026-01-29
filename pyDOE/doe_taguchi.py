@@ -18,8 +18,10 @@ References:
     - [What are Taguchi designs?](https://www.itl.nist.gov/div898/handbook/pri/section5/pri56.htm)
 """
 
+from __future__ import annotations
+
 from enum import Enum, unique
-from typing import List, Literal
+from typing import Literal
 
 import numpy as np
 
@@ -82,7 +84,7 @@ def get_orthogonal_array(oa_name: ORTHOGONAL_ARRAY_NAMES) -> np.ndarray:
     return ORTHOGONAL_ARRAYS[oa_name]
 
 
-def list_orthogonal_arrays() -> List[str]:
+def list_orthogonal_arrays() -> list[str]:
     """
     List descriptive names of available Taguchi orthogonal arrays.
 
@@ -95,7 +97,7 @@ def list_orthogonal_arrays() -> List[str]:
 
 
 def taguchi_design(
-    oa_name: ORTHOGONAL_ARRAY_NAMES, levels_per_factor: List[List]
+    oa_name: ORTHOGONAL_ARRAY_NAMES, levels_per_factor: list[list]
 ) -> np.ndarray:
     """
     Generate a Taguchi design matrix using an orthogonal array and

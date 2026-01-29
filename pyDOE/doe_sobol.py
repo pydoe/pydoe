@@ -18,7 +18,7 @@ evaluation of integrals.” *Zh. Vych. Mat. Mat. Fiz.*, 7: 784-802 (in Russian);
 *U.S.S.R. Comput. Maths. Math. Phys.*, 7: 86-112 (in English).
 """
 
-from typing import Optional
+from __future__ import annotations
 
 import numpy as np
 from scipy.stats import qmc
@@ -32,7 +32,7 @@ def sobol_sequence(  # noqa: PLR0913
     d: int,
     *,
     scramble: bool = False,
-    seed: Optional[int] = None,
+    seed: int | None = None,
     bounds: np.ndarray = None,
     skip: int = 0,
     use_pow_of_2: bool = True,

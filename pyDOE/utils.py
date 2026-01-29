@@ -5,7 +5,7 @@ This module provides common utility functions used across different DOE methods,
 including sample scaling, bounds checking, and other shared functionality.
 """
 
-from typing import List, Tuple
+from __future__ import annotations
 
 import numpy as np
 
@@ -14,7 +14,7 @@ __all__ = ["scale_samples"]
 
 
 def scale_samples(
-    samples: np.ndarray, bounds: List[Tuple[float, float]]
+    samples: np.ndarray, bounds: list[tuple[float, float]]
 ) -> np.ndarray:
     """
     Scale samples from [0, 1] to specified bounds.

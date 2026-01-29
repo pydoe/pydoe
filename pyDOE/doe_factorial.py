@@ -13,11 +13,12 @@ Much thanks goes to these individuals. It has been converted to Python by
 Abraham Lee.
 """
 
+from __future__ import annotations
+
 import itertools
 import math
 import re
 import string
-from typing import List, Tuple
 
 import numpy as np
 from scipy.special import binom
@@ -425,7 +426,7 @@ def _n_fac_at_res(n: int, res: int) -> int:
 
 def fracfact_opt(  # noqa: PLR0914
     n_factors: int, n_erased: int, max_attempts: int = 0
-) -> Tuple[str, List[str], np.ndarray]:
+) -> tuple[str, list[str], np.ndarray]:
     """
     Find the optimal generator string for a 2-level fractional-factorial design
     with the specified number of factors and erased factors.
@@ -525,7 +526,7 @@ def fracfact_opt(  # noqa: PLR0914
     return best_design, best_map, best_vector
 
 
-def fracfact_aliasing(design: np.ndarray) -> Tuple[List[str], np.ndarray]:
+def fracfact_aliasing(design: np.ndarray) -> tuple[list[str], np.ndarray]:
     """
     Find the aliasings in a design, given the contrasts.
 
@@ -606,7 +607,7 @@ def fracfact_aliasing(design: np.ndarray) -> Tuple[List[str], np.ndarray]:
     return aliases_readable, alias_vector
 
 
-def alias_vector_indices(n_factors: int) -> Tuple[np.ndarray, np.ndarray]:
+def alias_vector_indices(n_factors: int) -> tuple[np.ndarray, np.ndarray]:
     """
     Find the indexes to convert the alias_vector into a square matrix and
     vice-versa.

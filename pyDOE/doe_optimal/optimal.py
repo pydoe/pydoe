@@ -1,4 +1,6 @@
-from typing import Literal, Tuple
+from __future__ import annotations
+
+from typing import Literal
 
 import numpy as np
 
@@ -27,7 +29,7 @@ def optimal_design(  # noqa: PLR0913, PLR0917
     ] = "sequential",
     alpha: float = 0.0,
     max_iter: int = 200,
-) -> Tuple[np.ndarray, dict]:
+) -> tuple[np.ndarray, dict]:
     """
     Generate an optimal experimental design using a specified
     algorithm and criterion.

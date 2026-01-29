@@ -35,9 +35,10 @@ References
    (Accessed: 20 April 2021)
 """
 
+from __future__ import annotations
+
 import math
 import warnings
-from typing import Optional
 
 import numpy as np
 
@@ -52,9 +53,9 @@ def saltelli_sampling(  # noqa: PLR0913
     N: int,
     *,
     calc_second_order: bool = True,
-    skip_values: Optional[int] = None,
+    skip_values: int | None = None,
     scramble: bool = False,
-    seed: Optional[int] = None,
+    seed: int | None = None,
 ) -> np.ndarray:
     """
     Generate Saltelli samples using Sobol' sequences for sensitivity analysis.

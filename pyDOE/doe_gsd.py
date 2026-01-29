@@ -5,14 +5,13 @@ Copyright (C) 2018 - Rickard Sjoegren
 from __future__ import annotations
 
 import itertools
-from typing import Tuple
 
 import numpy as np
 
 
 def gsd(
     levels: np.ndarray, reduction: int, n: int = 1
-) -> Tuple[np.ndarray, list[np.ndarray]]:
+) -> tuple[np.ndarray, list[np.ndarray]]:
     """
     Create a Generalized Subset Design (GSD).
 

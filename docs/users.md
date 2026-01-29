@@ -63,8 +63,8 @@ Lawrence Livermore National Laboratory uses DOE in **Zero-RK** and **Merlin-Spel
 
 <br>
 
-[![MOG](./assets/images/MOG.png#only-light)](https://optgroup.it.jyu.fi/)
-[![MOG](./assets/images/mog.png#only-dark)](https://optgroup.it.jyu.fi/)  
+[![MOG](./assets/images/MOG-only-light.png#only-light)](https://optgroup.it.jyu.fi/)
+[![MOG](./assets/images/MOG--only-dark.png#only-dark)](https://optgroup.it.jyu.fi/)  
 *The Multiobjective Optimization Group* uses DOE in **pyRVEA** to produce DOE samples for multi-objective optimization and surrogate model workflows. It implements the **R**eference **V**ector **G**uided **E**volutionary **A**lgorithm for global search in design spaces.
 > Source: <a href="https://github.com/industrial-optimization-group/pyRVEA" style="color: #484848;">github.com/industrial-optimization-group/pyRVEA</a>
 

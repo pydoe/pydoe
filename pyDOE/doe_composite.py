@@ -15,7 +15,7 @@ Abraham Lee.
 
 from __future__ import annotations
 
-from typing import Literal, Tuple, Union
+from typing import Literal
 
 import numpy as np
 
@@ -30,7 +30,7 @@ __all__ = ["ccdesign"]
 
 def ccdesign(
     n: int,
-    center: Union[np.ndarray[int], Tuple[int]] = (4, 4),
+    center: np.ndarray[int] | tuple[int] = (4, 4),
     alpha: Literal["orthogonal", "o", "rotatable", "r"] = "orthogonal",
     face: Literal[
         "circumscribed", "ccc", "inscribed", "cci", "faced", "ccf"

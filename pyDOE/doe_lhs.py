@@ -13,7 +13,9 @@ Much thanks goes to these individuals. It has been converted to Python by
 Abraham Lee.
 """
 
-from typing import Literal, Optional, Union
+from __future__ import annotations
+
+from typing import Literal
 from warnings import warn
 
 import numpy as np
@@ -26,23 +28,22 @@ __all__ = ["lhs"]
 
 def lhs(  # noqa: PLR0912, PLR0913, PLR0917
     n: int,
-    samples: Optional[int] = None,
-    criterion: Optional[
-        Literal[
-            "center",
-            "c",
-            "maximin",
-            "m",
-            "centermaximin",
-            "cm",
-            "correlation",
-            "corr",
-        ]
-    ] = None,
-    iterations: Optional[int] = None,
-    random_state: Optional[Union[np.random.RandomState, int]] = None,
+    samples: int | None = None,
+    criterion: Literal[
+        "center",
+        "c",
+        "maximin",
+        "m",
+        "centermaximin",
+        "cm",
+        "correlation",
+        "corr",
+    ]
+    | None = None,
+    iterations: int | None = None,
+    random_state: int | np.random.RandomState | None = None,
     correlation_matrix: np.ndarray = None,
-    seed: Optional[Union[int, np.random.Generator]] = None,
+    seed: int | np.random.Generator | None = None,
 ) -> np.ndarray:
     """
     Generate a latin-hypercube design
@@ -208,7 +209,7 @@ def lhs(  # noqa: PLR0912, PLR0913, PLR0917
 def _lhsclassic(
     n: int,
     samples: int,
-    randomstate: Union[np.random.RandomState, np.random.Generator],
+    randomstate: np.random.RandomState | np.random.Generator,
 ) -> np.ndarray:
     # Generate the intervals
     cut = np.linspace(0, 1, samples + 1)
@@ -239,7 +240,7 @@ def _lhsclassic(
 def _lhscentered(
     n: int,
     samples: int,
-    randomstate: Union[np.random.RandomState, np.random.Generator],
+    randomstate: np.random.RandomState | np.random.Generator,
 ) -> np.ndarray:
     # Generate the intervals
     cut = np.linspace(0, 1, samples + 1)
@@ -270,7 +271,7 @@ def _lhsmaximin(
     samples: int,
     iterations: int,
     lhstype: str,
-    randomstate: Union[np.random.RandomState, np.random.Generator],
+    randomstate: np.random.RandomState | np.random.Generator,
 ) -> np.ndarray:
     maxdist = 0
 
@@ -296,7 +297,7 @@ def _lhscorrelate(
     n: int,
     samples: int,
     iterations: int,
-    randomstate: Union[np.random.RandomState, np.random.Generator],
+    randomstate: np.random.RandomState | np.random.Generator,
 ) -> np.ndarray:
     mincorr = np.inf
 
@@ -317,9 +318,9 @@ def _lhscorrelate(
 
 def _lhsmu(  # noqa: PLR0914
     N: int,
-    samples: Optional[int] = None,
+    samples: int | None = None,
     corr: np.ndarray = None,
-    randomstate: Union[np.random.RandomState, np.random.Generator] = None,
+    randomstate: np.random.RandomState | np.random.Generator | None = None,
     M: int = 5,
 ) -> np.ndarray:
     if samples is None:

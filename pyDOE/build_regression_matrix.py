@@ -15,12 +15,12 @@ Abraham Lee.
 
 from __future__ import annotations
 
-from typing import Any, Generator
+from collections.abc import Iterator
 
 import numpy as np
 
 
-def grep(haystack: list, needle: str) -> Generator[Any, Any, None]:
+def grep(haystack: str, needle: str) -> Iterator[int]:
     start = 0
     while True:
         start = haystack.find(needle, start)
@@ -65,6 +65,7 @@ def build_regression_matrix(  # noqa: PLR0912
     monom_index = []
     for i in range(len(list_of_tokens)):
         if build[i]:
+            # BUG: Argument haystack should be str, not list of str
             monom_index += [
                 grep(
                     list_of_tokens,

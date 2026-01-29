@@ -25,7 +25,7 @@ References
    https://doi.org/10.1016/j.envsoft.2012.03.008
 """
 
-from typing import Optional
+from __future__ import annotations
 
 import numpy as np
 
@@ -34,7 +34,7 @@ __all__ = ["morris_sampling"]
 
 
 def morris_sampling(
-    num_vars: int, N: int, num_levels: int = 4, seed: Optional[int] = None
+    num_vars: int, N: int, num_levels: int = 4, seed: int | None = None
 ) -> np.ndarray:
     """
     Generate samples using the Morris Method (Vanilla, no optimization).
