@@ -43,10 +43,11 @@ classifiers = [
     "Operating System :: Unix",
     "Operating System :: MacOS",
 ]
-dependencies = [ "numpy >= 1.22", "scipy >= 1.8" ]
-# We pin this two versions behind the latest security release.
-# Testing is performed only on currently maintained Python versions.
-requires-python = ">=3.8"
+dependencies = [
+    "numpy>=2.2.6",
+    "scipy>=1.15.3",
+]
+requires-python = ">=3.10"
 
 [project.urls]
 source = "https://github.com/pydoe/pydoe"
@@ -72,6 +73,7 @@ lint = [
 ]
 test = [
     "pytest>=8.3.5",
+    "pytest-cov>=7.0.0",
     "pytest-xdist>=3.6.1",
 ]
 

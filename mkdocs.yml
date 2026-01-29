@@ -1,6 +1,6 @@
 site_name: PyDOE
 site_description: Design of Experiments for Python
-site_url: https://pydoe.readthedocs.io/
+site_url: https://pydoe.github.io/pydoe/
 docs_dir: docs
 site_dir: build/docs
 

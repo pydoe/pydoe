@@ -1,0 +1,46 @@
+name: Build PyDOE
+
+on:
+  workflow_call:
+    outputs:
+      artifact-name:
+        value: ${{ jobs.build.outputs.artifact-name }}
+      run-id:
+        value: ${{ github.run_id }}
+
+concurrency:
+  group: ${{ github.workflow }}/${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build Dist
+    runs-on: ubuntu-latest
+
+    outputs:
+      artifact-name: ${{ steps.artifact-name.outputs.artifact-name }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v7
+
+      - name: Build distribution
+        run: uv build -v --clear .
+
+      - name: Set Artifact Name
+        id: artifact-name
+        run: |
+          echo "artifact-name=${{ github.run_id }}[${{ github.run_attempt }}]--build-artifacts" \
+          | tee -a $GITHUB_OUTPUT
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v6
+        with:
+          name: ${{ steps.artifact-name.outputs.artifact-name }}
+          path: dist
+          if-no-files-found: error

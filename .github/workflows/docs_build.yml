@@ -1,0 +1,69 @@
+name: Build PyDOE Docs
+
+on:
+  workflow_call:
+    inputs:
+      deploy:
+        type: boolean
+        required: false
+        default: false
+    outputs:
+      artifact-name:
+        value: ${{ jobs.build.outputs.artifact-name }}
+      run-id:
+        value: ${{ github.run_id }}
+
+concurrency:
+  group: ${{ github.workflow }}/${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build Docs
+    runs-on: ubuntu-latest
+
+    outputs:
+      artifact-name: ${{ steps.artifact-name.outputs.artifact-name }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v6
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v7
+
+      - name: Build Documentation
+        run: uv run --no-dev --group docs mkdocs build --clean --strict
+
+      - name: Set Artifact Name
+        id: artifact-name
+        run: |
+          echo "artifact-name=${{ github.run_id }}[${{ github.run_attempt }}]--docs-artifacts" \
+          | tee -a $GITHUB_OUTPUT
+
+      - name: Upload Docs Artifacts
+        uses: actions/upload-artifact@v6
+        with:
+          name: ${{ steps.artifact-name.outputs.artifact-name }}
+          path: build/docs
+          if-no-files-found: error
+
+  deploy:
+    name: Deploy Docs
+    needs: build
+    permissions:
+      pages: write     # to deploy to GitHub Pages
+      id-token: write  # to verify the deployment
+    if: ${{ inputs.deploy }}
+    runs-on: ubuntu-latest
+
+    environment:
+      name: docs-deploy
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+        with:
+          artifact_name: ${{ needs.build.outputs.artifact-name }}

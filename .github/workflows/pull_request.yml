@@ -1,0 +1,39 @@
+name: Pull Request Checks
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+      - review_requested
+
+concurrency:
+  group: ${{ github.workflow }}/PR-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    if: ${{ ! github.event.pull_request.draft }}
+    uses: ./.github/workflows/build.yml
+
+  test_simple:
+    needs: build
+    if: ${{ ! github.event.pull_request.draft && github.event.pull_request.requested_reviewers[0] == null }}
+    uses: ./.github/workflows/code_test.yml
+    with:
+      artifact-name: ${{ needs.build.outputs.artifact-name }}
+      artifact-run-id: ${{ needs.build.outputs.run-id }}
+
+  test_full:
+    needs: build
+    if: &reviewers_condition ${{ ! github.event.pull_request.draft && github.event.pull_request.requested_reviewers[0] != null }}
+    uses: ./.github/workflows/code_test.yml
+    with:
+      artifact-name: ${{ needs.build.outputs.artifact-name }}
+      artifact-run-id: ${{ needs.build.outputs.run-id }}
+      test-all-versions: true
+
+  docs_build:
+    if: *reviewers_condition
+    uses: ./.github/workflows/docs_build.yml

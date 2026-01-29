@@ -1,0 +1,121 @@
+name: Publish to PyPI
+
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - 'v*.*.*'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  fresh_build:
+    name: Build distribution
+    uses: ./.github/workflows/build.yml
+
+  full_test:
+    name: Basic Tests
+    needs: fresh_build
+    uses: ./.github/workflows/code_test.yml
+    with:
+      artifact-name: ${{ needs.fresh_build.outputs.artifact-name }}
+      artifact-run-id: ${{ needs.fresh_build.outputs.run-id }}
+      test-all-versions: true
+
+  publish-to-test-pypi:
+    name: Publish to Test PyPI
+    needs:
+      - fresh_build
+      - full_test
+    runs-on: ubuntu-latest
+    environment:
+      name: test-pypi
+      url: https://test.pypi.org/p/pydoe
+    permissions:
+      id-token: write
+
+    steps:
+    - name: Download Distributions
+      uses: actions/download-artifact@v7
+      with:
+        name: ${{ needs.fresh_build.outputs.artifact-name }}
+        run-id: ${{ needs.fresh_build.outputs.run-id }}
+        path: ./dist
+
+    - name: Publish to Test PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        repository-url: https://test.pypi.org/legacy/
+
+  smoke_test_pypi_test:
+    runs-on: ubuntu-latest
+    needs: publish-to-test-pypi
+    env:
+      UV_DEFAULT_INDEX: https://test.pypi.org/simple/
+    steps:
+    - &checkout-tests
+      name: Checkout Tests
+      uses: actions/checkout@v6
+
+    - uses: astral-sh/setup-uv@v7
+      with:
+        activate-environment: true
+
+    - &smoke-test_deps-install
+      name: Install Dependencies
+      shell: bash
+      run: |
+        uv sync --no-dev --group test --no-install-project
+        uv pip install pyDOE --no-deps
+        uvx --with yq tomlq '.project.dependencies.[]' pyproject.toml | xargs uv pip install
+        uv pip check
+
+    - &run-smoke-tests
+      name: Run Tests
+      run: uv run --no-sync pytest --doctest-modules pyDOE tests
+
+  publish-to-pypi:
+    name: Publish to PyPI
+    if: github.ref_type == 'tag'
+    needs:
+      - fresh_build
+      - full_test
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/pydoe
+    permissions:
+      id-token: write
+
+    steps:
+    - name: Download Distributions
+      uses: actions/download-artifact@v7
+      with:
+        name: ${{ needs.fresh_build.outputs.artifact-name }}
+        run-id: ${{ needs.fresh_build.outputs.run-id }}
+        path: ./dist
+
+    - name: Publish to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+
+  smoke_test_pypi:
+    runs-on: ubuntu-latest
+    needs: publish-to-pypi
+    steps:
+    - *checkout-tests
+    - uses: astral-sh/setup-uv@v7
+      with:
+        activate-environment: true
+
+    - *smoke-test_deps-install
+    - *run-smoke-tests
+
+  publish_docs:
+    name: Publish Documentation
+    if: ${{ needs.smoke_test_pypi.result == 'success' }}
+    needs: smoke_test_pypi
+    uses: ./.github/workflows/docs_build.yml
+    with:
+      deploy: true
