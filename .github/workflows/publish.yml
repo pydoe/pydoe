@@ -116,6 +116,10 @@ jobs:
     name: Publish Documentation
     if: ${{ needs.smoke_test_pypi.result == 'success' }}
     needs: smoke_test_pypi
+    permissions:
+      pages: write     # to deploy to GitHub Pages
+      id-token: write  # to verify the deployment
+
     uses: ./.github/workflows/docs_build.yml
     with:
       deploy: true
