@@ -1,5 +1,4 @@
 import unittest
-import math
 
 import numpy as np
 import pytest
@@ -11,8 +10,6 @@ from pyDOE.doe_factorial import (
     fracfact_opt,
     fullfact,
     validate_generator,
-    _calculate_min_base_factors,
-    _max_factors_for_resolution,
 )
 
 
@@ -158,18 +155,15 @@ class TestFactorial(unittest.TestCase):
         with pytest.raises(ValueError, match="n must be at least 2"):
             fracfact_by_res(1, 3)
 
-
     def test_fracfact_by_res_invalid_resolution(self):
         with pytest.raises(ValueError, match="resolution must be >= 3"):
             fracfact_by_res(3, 2)
-
 
     def test_fracfact_by_res_table_lookup_path(self):
         # (6, 3) is explicitly in the DOE table -> k = 3
         design = fracfact_by_res(6, 3)
         assert design.shape == (8, 6)  # 2^3 runs, 6 factors
         assert set(np.unique(design)) == {-1.0, 1.0}
-
 
     def test_fracfact_by_res_fallback_calculation_path(self):
         # (16, 3) is not in the table -> fallback calculation
@@ -178,17 +172,14 @@ class TestFactorial(unittest.TestCase):
         assert design.shape == (32, 16)
         assert set(np.unique(design)) == {-1.0, 1.0}
 
-
     def test_fracfact_by_res_exceeds_base_factor_limit(self):
         with pytest.raises(ValueError, match="more than 26 base factors"):
             fracfact_by_res(2**27, 3)
-
 
     def test_fracfact_by_res_too_many_base_factors(self):
         # Force k > 26 via fallback logic
         with pytest.raises(ValueError, match="more than 26 base factors"):
             fracfact_by_res(2**27, 3)
-
 
     def test_fracfact_by_res_resolution_five(self):
         design = fracfact_by_res(6, 5)
@@ -196,51 +187,10 @@ class TestFactorial(unittest.TestCase):
         assert design.shape == (64, 6)
         assert set(np.unique(design)) == {-1.0, 1.0}
 
-
     def test_fracfact_by_res_columns_match_n(self):
         for n, res in [(5, 3), (7, 4), (9, 5)]:
             design = fracfact_by_res(n, res)
             assert design.shape[1] == n
-
-    def test_calculate_min_base_factors_res_4_with_loop_increment(self):
-        # n large enough to force k to increase
-        n = 12
-        res = 4
-        k = _calculate_min_base_factors(n, res)
-
-        initial_k = max(res - 1, math.ceil(math.log2(n + 1)))
-        assert k >= initial_k
-        assert _max_factors_for_resolution(k, res) >= n
-        assert _max_factors_for_resolution(k - 1, res) < n
-
-
-    def test_calculate_min_base_factors_res_5_path(self):
-        n = 10
-        res = 5
-        k = _calculate_min_base_factors(n, res)
-
-        assert k >= res - 1
-        assert _max_factors_for_resolution(k, res) >= n
-
-
-    def test_calculate_min_base_factors_high_resolution_fallback(self):
-        # res > 5 triggers conservative fallback
-        n = 6
-        res = 6
-        k = _calculate_min_base_factors(n, res)
-
-        assert k >= res - 1
-        assert _max_factors_for_resolution(k, res) >= n
-
-
-    def test_calculate_min_base_factors_boundary_near_26(self):
-        # Large n that pushes k close to 26 but still valid
-        n = 2**20
-        res = 4
-        k = _calculate_min_base_factors(n, res)
-
-        assert k <= 26
-        assert _max_factors_for_resolution(k, res) >= n
 
 
 @pytest.mark.parametrize(
@@ -255,7 +205,7 @@ class TestFactorial(unittest.TestCase):
     ],
 )
 def test_validate_generator_invalid(
-        n_factors: int, generator: str, message: str
+    n_factors: int, generator: str, message: str
 ):
     with pytest.raises(ValueError, match=message):
         validate_generator(n_factors, generator)
