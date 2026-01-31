@@ -127,6 +127,30 @@ class TestFactorial(unittest.TestCase):
             np.array([0.0, 0.0, 3.0, 4.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
         )
 
+    def test_fracfact_by_res_resolution_III(self):
+        """Test resolution III designs"""
+        # 8 runs should support 4 factors at resolution III
+        actual = fracfact_by_res(4, 3)
+        assert actual.shape[0] == 8
+        assert actual.shape[1] == 4
+
+        # 16 runs should support 7 factors at resolution III
+        actual = fracfact_by_res(7, 3)
+        assert actual.shape[0] == 16
+        assert actual.shape[1] == 7
+
+    def test_fracfact_by_res_resolution_IV(self):
+        """Test resolution IV designs"""
+        # 16 runs should support 4 factors at resolution IV
+        actual = fracfact_by_res(4, 4)
+        assert actual.shape[0] == 16
+        assert actual.shape[1] == 4
+
+        # 32 runs should support 8 factors at resolution IV
+        actual = fracfact_by_res(8, 4)
+        assert actual.shape[0] == 32
+        assert actual.shape[1] == 8
+
 
 @pytest.mark.parametrize(
     "n_factors, generator, message",
@@ -140,7 +164,7 @@ class TestFactorial(unittest.TestCase):
     ],
 )
 def test_validate_generator_invalid(
-    n_factors: int, generator: str, message: str
+        n_factors: int, generator: str, message: str
 ):
     with pytest.raises(ValueError, match=message):
         validate_generator(n_factors, generator)
