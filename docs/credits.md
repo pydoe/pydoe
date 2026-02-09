@@ -25,8 +25,9 @@ The original Scilab code was converted to Python and packaged as PyDOE by:
 
 This version provided Python users with factorial, fractional factorial, Plackett-Burman, Box-Behnken, central composite, and Latin-hypercube designs.
 
-> Source:  
-<a href="https://github.com/tisimst/pyDOE" style="color: #484848;">github.com/tisimst/pydoe</a>
+> Sources:  
+<a href="https://github.com/tisimst/pyDOE" style="color: #484848;">github.com/tisimst/pydoe</a>  
+<a href="https://pythonhosted.org/pyDOE" style="color: #484848;">pythonhosted.org/pydoe</a>
 
 ## PyDOE2
 PyDOE2 is a fork of PyDOE, created by:

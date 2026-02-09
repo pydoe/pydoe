@@ -234,6 +234,95 @@ array([[-1., -1., -1.,  1.,  1.,  1.],
        [ 1.,  1.,  1.,  1.,  1.,  1.]])
 ```
 
+Available Factorial Designs (with Resolution)
+
+<table class="factorial-table">
+  <thead>
+    <tr>
+      <th class="factors-bar">Runs</th>
+      <th class="factors-bar" colspan="14">Factors</th>
+    </tr>
+    <tr>
+      <th class="factors-bar"></th>
+      <th class="factors-bar">2</th><th class="factors-bar">3</th>
+      <th class="factors-bar">4</th><th class="factors-bar">5</th>
+      <th class="factors-bar">6</th><th class="factors-bar">7</th>
+      <th class="factors-bar">8</th><th class="factors-bar">9</th>
+      <th class="factors-bar">10</th><th class="factors-bar">11</th>
+      <th class="factors-bar">12</th><th class="factors-bar">13</th>
+      <th class="factors-bar">14</th><th class="factors-bar">15</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="factors-bar">4</td>
+      <td class="cell-full">Full</td>
+      <td class="cell-r3">III</td>
+      <td class="cell-empty"></td><td class="cell-empty"></td>
+      <td class="cell-empty"></td><td class="cell-empty"></td>
+      <td class="cell-empty"></td><td class="cell-empty"></td>
+      <td class="cell-empty"></td><td class="cell-empty"></td>
+      <td class="cell-empty"></td><td class="cell-empty"></td>
+      <td class="cell-empty"></td><td class="cell-empty"></td>
+    </tr>
+
+    <tr>
+      <td class="factors-bar">8</td>
+      <td class="cell-empty"></td><td class="cell-full">Full</td>
+      <td class="cell-r4">IV</td><td class="cell-r3">III</td>
+      <td class="cell-r3">III</td><td class="cell-r3">III</td>
+      <td class="cell-empty"></td><td class="cell-empty"></td>
+      <td class="cell-empty"></td><td class="cell-empty"></td>
+      <td class="cell-empty"></td><td class="cell-empty"></td>
+      <td class="cell-empty"></td><td class="cell-empty"></td>
+    </tr>
+
+    <tr>
+      <td class="factors-bar">16</td>
+      <td class="cell-empty"></td><td class="cell-empty"></td>
+      <td class="cell-full">Full</td><td class="cell-r5">V</td>
+      <td class="cell-r4">IV</td><td class="cell-r4">IV</td>
+      <td class="cell-r4">IV</td><td class="cell-r3">III</td>
+      <td class="cell-r3">III</td><td class="cell-r3">III</td>
+      <td class="cell-r3">III</td><td class="cell-r3">III</td>
+      <td class="cell-r3">III</td><td class="cell-r3">III</td>
+    </tr>
+
+    <tr>
+      <td class="factors-bar">32</td>
+      <td class="cell-empty"></td><td class="cell-empty"></td>
+      <td class="cell-empty"></td><td class="cell-full">Full</td>
+      <td class="cell-r6">VI</td><td class="cell-r4">IV</td>
+      <td class="cell-r4">IV</td><td class="cell-r4">IV</td>
+      <td class="cell-r4">IV</td><td class="cell-r4">IV</td>
+      <td class="cell-r4">IV</td><td class="cell-r4">IV</td>
+      <td class="cell-r4">IV</td><td class="cell-r4">IV</td>
+    </tr>
+
+    <tr>
+      <td class="factors-bar">64</td>
+      <td class="cell-empty"></td><td class="cell-empty"></td>
+      <td class="cell-empty"></td><td class="cell-empty"></td>
+      <td class="cell-full">Full</td><td class="cell-r7">VII</td>
+      <td class="cell-r5">V</td><td class="cell-r4">IV</td>
+      <td class="cell-r4">IV</td><td class="cell-r4">IV</td>
+      <td class="cell-r4">IV</td><td class="cell-r4">IV</td>
+      <td class="cell-r4">IV</td><td class="cell-r4">IV</td>
+    </tr>
+
+    <tr>
+      <td class="factors-bar">128</td>
+      <td class="cell-empty"></td><td class="cell-empty"></td>
+      <td class="cell-empty"></td><td class="cell-empty"></td>
+      <td class="cell-empty"></td><td class="cell-full">Full</td>
+      <td class="cell-r8">VIII</td><td class="cell-r6">VI</td>
+      <td class="cell-r5">V</td><td class="cell-r5">V</td>
+      <td class="cell-r4">IV</td><td class="cell-r4">IV</td>
+      <td class="cell-r4">IV</td><td class="cell-r4">IV</td>
+    </tr>
+  </tbody>
+</table>
+
 ## Plackett-Burman (`pbdesign`) {#plackett-burman}
 
 Another way to generate fractional-factorial designs is through the use
