@@ -234,6 +234,99 @@ array([[-1., -1., -1.,  1.,  1.,  1.],
        [ 1.,  1.,  1.,  1.,  1.,  1.]])
 ```
 
+Available Factorial Designs (with Resolution)
+
+<div class="doe-table-wrapper">
+
+<table class="doe-table">
+  <thead>
+    <tr>
+      <th>Number of Runs</th>
+      <th colspan="14">Number of Factors</th>
+    </tr>
+    <tr>
+      <th></th>
+      <th>2</th><th>3</th><th>4</th><th>5</th>
+      <th>6</th><th>7</th><th>8</th><th>9</th>
+      <th>10</th><th>11</th><th>12</th><th>13</th>
+      <th>14</th><th>15</th>
+    </tr>
+  <tbody>
+
+    <tr>
+      <th>4</th>
+      <td class="full">$2^2$</td><td class="res3">$2^{3-1}$</td>
+      <td class="na"></td><td class="na"></td><td class="na"></td><td class="na"></td>
+      <td class="na"></td><td class="na"></td><td class="na"></td><td class="na"></td>
+      <td class="na"></td><td class="na"></td><td class="na"></td><td class="na"></td>
+    </tr>
+
+    <tr>
+      <th>8</th>
+      <td class="na"></td><td class="full">$2^3$</td>
+      <td class="res4">$2^{4-1}$</td><td class="res3">$2^{5-2}$</td>
+      <td class="res3">$2^{6-3}$</td><td class="res3">$2^{7-4}$</td>
+      <td class="na"></td><td class="na"></td><td class="na"></td><td class="na"></td>
+      <td class="na"></td><td class="na"></td><td class="na"></td><td class="na"></td>
+    </tr>
+
+    <tr>
+      <th>16</th>
+      <td class="na"></td><td class="na"></td>
+      <td class="full">$2^4$</td><td class="res5">$2^{5-1}$</td>
+      <td class="res4">$2^{6-2}$</td><td class="res4">$2^{7-3}$</td>
+      <td class="res4">$2^{8-4}$</td><td class="res3">$2^{9-5}$</td>
+      <td class="res3">$2^{10-6}$</td><td class="res3">$2^{11-7}$</td>
+      <td class="res3">$2^{12-8}$</td><td class="res3">$2^{13-9}$</td>
+      <td class="res3">$2^{14-10}$</td><td class="res3">$2^{15-11}$</td>
+    </tr>
+
+    <tr>
+      <th>32</th>
+      <td class="na"></td><td class="na"></td><td class="na"></td>
+      <td class="full">$2^5$</td><td class="res5">$2^{6-1}$</td>
+      <td class="res4">$2^{7-2}$</td><td class="res4">$2^{8-3}$</td>
+      <td class="res4">$2^{9-4}$</td><td class="res4">$2^{10-5}$</td>
+      <td class="res4">$2^{11-6}$</td><td class="res4">$2^{12-7}$</td>
+      <td class="res4">$2^{13-8}$</td><td class="res4">$2^{14-9}$</td>
+      <td class="res4">$2^{15-10}$</td>
+    </tr>
+
+    <tr>
+      <th>64</th>
+      <td class="na"></td><td class="na"></td><td class="na"></td><td class="na"></td>
+      <td class="full">$2^6$</td><td class="res5">$2^{7-1}$</td>
+      <td class="res5">$2^{8-2}$</td><td class="res4">$2^{9-3}$</td>
+      <td class="res4">$2^{10-4}$</td><td class="res4">$2^{11-5}$</td>
+      <td class="res4">$2^{12-6}$</td><td class="res4">$2^{13-7}$</td>
+      <td class="res4">$2^{14-8}$</td><td class="res4">$2^{15-9}$</td>
+    </tr>
+
+    <tr>
+      <th>128</th>
+      <td class="na"></td><td class="na"></td>
+      <td class="na"></td><td class="na"></td>
+      <td class="na"></td>
+      <td class="full">$2^7$</td><td class="res5">$2^{8-1}$</td>
+      <td class="res5">$2^{9-2}$</td><td class="res5">$2^{10-3}$</td>
+      <td class="res5">$2^{11-4}$</td><td class="res4">$2^{12-5}$</td>
+      <td class="res4">$2^{13-6}$</td><td class="res4">$2^{14-7}$</td>
+      <td class="res4">$2^{15-8}$</td>
+    </tr>
+
+  </tbody>
+</table>
+
+<div class="doe-legend">
+  <div><span class="legend full"></span> Full Factorial Design</div>
+  <div><span class="legend res5"></span> Resolution V (or Higher) Design</div>
+  <div><span class="legend res4"></span> Resolution IV Design</div>
+  <div><span class="legend res3"></span> Resolution III Design</div>
+  <div><span class="legend na"></span> Not Available</div>
+</div>
+
+</div>
+
 ## Plackett-Burman (`pbdesign`) {#plackett-burman}
 
 Another way to generate fractional-factorial designs is through the use

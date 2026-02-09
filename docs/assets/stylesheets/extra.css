@@ -27,3 +27,51 @@ mark {
     background-color: rgba(255, 235, 59, 0.5);
     border-radius: 2px;
 }
+
+/* ---------- Factorial table ---------- */
+.doe-table-wrapper {
+  overflow-x: auto;
+}
+
+.doe-table {
+  border-collapse: collapse;
+  font-size: 0.75rem;
+  margin: auto;
+  text-align: center;
+}
+
+.doe-table th,
+.doe-table td {
+  border: 1px solid #bdbdbd;
+  padding: 3px 6px;
+  min-width: 38px;
+}
+
+.doe-table th {
+  background: #f1f1f1;
+}
+
+/* Cell styles */
+.full { background: #ffffff; }
+.res3 { background: #ff0000; }
+.res4 { background: #ffff00; }
+.res5 { background: #00ff00; }
+.na   { background: #d9d9d9; }
+
+/* Legend (2 rows) */
+.doe-legend {
+  margin-top: 12px;
+  font-size: 0.75rem;
+  display: grid;
+  grid-template-columns: repeat(2, max-content);
+  gap: 8px 24px;
+  justify-content: center;
+}
+
+.legend {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  border: 1px solid #333;
+  margin-right: 6px;
+}
