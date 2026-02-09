@@ -29,112 +29,49 @@ mark {
 }
 
 /* ---------- Factorial table ---------- */
-.factorial-table {
-  font-size: 0.72rem;
+.doe-table-wrapper {
+  overflow-x: auto;
 }
 
-.factorial-table th,
-.factorial-table td {
-  padding: 0.25rem 0.35rem;
-  min-width: 38px;
-  line-height: 1.1;
-}
-
-.factorial-table thead th {
-  padding: 0.3rem 0.35rem;
-}
-
-.factorial-table td:first-child,
-.factorial-table th:first-child {
-  min-width: 52px;
-  font-weight: 600;
-}
-
-/* Group header */
-.factorial-table .factors-bar {
-  background-color: #f1f1f1;
-  font-weight: 700;
-  text-align: center;
-  border-top: 0.5px solid #aaaaae;
-  border-bottom: 0.5px solid #aaaaae;
-  border-left: 0.5px solid #aaaaae;
-  border-right: 0.5px solid #aaaaae;
+.doe-table {
+  border-collapse: collapse;
   font-size: 0.75rem;
-  letter-spacing: 0.5px;
+  margin: auto;
+  text-align: center;
 }
 
-/* Full factorial */
-.cell-full {
-  background-color: #00ff00;
-  color: black;
-  font-weight: 520;
-  border-top: 0.5px solid #aaaaae;
-  border-bottom: 0.5px solid #aaaaae;
-  border-left: 0.5px solid #aaaaae;
-  border-right: 0.5px solid #aaaaae;
+.doe-table th,
+.doe-table td {
+  border: 1px solid #bdbdbd;
+  padding: 3px 6px;
+  min-width: 38px;
 }
 
-/* Resolution colors */
-.cell-r3 {
-  background-color: #ff0000;
-  color: black;
-  font-weight: 520;
-  border-top: 0.5px solid #aaaaae;
-  border-bottom: 0.5px solid #aaaaae;
-  border-left: 0.5px solid #aaaaae;
-  border-right: 0.5px solid #aaaaae;
-}
-.cell-r4 {
-  background-color: #ffff00;
-  color: black;
-  font-weight: 520;
-  border-top: 0.5px solid #aaaaae;
-  border-bottom: 0.5px solid #aaaaae;
-  border-left: 0.5px solid #aaaaae;
-  border-right: 0.5px solid #aaaaae;
-}
-.cell-r5 {
-  background-color: #00ff00;
-  color: black;
-  font-weight: 520;
-  border-top: 0.5px solid #aaaaae;
-  border-bottom: 0.5px solid #aaaaae;
-  border-left: 0.5px solid #aaaaae;
-  border-right: 0.5px solid #aaaaae;
-}
-.cell-r6 {
-  background-color: #00ff00;
-  color: black;
-  font-weight: 520;
-  border-top: 0.5px solid #aaaaae;
-  border-bottom: 0.5px solid #aaaaae;
-  border-left: 0.5px solid #aaaaae;
-  border-right: 0.5px solid #aaaaae;
-}
-.cell-r7 {
-  background-color: #00ff00;
-  color: black;
-  font-weight: 520;
-  border-top: 0.5px solid #aaaaae;
-  border-bottom: 0.5px solid #aaaaae;
-  border-left: 0.5px solid #aaaaae;
-  border-right: 0.5px solid #aaaaae;
-}
-.cell-r8 {
-  background-color: #00ff00;
-  color: black;
-  font-weight: 520;
-  border-top: 0.5px solid #aaaaae;
-  border-bottom: 0.5px solid #aaaaae;
-  border-left: 0.5px solid #aaaaae;
-  border-right: 0.5px solid #aaaaae;
+.doe-table th {
+  background: #f1f1f1;
 }
 
-/* Empty cells */
-.cell-empty {
-  background-color: #ffffff;
-  border-top: 0.5px solid #aaaaae;
-  border-bottom: 0.5px solid #aaaaae;
-  border-left: 0.5px solid #aaaaae;
-  border-right: 0.5px solid #aaaaae;
+/* Cell styles */
+.full { background: #ffffff; }
+.res3 { background: #ff0000; }
+.res4 { background: #ffff00; }
+.res5 { background: #00ff00; }
+.na   { background: #d9d9d9; }
+
+/* Legend (2 rows) */
+.doe-legend {
+  margin-top: 12px;
+  font-size: 0.75rem;
+  display: grid;
+  grid-template-columns: repeat(2, max-content);
+  gap: 8px 24px;
+  justify-content: center;
+}
+
+.legend {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  border: 1px solid #333;
+  margin-right: 6px;
 }
