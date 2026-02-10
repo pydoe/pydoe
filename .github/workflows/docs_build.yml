@@ -1,29 +1,31 @@
-name: Build PyDOE Docs
+name: Build Documentation
+permissions:
+  pages: write
+  id-token: write
 
 on:
+  pull_request:
+    branches: [ master ]
   workflow_call:
-    inputs:
+    inputs: &build-docs-inputs
       deploy:
         type: boolean
         required: false
         default: false
-    outputs:
-      artifact-name:
-        value: ${{ jobs.build.outputs.artifact-name }}
-      run-id:
-        value: ${{ github.run_id }}
+
+  workflow_dispatch:
+    inputs: *build-docs-inputs
+
+concurrency:
+  group: docs-build
 
 jobs:
+
   build:
-    name: Build Docs
     runs-on: ubuntu-latest
 
-    outputs:
-      artifact-name: ${{ steps.artifact-name.outputs.artifact-name }}
-
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v6
+      - uses: actions/checkout@v6
 
       - name: Setup uv
         uses: astral-sh/setup-uv@v7
@@ -34,40 +36,17 @@ jobs:
       - name: Set Artifact Name
         id: artifact-name
         run: |
-          echo "artifact-name=${{ github.run_id }}[${{ github.run_attempt }}]--docs-artifacts" \
+          echo "artifact_name=${{ github.run_id }}[${{ github.run_attempt }}]--build-artifacts" \
           | tee -a $GITHUB_OUTPUT
-
-      - name: Upload Docs Artifacts
-        if: ${{ ! inputs.deploy }}
-        uses: actions/upload-artifact@v6
-        with:
-          name: ${{ steps.artifact-name.outputs.artifact-name }}
-          path: build/docs
-          if-no-files-found: error
 
       - name: Upload Pages Artifacts
         uses: actions/upload-pages-artifact@v4
-        if: ${{ inputs.deploy }}
         with:
-          name: ${{ steps.artifact-name.outputs.artifact-name }}
+          name: ${{ steps.artifact-name.outputs.artifact_name }}
           path: build/docs
 
-  deploy:
-    name: Deploy Docs
-    needs: build
-    permissions:
-      pages: write     # to deploy to GitHub Pages
-      id-token: write  # to verify the deployment
-    if: ${{ inputs.deploy }}
-    runs-on: ubuntu-latest
-
-    environment:
-      name: docs-deploy
-      url: ${{ steps.deployment.outputs.page_url }}
-
-    steps:
       - name: Deploy to GitHub Pages
-        id: deployment
+        if: ${{ inputs.deploy }}
         uses: actions/deploy-pages@v4
         with:
-          artifact_name: ${{ needs.build.outputs.artifact-name }}
+          artifact_name: ${{ steps.artifact-name.outputs.artifact_name }}

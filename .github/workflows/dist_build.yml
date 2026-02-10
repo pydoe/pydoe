@@ -1,24 +1,19 @@
-name: Build PyDOE
+name: Build Distribution
 
 on:
   workflow_call:
     outputs:
-      artifact-name:
-        value: ${{ jobs.build.outputs.artifact-name }}
-      run-id:
+      artifact_name:
+        value: ${{ jobs.build.outputs.artifact_name }}
+      run_id:
         value: ${{ github.run_id }}
 
 jobs:
   build:
-    name: Build Dist
     runs-on: ubuntu-latest
 
-    outputs:
-      artifact-name: ${{ steps.artifact-name.outputs.artifact-name }}
-
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v6
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -31,12 +26,15 @@ jobs:
       - name: Set Artifact Name
         id: artifact-name
         run: |
-          echo "artifact-name=${{ github.run_id }}[${{ github.run_attempt }}]--build-artifacts" \
+          echo "artifact_name=${{ github.run_id }}[${{ github.run_attempt }}]--build-artifacts" \
           | tee -a $GITHUB_OUTPUT
 
-      - name: Upload build artifacts
+      - name: Upload Build Artifacts
         uses: actions/upload-artifact@v6
         with:
-          name: ${{ steps.artifact-name.outputs.artifact-name }}
+          name: ${{ steps.artifact-name.outputs.artifact_name }}
           path: dist
           if-no-files-found: error
+
+    outputs:
+      artifact_name: ${{ steps.artifact-name.outputs.artifact_name }}

@@ -2,9 +2,12 @@ name: Lint and Format
 
 on:
   push:
-    paths:
-      - '**/*.py'
-      - 'pyproject.toml'
+    branches: [ master ]
+
+  pull_request:
+    branches: [ master ]
+    paths: [ '**/*.py' ]
+
   workflow_dispatch:
 
 concurrency:

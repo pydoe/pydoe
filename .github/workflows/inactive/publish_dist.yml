@@ -1,0 +1,77 @@
+name: Publish to PyPI
+
+on:
+  push:
+    tags: [ 'v*.*.*' ]
+
+permissions:
+  id-token: write
+
+concurrency:
+  group: ${{ github.workflow }}
+
+jobs:
+  testing:
+    uses: ./.github/workflows/code_test.yml
+
+  publish-test-pypi:
+    runs-on: ubuntu-latest
+
+    environment:
+      name: test-pypi
+
+    needs: testing
+
+    steps:
+
+      - &download_dist
+        name: Download Distributions
+        uses: actions/download-artifact@v7
+        with:
+          name: ${{ needs.testing.outputs.artifact_name }}
+          run-id: ${{ needs.testing.outputs.artifact_run_id }}
+          path: ./dist
+
+      - name: Publish to Test PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
+          verbose: true
+
+      - name: Smoke Test on Test PyPI
+        run: |
+          pip install -v --index-url https://test.pypi.org/simple/ \
+          --extra-index-url https://pypi.org/simple/ webloom
+          python -c "import webloom;print(webloom.__version__)"
+
+  publish-to-pypi:
+    runs-on: ubuntu-latest
+
+    environment:
+      name: pypi
+
+    needs: testing
+
+    steps:
+
+      - *download_dist
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          verbose: true
+
+      - name: Smoke Test on PyPI
+        run: |
+          pip install -v --index-url https://pypi.org/simple/ webloom
+          python -c "import webloom;print(webloom.__version__)"
+
+  publish_docs:
+    needs: publish-to-pypi
+
+    permissions:
+      pages: write
+      id-token: write
+
+    uses: ./.github/workflows/docs_build.yml
+    with:
+      deploy: true

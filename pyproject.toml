@@ -143,3 +143,6 @@ ignore = [
 [tool.ruff.format]
 docstring-code-format = true
 skip-magic-trailing-comma = true
+
+[tool.pytest.ini_options]
+addopts = "--doctest-modules"
