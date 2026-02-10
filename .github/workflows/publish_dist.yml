@@ -39,10 +39,12 @@ jobs:
           verbose: true
 
       - name: Smoke Test on Test PyPI
+        shell: bash
         run: |
+          sleep 60
           pip install -v --index-url https://test.pypi.org/simple/ \
-          --extra-index-url https://pypi.org/simple/ webloom
-          python -c "import webloom;print(webloom.__version__)"
+          --extra-index-url https://pypi.org/simple/ pyDOE
+          python -c "import pyDOE;print(pyDOE.__version__)"
 
   publish-to-pypi:
     runs-on: ubuntu-latest
@@ -61,9 +63,11 @@ jobs:
           verbose: true
 
       - name: Smoke Test on PyPI
+        shell: bash
         run: |
-          pip install -v --index-url https://pypi.org/simple/ webloom
-          python -c "import webloom;print(webloom.__version__)"
+          sleep 60
+          pip install -v --index-url https://pypi.org/simple/ pyDOE
+          python -c "import pyDOE;print(pyDOE.__version__)"
 
   publish_docs:
     needs: publish-to-pypi
