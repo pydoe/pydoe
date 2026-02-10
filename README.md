@@ -1,8 +1,8 @@
 PyDOE: An Experimental Design Package for Python
 ================================================
 
-[![Tests](https://github.com/pydoe/pydoe/actions/workflows/tests.yml/badge.svg)](https://github.com/pydoe/pydoe/actions/workflows/tests.yml)
-[![Documentation](https://github.com/pydoe/pydoe/actions/workflows/docs.yml/badge.svg)](https://github.com/pydoe/pydoe/actions/workflows/docs.yml)
+[![Tests](https://github.com/pydoe/pydoe/actions/workflows/code_test.yml/badge.svg)](https://github.com/pydoe/pydoe/actions/workflows/code_test.yml)
+[![Documentation](https://github.com/pydoe/pydoe/actions/workflows/docs_build.yml/badge.svg)](https://github.com/pydoe/pydoe/actions/workflows/docs_build.yml)
 [![DOI](https://zenodo.org/badge/709347557.svg)](https://zenodo.org/doi/10.5281/zenodo.10958492)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
