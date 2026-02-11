@@ -23,42 +23,70 @@ The following individuals forked `PyDOE2` and worked on `PyDOE3`:
 
 from importlib.metadata import PackageNotFoundError, version
 
-from pydoe.doe_box_behnken import bbdesign
-from pydoe.doe_composite import ccdesign
-from pydoe.doe_cranley_patterson_shift import cranley_patterson_shift
-from pydoe.doe_doehlert import doehlert_shell_design, doehlert_simplex_design
-from pydoe.doe_factorial import (
+from .clustering import random_k_means
+from .factorial import (
     alias_vector_indices,
     ff2n,
+    fold,
     fracfact,
     fracfact_aliasing,
     fracfact_by_res,
     fracfact_opt,
     fullfact,
+    pbdesign,
 )
-from pydoe.doe_fold import fold
-from pydoe.doe_gsd import gsd
-from pydoe.doe_halton import halton_sequence
-from pydoe.doe_korobov import korobov_sequence
-from pydoe.doe_lhs import lhs
-from pydoe.doe_plackett_burman import pbdesign
-from pydoe.doe_random_k_means import random_k_means
-from pydoe.doe_random_uniform import random_uniform
-from pydoe.doe_rank1 import rank1_lattice
-from pydoe.doe_saltelli import saltelli_sampling
-from pydoe.doe_sobol import sobol_sequence
-from pydoe.doe_sparse_grid import doe_sparse_grid, sparse_grid_dimension
-from pydoe.doe_taguchi import (
+from .optimal import (
+    a_efficiency,
+    a_optimality,
+    build_design_matrix,
+    build_uniform_moment_matrix,
+    c_optimality,
+    criterion_value,
+    d_efficiency,
+    d_optimality,
+    detmax,
+    e_optimality,
+    fedorov,
+    g_optimality,
+    generate_candidate_set,
+    i_optimality,
+    information_matrix,
+    modified_fedorov,
+    optimal_design,
+    s_optimality,
+    sequential_dykstra,
+    simple_exchange_wynn_mitchell,
+    t_optimality,
+    v_optimality,
+)
+from .response_surface import (
+    bbdesign,
+    ccdesign,
+    doehlert_shell_design,
+    doehlert_simplex_design,
+    repeat_center,
+    star,
+    union,
+)
+from .sensitivity_analysis import gsd, morris_sampling, saltelli_sampling
+from .space_filling.quasi_random import (
+    cranley_patterson_shift,
+    halton_sequence,
+    korobov_sequence,
+    rank1_lattice,
+    sobol_sequence,
+    sukharev_grid,
+)
+from .space_filling.stochastic import lhs, random_uniform
+from .sparse_grid import doe_sparse_grid, sparse_grid_dimension
+from .taguchi import (
     TaguchiObjective,
     compute_snr,
     get_orthogonal_array,
     list_orthogonal_arrays,
     taguchi_design,
 )
-from pydoe.doe_vanilla_morris import morris_sampling
-from pydoe.grid_designs import sukharev_grid
-from pydoe.utils import scale_samples
-from pydoe.var_regression_matrix import var_regression_matrix
+from .utils import scale_samples, var_regression_matrix
 
 
 try:  # noqa: RUF067
@@ -68,14 +96,25 @@ except PackageNotFoundError:
 
 __all__ = [
     "TaguchiObjective",
+    "a_efficiency",
+    "a_optimality",
     "alias_vector_indices",
     "bbdesign",
+    "build_design_matrix",
+    "build_uniform_moment_matrix",
+    "c_optimality",
     "ccdesign",
     "compute_snr",
     "cranley_patterson_shift",
+    "criterion_value",
+    "d_efficiency",
+    "d_optimality",
+    "detmax",
     "doe_sparse_grid",
     "doehlert_shell_design",
     "doehlert_simplex_design",
+    "e_optimality",
+    "fedorov",
     "ff2n",
     "fold",
     "fracfact",
@@ -83,22 +122,36 @@ __all__ = [
     "fracfact_by_res",
     "fracfact_opt",
     "fullfact",
+    "g_optimality",
+    "generate_candidate_set",
     "get_orthogonal_array",
     "gsd",
     "halton_sequence",
+    "i_optimality",
+    "information_matrix",
     "korobov_sequence",
     "lhs",
     "list_orthogonal_arrays",
+    "modified_fedorov",
     "morris_sampling",
+    "optimal_design",
     "pbdesign",
     "random_k_means",
     "random_uniform",
     "rank1_lattice",
+    "repeat_center",
+    "s_optimality",
     "saltelli_sampling",
     "scale_samples",
+    "sequential_dykstra",
+    "simple_exchange_wynn_mitchell",
     "sobol_sequence",
     "sparse_grid_dimension",
+    "star",
     "sukharev_grid",
+    "t_optimality",
     "taguchi_design",
+    "union",
+    "v_optimality",
     "var_regression_matrix",
 ]

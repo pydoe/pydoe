@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-from pydoe.doe_star import star
+from pydoe import star
 
 
 class TestStar(unittest.TestCase):

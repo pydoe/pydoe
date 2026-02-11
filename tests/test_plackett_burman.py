@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-from pydoe.doe_plackett_burman import pbdesign
+from pydoe import pbdesign
 
 
 class TestPlackettBurman(unittest.TestCase):

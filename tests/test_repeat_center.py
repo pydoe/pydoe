@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-from pydoe.doe_repeat_center import repeat_center
+from pydoe import repeat_center
 
 
 class TestRepeatCenter(unittest.TestCase):

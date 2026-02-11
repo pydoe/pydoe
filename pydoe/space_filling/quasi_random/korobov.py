@@ -21,7 +21,7 @@ import random
 
 import numpy as np
 
-from pydoe.doe_rank1 import rank1_lattice
+from pydoe.space_filling.quasi_random.rank1 import rank1_lattice
 
 
 __all__ = ["korobov_sequence"]

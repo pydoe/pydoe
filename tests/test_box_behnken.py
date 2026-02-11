@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-from pydoe.doe_box_behnken import bbdesign
+from pydoe import bbdesign
 
 
 class TestBoxBehnken(unittest.TestCase):

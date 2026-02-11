@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-from pydoe.doe_optimal import (
+from pydoe import (
     a_efficiency,
     a_optimality,
     build_design_matrix,

@@ -17,8 +17,8 @@ from __future__ import annotations
 
 import numpy as np
 
-from pydoe.doe_factorial import ff2n
-from pydoe.doe_repeat_center import repeat_center
+from pydoe.factorial.factorial import ff2n
+from pydoe.response_surface.center_design import repeat_center
 
 
 __all__ = ["bbdesign"]

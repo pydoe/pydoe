@@ -19,10 +19,10 @@ from typing import Literal
 
 import numpy as np
 
-from pydoe.doe_factorial import ff2n
-from pydoe.doe_repeat_center import repeat_center
-from pydoe.doe_star import star
-from pydoe.doe_union import union
+from pydoe.factorial.factorial import ff2n
+from pydoe.response_surface.center_design import repeat_center
+from pydoe.response_surface.star import star
+from pydoe.response_surface.union import union
 
 
 __all__ = ["ccdesign"]

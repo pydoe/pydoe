@@ -1,7 +1,7 @@
 import numpy as np
 
-from pydoe.doe_optimal.criterion import regularized_inv
-from pydoe.doe_optimal.utils import information_matrix
+from pydoe.optimal.criterion import regularized_inv
+from pydoe.optimal.utils import information_matrix
 
 
 def d_efficiency(X: np.ndarray) -> float:

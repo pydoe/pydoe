@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-from pydoe.doe_lhs import lhs
+from pydoe import lhs
 
 
 class TestLhs(unittest.TestCase):

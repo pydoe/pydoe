@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-from pydoe.doe_gsd import gsd
+from pydoe import gsd
 
 
 class TestGsd(unittest.TestCase):
