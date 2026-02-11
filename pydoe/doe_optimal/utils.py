@@ -4,7 +4,7 @@ from typing import Literal
 
 import numpy as np
 
-from pyDOE.doe_optimal.criterion import (
+from pydoe.doe_optimal.criterion import (
     a_optimality,
     c_optimality,
     d_optimality,
@@ -15,7 +15,7 @@ from pyDOE.doe_optimal.criterion import (
     t_optimality,
     v_optimality,
 )
-from pyDOE.doe_optimal.model import (
+from pydoe.doe_optimal.model import (
     build_design_matrix,
     build_uniform_moment_matrix,
 )

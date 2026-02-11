@@ -13,7 +13,7 @@ This section includes the following sampling design methods:
     All sampling design functions are available with:
 
     ```python
-    >>> from pyDOE import morris_sampling, saltelli_sampling
+    >>> from pydoe import morris_sampling, saltelli_sampling
     ```
 
 ## Morris Method (`morris_sampling`) {#morris_method}
@@ -52,7 +52,7 @@ Basic usage with 2 variables:
 
 ```python
 >>> import numpy as np
->>> from pyDOE import morris_sampling
+>>> from pydoe import morris_sampling
 >>> samples = morris_sampling(num_vars=2, N=5, num_levels=4, seed=128)
 >>> samples.shape
 (15, 2)
@@ -139,7 +139,7 @@ Basic usage with first and total-order indices:
 
 ```python
 >>> import numpy as np
->>> from pyDOE import saltelli_sampling
+>>> from pydoe import saltelli_sampling
 >>> samples = saltelli_sampling(num_vars=3, N=1024, seed=128)
 >>> samples.shape
 (8192, 3)  # (1)!

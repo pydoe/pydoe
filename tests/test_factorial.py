@@ -3,7 +3,7 @@ import unittest
 import numpy as np
 import pytest
 
-from pyDOE.doe_factorial import (
+from pydoe.doe_factorial import (
     ff2n,
     fracfact,
     fracfact_by_res,

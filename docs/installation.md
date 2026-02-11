@@ -1,8 +1,8 @@
 # Installation
 
-`pyDOE` can be installed from `pypi`, `conda-forge`, and `git`.
+`PyDOE` can be installed from `pypi`, `conda-forge`, and `git`.
 
-## [PyPI](https://pypi.org/project/pyDOE)
+## [PyPI](https://pypi.org/project/pydoe)
 
 For using the PyPI package in your project, you can update your configuration file by adding following snippet.
 
@@ -10,7 +10,7 @@ For using the PyPI package in your project, you can update your configuration fi
 
     ```toml
     [project.dependencies]
-    pyDOE = "*" # (1)!
+    pydoe = "*" # (1)!
     ```
 
     1. Specifying a version is recommended
@@ -18,7 +18,7 @@ For using the PyPI package in your project, you can update your configuration fi
 === "requirements.txt"
 
     ```
-    pyDOE>=0.3.8
+    pydoe>=0.3.8
     ```
 
 ### pip
@@ -26,7 +26,7 @@ For using the PyPI package in your project, you can update your configuration fi
 === "Installation for user"
 
     ```bash
-    pip install --upgrade --user pyDOE # (1)!
+    pip install --upgrade --user pydoe # (1)!
     ```
 
     1. You may need to use `pip3` instead of `pip` depending on your python installation.
@@ -36,7 +36,7 @@ For using the PyPI package in your project, you can update your configuration fi
     ```bash
     python -m venv .venv
     source .venv/bin/activate
-    pip install --require-virtualenv --upgrade pyDOE # (1)!
+    pip install --require-virtualenv --upgrade pydoe # (1)!
     ```
 
     1. You may need to use `pip3` instead of `pip` depending on your python installation.
@@ -47,14 +47,14 @@ For using the PyPI package in your project, you can update your configuration fi
 
 ### pipenv
 
-    pipenv install pyDOE
+    pipenv install pydoe
 
 ### uv
 
 === "Adding to uv project"
 
     ```bash
-    uv add pyDOE
+    uv add pydoe
     uv sync
     ```
 
@@ -62,28 +62,28 @@ For using the PyPI package in your project, you can update your configuration fi
 
     ```bash
     uv venv
-    uv pip install pyDOE
+    uv pip install pydoe
     ```
 
 ### poetry
 
 ```bash
-poetry add pyDOE
+poetry add pydoe
 ```
 
 ### pdm
 
 ```bash
-pdm add pyDOE
+pdm add pydoe
 ```
 
 ### hatch
 
 ```bash
-hatch add pyDOE
+hatch add pydoe
 ```
 
-## [conda-forge](https://anaconda.org/conda-forge/pyDOE)
+## [conda-forge](https://anaconda.org/conda-forge/pydoe)
 
 You can update your environment spec file by adding following snippets.
 
@@ -91,7 +91,7 @@ You can update your environment spec file by adding following snippets.
 channels:
   - conda-forge
 dependencies:
-  - pyDOE # (1)!
+  - pydoe # (1)!
 ```
 
 1. Specifying a version is recommended
@@ -114,19 +114,19 @@ Or directly in your conda environment.
 
 === "conda"
     ```bash
-    conda install -c conda-forge pyDOE
+    conda install -c conda-forge pydoe
     ```
 === "micromamba"
     ```bash
-    micromamba install -c conda-forge pyDOE
+    micromamba install -c conda-forge pydoe
     ```
 
-## [git](https://github.com/pydoe/pyDOE)
+## [git](https://github.com/pydoe/pydoe)
 
 Sometimmes release can fall behind the latest changes in the repository. `pip` can directly install from the git repository.
 
 ```bash
-pip install --upgrade "git+github.com/pydoe/pyDOE.git#egg=pyDOE"
+pip install --upgrade "git+github.com/pydoe/pydoe.git#egg=pydoe"
 ```
 
 ## Dependencies

@@ -38,7 +38,7 @@ $$\hat{\beta} = (X^{T}X)^{-1}X^{T}y$$
 Examples
 --------
 >>> import numpy as np
->>> from pyDOE.doe_optimal import optimal_design, generate_candidate_set
+>>> from pydoe.doe_optimal import optimal_design, generate_candidate_set
 >>>
 >>> # Generate candidate set
 >>> candidates = generate_candidate_set(n_factors=2, n_levels=5)
@@ -53,14 +53,14 @@ Examples
 ... )
 """
 
-from pyDOE.doe_optimal.algorithms import (
+from pydoe.doe_optimal.algorithms import (
     detmax,
     fedorov,
     modified_fedorov,
     sequential_dykstra,
     simple_exchange_wynn_mitchell,
 )
-from pyDOE.doe_optimal.criterion import (
+from pydoe.doe_optimal.criterion import (
     a_optimality,
     c_optimality,
     d_optimality,
@@ -71,14 +71,14 @@ from pyDOE.doe_optimal.criterion import (
     t_optimality,
     v_optimality,
 )
-from pyDOE.doe_optimal.efficiency import a_efficiency, d_efficiency
-from pyDOE.doe_optimal.model import (
+from pydoe.doe_optimal.efficiency import a_efficiency, d_efficiency
+from pydoe.doe_optimal.model import (
     build_design_matrix,
     build_uniform_moment_matrix,
     generate_candidate_set,
 )
-from pyDOE.doe_optimal.optimal import optimal_design
-from pyDOE.doe_optimal.utils import criterion_value, information_matrix
+from pydoe.doe_optimal.optimal import optimal_design
+from pydoe.doe_optimal.utils import criterion_value, information_matrix
 
 
 __author__ = "Saud Zahir"

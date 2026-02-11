@@ -1,6 +1,6 @@
 # Optimal Experimental Designs
 
-The `pyDOE.doe_optimal` module provides advanced algorithms for constructing
+The `pydoe.doe_optimal` module provides advanced algorithms for constructing
 **optimal experimental designs** using a variety of optimality criteria and algorithms.
 This is useful for maximizing the information gained from experiments while minimizing
 the number of runs.
@@ -9,7 +9,7 @@ the number of runs.
     All available optimal design tools can be accessed after a simple import statement:
 
     ```python
-    >>> from pyDOE import optimal_design, generate_candidate_set
+    >>> from pydoe import optimal_design, generate_candidate_set
     ```
 
 ## Overview
@@ -87,7 +87,7 @@ Generate a D-optimal design for a quadratic model with 2 factors:
 
 ```python
 >>> import numpy as np
->>> from pyDOE.doe_optimal import optimal_design, generate_candidate_set
+>>> from pydoe.doe_optimal import optimal_design, generate_candidate_set
 >>> candidates = generate_candidate_set(n_factors=2, n_levels=5)
 >>> design, info = optimal_design(
 ...     candidates=candidates,

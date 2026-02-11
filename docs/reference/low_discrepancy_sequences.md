@@ -17,7 +17,7 @@ This section includes the following quasi-random designs:
     All sequence functions are available with:
 
     ```python
-    >>> from pyDOE import (sukharev_grid, sobol_sequence,
+    >>> from pydoe import (sukharev_grid, sobol_sequence,
     ...     halton_sequence, rank1_lattice, korobov_sequence,
     ...     cranley_patterson_shift)
     ```
@@ -178,7 +178,7 @@ quasi-random sequence and wraps the result within the unit hypercube.
 **Example**:
 
 ```python
->>> from pyDOE import halton_sequence, cranley_patterson_shift
+>>> from pydoe import halton_sequence, cranley_patterson_shift
 >>> x = halton_sequence(4, 2)
 >>> cranley_patterson_shift(x, seed=42)
 array([[0.77395605, 0.43887844],

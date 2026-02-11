@@ -1,5 +1,5 @@
 """
-Utility functions for pyDOE package.
+Utility functions for PyDOE package.
 
 This module provides common utility functions used across different DOE methods,
 including sample scaling, bounds checking, and other shared functionality.
@@ -46,7 +46,7 @@ def scale_samples(
     Examples
     --------
     >>> import numpy as np
-    >>> from pyDOE.utils import scale_samples
+    >>> from pydoe.utils import scale_samples
     >>> samples = np.array([[0.1, 0.2], [0.8, 0.9]])
     >>> bounds = [(-1, 1), (0, 10)]
     >>> scale_samples(samples, bounds)

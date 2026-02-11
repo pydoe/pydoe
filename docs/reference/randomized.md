@@ -9,7 +9,7 @@ be described:
     All available designs can be accessed after a simple import statement:
 
     ```pycon
-    >>> from pyDOE import lhs, random_k_means, random_uniform
+    >>> from pydoe import lhs, random_k_means, random_uniform
     ```
 
 ## Latin-Hypercube (`lhs`) {#latin-hypercube}
@@ -174,7 +174,7 @@ array([[0.24854237, 0.25041155],
 
 Random Uniform generates random samples from a uniform distribution over the
 half-open interval [0, 1). This is a simple wrapper around `numpy.random.rand`
-that provides a consistent interface with other pyDOE functions.
+that provides a consistent interface with other PyDOE functions.
 
 Random Uniform designs can be created using the following syntax:
 

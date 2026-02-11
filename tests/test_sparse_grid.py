@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from pyDOE.doe_sparse_grid import doe_sparse_grid, sparse_grid_dimension
+from pydoe.doe_sparse_grid import doe_sparse_grid, sparse_grid_dimension
 
 
 class TestSparseGridExamples:

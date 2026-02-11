@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-from pyDOE import random_k_means
+from pydoe import random_k_means
 
 
 class TestRandomKMeans(unittest.TestCase):

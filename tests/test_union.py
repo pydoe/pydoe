@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-from pyDOE.doe_union import union
+from pydoe.doe_union import union
 
 
 class TestUnion(unittest.TestCase):

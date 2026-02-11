@@ -2,8 +2,8 @@ import unittest
 
 import numpy as np
 
-from pyDOE.doe_vanilla_morris import morris_sampling
-from pyDOE.utils import scale_samples
+from pydoe.doe_vanilla_morris import morris_sampling
+from pydoe.utils import scale_samples
 
 
 class TestMorrisSampling(unittest.TestCase):

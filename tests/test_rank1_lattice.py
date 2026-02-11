@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-from pyDOE import rank1_lattice
+from pydoe import rank1_lattice
 
 
 class TestRank1Lattice(unittest.TestCase):

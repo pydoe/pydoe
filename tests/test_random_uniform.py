@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-from pyDOE import random_uniform
+from pydoe import random_uniform
 
 
 class TestRandomUniform(unittest.TestCase):

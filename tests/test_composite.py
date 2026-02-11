@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-from pyDOE.doe_composite import ccdesign
+from pydoe.doe_composite import ccdesign
 
 
 class TestComposite(unittest.TestCase):
