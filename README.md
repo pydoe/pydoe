@@ -11,9 +11,9 @@ https://stackoverflow.com/questions/tagged/pydoe)
 [![codecov](https://codecov.io/gh/pydoe/pydoe/branch/master/graph/badge.svg)](https://codecov.io/gh/pydoe/pydoe)
 [![License](https://img.shields.io/badge/license-BSD%203--Clause-blue.svg)](./LICENSE)
 
-[![PyPI Downloads](https://img.shields.io/pypi/dm/pyDOE.svg?label=PyPI%20downloads)](https://pypi.org/project/pyDOE/)
+[![PyPI Downloads](https://img.shields.io/pypi/dm/pydoe.svg?label=PyPI%20downloads)](https://pypi.org/project/pydoe/)
 [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/pydoe.svg?label=Conda%20downloads)](https://anaconda.org/conda-forge/pydoe)
-[![Python versions](https://img.shields.io/pypi/pyversions/pyDOE.svg)](https://pypi.org/project/pyDOE/)
+[![Python versions](https://img.shields.io/pypi/pyversions/pydoe.svg)](https://pypi.org/project/pydoe/)
 
 PyDOE is a Python package for design of experiments (DOE), enabling scientists, engineers, and statisticians to efficiently construct experimental designs.
 
@@ -76,7 +76,7 @@ Installation
 ------------
 
 ```bash
-pip install pyDOE
+pip install pydoe
 ```
 
 Credits

@@ -9,7 +9,7 @@ In this section, the following kinds of factorial designs will be described:
 !!! note
     All available designs can be accessed after a simple import statement:
     ```pycon
-    >>> from pyDOE import fullfract, ff2n, fracfact, pbdesign, gsd
+    >>> from pydoe import fullfract, ff2n, fracfact, pbdesign, gsd
     ```
 
 ## General Full-Factorial (`fullfact`)

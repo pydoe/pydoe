@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-from pyDOE import korobov_sequence
+from pydoe import korobov_sequence
 
 
 class TestKorobovSequence(unittest.TestCase):

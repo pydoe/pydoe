@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-from pyDOE import sobol_sequence
+from pydoe import sobol_sequence
 
 
 class TestSobolSequence(unittest.TestCase):

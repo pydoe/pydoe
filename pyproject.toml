@@ -3,7 +3,7 @@ requires = ["hatchling >= 1.26", "hatch-vcs"]
 build-backend = "hatchling.build"
 
 [project]
-name = "pyDOE"
+name = "pydoe"
 dynamic = ["version"]
 description = "Design of Experiments for Python"
 authors = [
@@ -118,13 +118,9 @@ select = [
     "RUF", # Ruff-specific rules (Additional optimizations and best practices)
 ]
 
-# NOTE:
-#     * Rule N999 is currently ignored, but in version 1.0.0
-#     and above it will be enforced.
 ignore = [
     "N803",      # [pep8-naming](https://docs.astral.sh/ruff/rules/invalid-argument-name/)
     "N806",      # [pep8-naming](https://docs.astral.sh/ruff/rules/non-lowercase-variable-in-function/)
-    "N999",      # [pep8-naming](https://docs.astral.sh/ruff/rules/invalid-module-name/)
     "PLR2004",   # [pylint](https://docs.astral.sh/ruff/rules/magic-value-comparison/)
     "S311",      # [flake8-bandit](https://docs.astral.sh/ruff/rules/suspicious-non-cryptographic-random-usage/)
 ]

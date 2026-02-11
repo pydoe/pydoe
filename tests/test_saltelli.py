@@ -3,8 +3,8 @@ import warnings
 
 import numpy as np
 
-from pyDOE.doe_saltelli import saltelli_sampling
-from pyDOE.utils import scale_samples
+from pydoe.doe_saltelli import saltelli_sampling
+from pydoe.utils import scale_samples
 
 
 class TestSaltelliSampling(unittest.TestCase):

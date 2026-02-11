@@ -4,19 +4,19 @@ from typing import Literal
 
 import numpy as np
 
-from pyDOE.doe_optimal.algorithms import (
+from pydoe.doe_optimal.algorithms import (
     detmax,
     fedorov,
     modified_fedorov,
     sequential_dykstra,
     simple_exchange_wynn_mitchell,
 )
-from pyDOE.doe_optimal.efficiency import a_efficiency, d_efficiency
-from pyDOE.doe_optimal.model import (
+from pydoe.doe_optimal.efficiency import a_efficiency, d_efficiency
+from pydoe.doe_optimal.model import (
     build_design_matrix,
     build_uniform_moment_matrix,
 )
-from pyDOE.doe_optimal.utils import criterion_value
+from pydoe.doe_optimal.utils import criterion_value
 
 
 def optimal_design(  # noqa: PLR0913, PLR0917

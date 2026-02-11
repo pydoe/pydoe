@@ -17,7 +17,7 @@ Sources of orthogonal arrays:
     All functions are available after importing:
 
     ```python
-    >>> from pyDOE import (list_orthogonal_arrays, get_orthogonal_array,
+    >>> from pydoe import (list_orthogonal_arrays, get_orthogonal_array,
     ...     taguchi_design, compute_snr, TaguchiObjective)
     ```
 

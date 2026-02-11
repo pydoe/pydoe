@@ -1,6 +1,6 @@
 # Sparse Grid Designs
 
-The ``pyDOE`` module provides sparse grid construction using **Smolyak's construction** (Smolyak, 1963) 
+The ``PyDOE`` module provides sparse grid construction using **Smolyak's construction** (Smolyak, 1963) 
 for generating experimental designs with hierarchical grid structures that maintain good 
 space-filling properties while requiring significantly fewer points than traditional 
 full grid approaches in high-dimensional spaces.
@@ -9,7 +9,7 @@ full grid approaches in high-dimensional spaces.
     All sparse grid functions are available with:
 
     ```python
-    >>> from pyDOE import doe_sparse_grid, sparse_grid_dimension
+    >>> from pydoe import doe_sparse_grid, sparse_grid_dimension
     ```
 
 ## Overview
@@ -62,7 +62,7 @@ This implementation exactly matches MATLAB spinterp's theoretical point counts.
 
 ```python
 >>> import numpy as np
->>> from pyDOE import doe_sparse_grid
+>>> from pydoe import doe_sparse_grid
 
 >>> # Basic 2D sparse grid
 >>> design = doe_sparse_grid(n_level=3, n_factors=2)
@@ -154,7 +154,7 @@ Generate a sparse grid design for 3 factors at level 4:
 
 ```python
 >>> import numpy as np
->>> from pyDOE import doe_sparse_grid, sparse_grid_dimension
+>>> from pydoe import doe_sparse_grid, sparse_grid_dimension
 >>> 
 >>> # Check point count first
 >>> n_points = sparse_grid_dimension(n_level=4, n_factors=3)

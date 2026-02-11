@@ -64,11 +64,11 @@ from typing import Literal
 
 import numpy as np
 
-from pyDOE.doe_optimal.model import (
+from pydoe.doe_optimal.model import (
     build_design_matrix,
     build_uniform_moment_matrix,
 )
-from pyDOE.doe_optimal.utils import (
+from pydoe.doe_optimal.utils import (
     _best_single_add,
     _best_single_drop,
     criterion_value,

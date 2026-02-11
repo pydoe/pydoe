@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-from pyDOE.doe_taguchi import TaguchiObjective, compute_snr, taguchi_design
+from pydoe.doe_taguchi import TaguchiObjective, compute_snr, taguchi_design
 
 
 class TestTaguchiDesign(unittest.TestCase):

@@ -117,7 +117,7 @@ extra:
     - icon: fontawesome/brands/github
       link: https://github.com/pydoe/pydoe
     - icon: fontawesome/brands/python
-      link: https://pypi.org/org/pydoe
+      link: https://pypi.org/project/pydoe/
 
 extra_javascript:
   - assets/javascripts/katex.js

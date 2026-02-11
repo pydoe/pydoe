@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-from pyDOE.grid_designs import sukharev_grid
+from pydoe.grid_designs import sukharev_grid
 
 
 class TestSukharevGrid(unittest.TestCase):

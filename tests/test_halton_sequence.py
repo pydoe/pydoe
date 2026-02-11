@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-from pyDOE import halton_sequence
+from pydoe import halton_sequence
 
 
 class TestHaltonSequence(unittest.TestCase):

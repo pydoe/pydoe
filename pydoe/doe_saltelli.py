@@ -42,7 +42,7 @@ import warnings
 
 import numpy as np
 
-from pyDOE.doe_sobol import sobol_sequence
+from pydoe.doe_sobol import sobol_sequence
 
 
 __all__ = ["saltelli_sampling"]

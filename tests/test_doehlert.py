@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-from pyDOE import doehlert_shell_design, doehlert_simplex_design
+from pydoe import doehlert_shell_design, doehlert_simplex_design
 
 
 class TestDoehlertDesign(unittest.TestCase):

@@ -43,8 +43,8 @@ jobs:
         run: |
           sleep 60
           pip install -v --index-url https://test.pypi.org/simple/ \
-          --extra-index-url https://pypi.org/simple/ pyDOE
-          python -c "import pyDOE;print(pyDOE.__version__)"
+          --extra-index-url https://pypi.org/simple/ pydoe
+          python -c "import pydoe;print(pydoe.__version__)"
 
   publish-to-pypi:
     runs-on: ubuntu-latest
@@ -66,8 +66,8 @@ jobs:
         shell: bash
         run: |
           sleep 60
-          pip install -v --index-url https://pypi.org/simple/ pyDOE
-          python -c "import pyDOE;print(pyDOE.__version__)"
+          pip install -v --index-url https://pypi.org/simple/ pydoe
+          python -c "import pydoe;print(pydoe.__version__)"
 
   publish_docs:
     needs: publish-to-pypi

@@ -25,7 +25,7 @@ from typing import Literal
 
 import numpy as np
 
-from pyDOE.orthogonal_arrays import ORTHOGONAL_ARRAYS
+from pydoe.orthogonal_arrays import ORTHOGONAL_ARRAYS
 
 
 __all__ = [
