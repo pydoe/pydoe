@@ -36,7 +36,7 @@ jobs:
       - name: Set Artifact Name
         id: artifact-name
         run: |
-          echo "artifact_name=${{ github.run_id }}[${{ github.run_attempt }}]--build-artifacts" \
+          echo "artifact_name=${{ github.run_id }}[${{ github.run_attempt }}]--docs-artifacts" \
           | tee -a $GITHUB_OUTPUT
 
       - name: Upload Pages Artifacts
