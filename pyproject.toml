@@ -50,8 +50,9 @@ dependencies = [
 requires-python = ">=3.10"
 
 [project.urls]
+homepage = "https://pydoe.github.io/pydoe/"
+documentation = "https://pydoe.github.io/pydoe/reference/factorial/"
 source = "https://github.com/pydoe/pydoe"
-# TODO: add documentation URL
 # TODO: provide changelog URL from docs
 releasenotes = "https://github.com/pydoe/pydoe/releases/latest"
 issues = "https://github.com/pydoe/pydoe/issues"
