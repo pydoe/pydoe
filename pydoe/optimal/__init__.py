@@ -38,7 +38,7 @@ $$\hat{\beta} = (X^{T}X)^{-1}X^{T}y$$
 Examples
 --------
 >>> import numpy as np
->>> from pydoe.doe_optimal import optimal_design, generate_candidate_set
+>>> from pydoe import optimal_design, generate_candidate_set
 >>>
 >>> # Generate candidate set
 >>> candidates = generate_candidate_set(n_factors=2, n_levels=5)

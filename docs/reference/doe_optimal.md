@@ -87,7 +87,7 @@ Generate a D-optimal design for a quadratic model with 2 factors:
 
 ```python
 >>> import numpy as np
->>> from pydoe.doe_optimal import optimal_design, generate_candidate_set
+>>> from pydoe import optimal_design, generate_candidate_set
 >>> candidates = generate_candidate_set(n_factors=2, n_levels=5)
 >>> design, info = optimal_design(
 ...     candidates=candidates,

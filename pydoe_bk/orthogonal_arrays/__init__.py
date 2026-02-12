@@ -1,1 +1,0 @@
-from .orthogonal_arrays import ORTHOGONAL_ARRAYS as ORTHOGONAL_ARRAYS
