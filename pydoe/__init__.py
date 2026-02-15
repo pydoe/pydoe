@@ -33,6 +33,7 @@ from .factorial import (
     fracfact_by_res,
     fracfact_opt,
     fullfact,
+    gsd,
     pbdesign,
 )
 from .optimal import (
@@ -68,7 +69,7 @@ from .response_surface import (
     star,
     union,
 )
-from .sensitivity_analysis import gsd, morris_sampling, saltelli_sampling
+from .sensitivity_analysis import morris_sampling, saltelli_sampling
 from .space_filling.quasi_random import (
     cranley_patterson_shift,
     halton_sequence,

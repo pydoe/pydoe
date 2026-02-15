@@ -8,6 +8,7 @@ from .factorial import (
     fullfact,
 )
 from .fold import fold
+from .gsd import gsd
 from .plackett_burman import pbdesign
 
 
@@ -20,5 +21,6 @@ __all__ = [
     "fracfact_by_res",
     "fracfact_opt",
     "fullfact",
+    "gsd",
     "pbdesign",
 ]
