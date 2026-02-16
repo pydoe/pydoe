@@ -72,7 +72,11 @@ def pbdesign(n: int) -> np.ndarray:
         int(n / 4) + 1
     )  # calculate the correct number of rows (multiple of 4)
     f, e = np.frexp([n, n / 12.0, n / 20.0])
-    k = [idx for idx, val in enumerate(np.logical_and(f == 0.5, e > 0)) if val]
+    k = [
+        idx
+        for idx, val in enumerate(np.logical_and(np.isclose(f, 0.5), e > 0))
+        if val
+    ]
 
     if not (isinstance(n, int) and k != []):
         raise ValueError("Invalid inputs. n must be a multiple of 4.")
