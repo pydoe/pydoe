@@ -81,6 +81,12 @@ test = [
 [tool.hatch.version]
 source = "vcs"
 
+[tool.hatch.build.targets.wheel]
+include = [
+  "/pydoe",
+  "/pyDOE.py",
+]
+
 [tool.ruff]
 line-length = 80
 indent-width = 4
