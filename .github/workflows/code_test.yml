@@ -86,7 +86,7 @@ jobs:
           uv pip install -v ./dist/*.whl
 
       - name: Run Tests
-        run: uv run --no-sync pytest -v -n auto --cov --cov-report=xml
+        run: uv run --no-sync pytest -v -n auto --cov --cov-report=xml tests --pyargs pydoe
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
