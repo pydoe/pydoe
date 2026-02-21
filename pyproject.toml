@@ -143,3 +143,5 @@ skip-magic-trailing-comma = true
 
 [tool.pytest.ini_options]
 addopts = "--doctest-modules"
+testpaths = ["tests", "pydoe"]
+python_files = ["test_*.py"]
