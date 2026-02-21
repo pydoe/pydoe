@@ -51,7 +51,7 @@ theme:
 
   # Logo and favicon
   favicon: assets/images/pydoe.ico
-  logo: assets/images/pydoe-white-outline.svg
+  logo: assets/images/pydoe.png
 
   # Font configuration
   font:
