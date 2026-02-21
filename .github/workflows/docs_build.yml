@@ -31,7 +31,7 @@ jobs:
         uses: astral-sh/setup-uv@v7
 
       - name: Build Documentation
-        run: uv run --no-dev --group docs mkdocs build --clean --strict
+        run: uv run --no-dev --group docs zensical build --clean --strict
 
       - name: Set Artifact Name
         id: artifact-name

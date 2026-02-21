@@ -1,7 +1,7 @@
 """
-Compatibility shim for legacy CamelCase import.
+Compatibility shim for legacy camelCase import.
 
-This module aliases `pyDOE` → `pydoe`.
+This module aliases `pyDOE` ---> `pydoe`.
 """
 
 import importlib
