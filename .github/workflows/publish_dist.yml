@@ -26,7 +26,7 @@ jobs:
 
       - &download_dist
         name: Download Distributions
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: ${{ needs.testing.outputs.artifact_name }}
           run-id: ${{ needs.testing.outputs.artifact_run_id }}
