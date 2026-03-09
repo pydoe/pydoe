@@ -68,7 +68,7 @@ sampled points that are normally distributed:
 A basic 4-factor latin-hypercube design:
 
 ```pycon
->>> lhs(4, criterion='center')
+>>> lhs(4, criterion="center")
 array([[ 0.875,  0.625,  0.875,  0.125],
        [ 0.375,  0.125,  0.375,  0.375],
        [ 0.625,  0.375,  0.125,  0.625],
@@ -78,7 +78,7 @@ array([[ 0.875,  0.625,  0.875,  0.125],
 Let's say we want more samples, like 10:
 
 ```pycon
->>> lhs(4, samples=10, criterion='center')
+>>> lhs(4, samples=10, criterion="center")
 array([[ 0.05,  0.05,  0.15,  0.15],
        [ 0.55,  0.85,  0.95,  0.75],
        [ 0.25,  0.25,  0.45,  0.25],
@@ -208,7 +208,7 @@ For 2D visualization:
 
 ```pycon
 >>> np.random.seed(123)
->>> points = random_uniform(20, 2) # (1)!
+>>> points = random_uniform(20, 2)  # (1)!
 ```
 
 1.  Points are completely random with no structure

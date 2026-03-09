@@ -17,8 +17,8 @@ In this section, the following kinds of factorial designs will be described:
 This kind of design offers full flexibility as to the number of discrete levels for each factor in the design. Its usage is simple:
 
 ```pycon
->>> fullfact(levels) # (1)!
->>> fullfact([2,3])
+>>> fullfact(levels)  # (1)!
+>>> fullfact([2, 3])
 array([[ 0.,  0.],
        [ 1.,  0.],
        [ 0.,  1.],
@@ -366,7 +366,7 @@ As a side note, It just so happens that the Plackett-Burman and $2^{(7-4)}$
 fractional factorial design are identical:
 
 ```pycon
->>> np.all(pbdesign(7)==fracfact("a b ab c ac bc abc"))
+>>> np.all(pbdesign(7) == fracfact("a b ab c ac bc abc"))
 True
 ```
 
