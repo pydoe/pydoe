@@ -125,25 +125,68 @@ class TestFactorial(unittest.TestCase):
         """Test resolution III designs"""
         # 8 runs should support 4 factors at resolution III
         actual = fracfact_by_res(4, 3)
-        assert actual.shape[0] == 8
+        assert actual.shape[0] == 8  # 2^3 runs
         assert actual.shape[1] == 4
 
         # 16 runs should support 7 factors at resolution III
         actual = fracfact_by_res(7, 3)
-        assert actual.shape[0] == 16
+        assert actual.shape[0] == 16  # 2^4 runs
         assert actual.shape[1] == 7
+
+        # 16 runs should support 10 factors at resolution III
+        actual = fracfact_by_res(10, 3)
+        assert actual.shape[0] == 16  # 2^4 runs
+        assert actual.shape[1] == 10
 
     def test_fracfact_by_res_resolution_IV(self):
         """Test resolution IV designs"""
         # 16 runs should support 4 factors at resolution IV
         actual = fracfact_by_res(4, 4)
-        assert actual.shape[0] == 16
+        assert actual.shape[0] == 16  # 2^4 runs
         assert actual.shape[1] == 4
 
         # 32 runs should support 8 factors at resolution IV
         actual = fracfact_by_res(8, 4)
-        assert actual.shape[0] == 32
+        assert actual.shape[0] == 32  # 2^5 runs
         assert actual.shape[1] == 8
+
+        # 64 runs should support 11 factors at resolution IV
+        actual = fracfact_by_res(11, 4)
+        assert actual.shape[0] == 64  # 2^6 runs
+        assert actual.shape[1] == 11
+
+    def test_fracfact_by_res_resolution_V(self):
+        """Test resolution V designs"""
+        # 32 runs should support 5 factors at resolution V
+        actual = fracfact_by_res(5, 5)
+        assert actual.shape[0] == 32  # 2^5 runs
+        assert actual.shape[1] == 5
+
+        # 128 runs should support 8 factors at resolution V
+        actual = fracfact_by_res(8, 5)
+        assert actual.shape[0] == 128  # 2^7 runs
+        assert actual.shape[1] == 8
+
+        # 256 runs should support 12 factors at resolution V
+        actual = fracfact_by_res(12, 5)
+        assert actual.shape[0] == 256  # 2^8 runs
+        assert actual.shape[1] == 12
+
+    def test_fracfact_by_res_higher_resolution_runs(self):
+        """Test that higher resolution requires same or more runs"""
+        # For 11 factors, resolution IV requires 64 runs, V requires 128
+        iv_runs = fracfact_by_res(11, 4).shape[0]
+        v_runs = fracfact_by_res(11, 5).shape[0]
+        assert v_runs > iv_runs
+        assert v_runs == 128
+        assert iv_runs == 64
+
+        # For 8 factors, resolution IV requires 32 runs, V requires 128
+        iv_runs = fracfact_by_res(8, 4).shape[0]
+        v_runs = fracfact_by_res(8, 5).shape[0]
+        assert v_runs > iv_runs
+        assert v_runs == 128
+        assert iv_runs == 32
 
     def test_fracfact_by_res_invalid_n(self):
         with pytest.raises(ValueError, match="n must be at least 2"):
