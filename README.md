@@ -9,6 +9,7 @@ PyDOE: An Experimental Design Package for Python
 [![Stack Overflow](https://img.shields.io/badge/stackoverflow-Ask%20questions-blue.svg)](
 https://stackoverflow.com/questions/tagged/pydoe)
 [![codecov](https://codecov.io/gh/pydoe/pydoe/branch/master/graph/badge.svg)](https://codecov.io/gh/pydoe/pydoe)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=pydoe_pydoe&metric=alert_status)](https://sonarcloud.io/project/overview?id=pydoe_pydoe)
 [![License](https://img.shields.io/badge/license-BSD%203--Clause-blue.svg)](./LICENSE)
 
 [![PyPI Downloads](https://img.shields.io/pypi/dm/pydoe.svg?label=PyPI%20downloads)](https://pypi.org/project/pydoe/)
