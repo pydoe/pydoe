@@ -125,68 +125,68 @@ class TestFactorial(unittest.TestCase):
         """Test resolution III designs"""
         # 8 runs should support 4 factors at resolution III
         actual = fracfact_by_res(4, 3)
-        assert actual.shape[0] == 8  # 2^3 runs
-        assert actual.shape[1] == 4
+        self.assertEqual(actual.shape[0], 8)  # 2^3 runs
+        self.assertEqual(actual.shape[1], 4)
 
         # 16 runs should support 7 factors at resolution III
         actual = fracfact_by_res(7, 3)
-        assert actual.shape[0] == 16  # 2^4 runs
-        assert actual.shape[1] == 7
+        self.assertEqual(actual.shape[0], 16)  # 2^4 runs
+        self.assertEqual(actual.shape[1], 7)
 
         # 16 runs should support 10 factors at resolution III
         actual = fracfact_by_res(10, 3)
-        assert actual.shape[0] == 16  # 2^4 runs
-        assert actual.shape[1] == 10
+        self.assertEqual(actual.shape[0], 16)  # 2^4 runs
+        self.assertEqual(actual.shape[1], 10)
 
     def test_fracfact_by_res_resolution_IV(self):
         """Test resolution IV designs"""
         # 16 runs should support 4 factors at resolution IV
         actual = fracfact_by_res(4, 4)
-        assert actual.shape[0] == 16  # 2^4 runs
-        assert actual.shape[1] == 4
+        self.assertEqual(actual.shape[0], 16)  # 2^4 runs
+        self.assertEqual(actual.shape[1], 4)
 
         # 32 runs should support 8 factors at resolution IV
         actual = fracfact_by_res(8, 4)
-        assert actual.shape[0] == 32  # 2^5 runs
-        assert actual.shape[1] == 8
+        self.assertEqual(actual.shape[0], 32)  # 2^5 runs
+        self.assertEqual(actual.shape[1], 8)
 
         # 64 runs should support 11 factors at resolution IV
         actual = fracfact_by_res(11, 4)
-        assert actual.shape[0] == 64  # 2^6 runs
-        assert actual.shape[1] == 11
+        self.assertEqual(actual.shape[0], 64)  # 2^6 runs
+        self.assertEqual(actual.shape[1], 11)
 
     def test_fracfact_by_res_resolution_V(self):
         """Test resolution V designs"""
         # 32 runs should support 5 factors at resolution V
         actual = fracfact_by_res(5, 5)
-        assert actual.shape[0] == 32  # 2^5 runs
-        assert actual.shape[1] == 5
+        self.assertEqual(actual.shape[0], 32)  # 2^5 runs
+        self.assertEqual(actual.shape[1], 5)
 
         # 128 runs should support 8 factors at resolution V
         actual = fracfact_by_res(8, 5)
-        assert actual.shape[0] == 128  # 2^7 runs
-        assert actual.shape[1] == 8
+        self.assertEqual(actual.shape[0], 128)  # 2^7 runs
+        self.assertEqual(actual.shape[1], 8)
 
         # 256 runs should support 12 factors at resolution V
         actual = fracfact_by_res(12, 5)
-        assert actual.shape[0] == 256  # 2^8 runs
-        assert actual.shape[1] == 12
+        self.assertEqual(actual.shape[0], 256)  # 2^8 runs
+        self.assertEqual(actual.shape[1], 12)
 
     def test_fracfact_by_res_higher_resolution_runs(self):
         """Test that higher resolution requires same or more runs"""
         # For 11 factors, resolution IV requires 64 runs, V requires 128
         iv_runs = fracfact_by_res(11, 4).shape[0]
         v_runs = fracfact_by_res(11, 5).shape[0]
-        assert v_runs > iv_runs
-        assert v_runs == 128
-        assert iv_runs == 64
+        self.assertGreater(v_runs, iv_runs)
+        self.assertEqual(v_runs, 128)
+        self.assertEqual(iv_runs, 64)
 
         # For 8 factors, resolution IV requires 32 runs, V requires 128
         iv_runs = fracfact_by_res(8, 4).shape[0]
         v_runs = fracfact_by_res(8, 5).shape[0]
-        assert v_runs > iv_runs
-        assert v_runs == 128
-        assert iv_runs == 32
+        self.assertGreater(v_runs, iv_runs)
+        self.assertEqual(v_runs, 128)
+        self.assertEqual(iv_runs, 32)
 
     def test_fracfact_by_res_invalid_n(self):
         with pytest.raises(ValueError, match="n must be at least 2"):
@@ -199,15 +199,15 @@ class TestFactorial(unittest.TestCase):
     def test_fracfact_by_res_table_lookup_path(self):
         # (6, 3) is explicitly in the DOE table -> k = 3
         design = fracfact_by_res(6, 3)
-        assert design.shape == (8, 6)  # 2^3 runs, 6 factors
-        assert set(np.unique(design)) == {-1.0, 1.0}
+        self.assertEqual(design.shape, (8, 6))  # 2^3 runs, 6 factors
+        self.assertEqual(set(np.unique(design)), {-1.0, 1.0})
 
     def test_fracfact_by_res_fallback_calculation_path(self):
         # (16, 3) is not in the table -> fallback calculation
         design = fracfact_by_res(16, 3)
         # k = ceil(log2(17)) = 5 -> 32 runs
-        assert design.shape == (32, 16)
-        assert set(np.unique(design)) == {-1.0, 1.0}
+        self.assertEqual(design.shape, (32, 16))
+        self.assertEqual(set(np.unique(design)), {-1.0, 1.0})
 
     def test_fracfact_by_res_exceeds_base_factor_limit(self):
         with pytest.raises(ValueError, match="more than 26 base factors"):
@@ -221,13 +221,13 @@ class TestFactorial(unittest.TestCase):
     def test_fracfact_by_res_resolution_five(self):
         design = fracfact_by_res(6, 5)
         # From table: (6,5) -> k = 6 -> 64 runs
-        assert design.shape == (64, 6)
-        assert set(np.unique(design)) == {-1.0, 1.0}
+        self.assertEqual(design.shape, (64, 6))
+        self.assertEqual(set(np.unique(design)), {-1.0, 1.0})
 
     def test_fracfact_by_res_columns_match_n(self):
         for n, res in [(5, 3), (7, 4), (9, 5)]:
             design = fracfact_by_res(n, res)
-            assert design.shape[1] == n
+            self.assertEqual(design.shape[1], n)
 
 
 @pytest.mark.parametrize(
