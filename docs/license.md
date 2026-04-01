@@ -4,6 +4,8 @@ Copyright (c) 2018, Rickard Sjögren & Daniel Svensson
 
 Copyright (c) 2023, Rémi Lafage
 
+Copyright (c) 2025, PyDOE
+
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification,
