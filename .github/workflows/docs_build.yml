@@ -40,7 +40,7 @@ jobs:
           | tee -a $GITHUB_OUTPUT
 
       - name: Upload Pages Artifacts
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-pages-artifact@v5
         with:
           name: ${{ steps.artifact-name.outputs.artifact_name }}
           path: build/docs

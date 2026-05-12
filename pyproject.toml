@@ -79,10 +79,7 @@ test = [
 source = "vcs"
 
 [tool.hatch.build.targets.wheel]
-include = [
-  "/pydoe",
-  "/pyDOE.py",
-]
+include = [ "/pydoe" ]
 
 [tool.ruff]
 line-length = 80
