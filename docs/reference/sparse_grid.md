@@ -56,7 +56,7 @@ This implementation exactly matches MATLAB spinterp's theoretical point counts.
 **Returns**:
 
 - ``design`` : ndarray of shape (n_points, n_factors)
-    Sparse grid design points in the unit hypercube [0, 1]^n_factors.
+    Sparse grid design points in the unit hypercube `[0, 1]^n_factors`.
 
 **Examples:**
 

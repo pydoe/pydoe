@@ -9,6 +9,14 @@ The `PyDOE` package is designed to help the **scientist, engineer,
 statistician,** etc., to construct appropriate 
 **experimental designs**.
 
+
+!!! tip "Quick Start"
+    All available designs can be accessed after a simple import statement:
+
+    ```python
+    >>> from pydoe import *
+    ```
+
 ## Overview
 
 The package provides extensive support for design-of-experiments (DOE) methods and is capable of creating designs for any number of factors.
@@ -63,12 +71,3 @@ It provides:
 - **Sparse Grid Designs**
   - Sparse Grid Design (``doe_sparse_grid``)
   - Sparse Grid Dimension (``sparse_grid_dimension``)
-
-
-
-!!! tip "Quick Start"
-    All available designs can be accessed after a simple import statement:
-
-    ```python
-    >>> from pydoe import *
-    ```
