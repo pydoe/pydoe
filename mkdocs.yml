@@ -88,8 +88,21 @@ nav:
         - Select Experimental Design: theory/choosing-design/select-design.md
         - Completely Randomized Designs: theory/choosing-design/completely-randomized.md
         - Randomized Block Designs: theory/choosing-design/randomized-block.md
+        - Latin Square Designs: theory/choosing-design/latin-squares.md
+        - Graeco-Latin Square Designs: theory/choosing-design/graeco-latin-squares.md
+        - Hyper-Graeco-Latin Square Designs: theory/choosing-design/hyper-graeco-latin-squares.md
         - Full Factorial Designs: theory/choosing-design/full-factorial.md
+        - Two-Level Full Factorial Designs: theory/choosing-design/two-level-full-factorial.md
+        - Full Factorial Example: theory/choosing-design/full-factorial-example-s3.md
+        - Blocking of Full Factorial Designs: theory/choosing-design/blocking-full-factorial.md
         - Fractional Factorial Designs: theory/choosing-design/fractional-factorial.md
+        - "A 2^(3-1) Half-Fraction Design": theory/choosing-design/half-fraction-design.md
+        - Constructing the Half-Fraction Design: theory/choosing-design/constructing-half-fraction.md
+        - Confounding (Aliasing): theory/choosing-design/confounding.md
+        - Design Resolution: theory/choosing-design/design-resolution.md
+        - Use of Fractional Factorial Designs: theory/choosing-design/using-fractional-factorial.md
+        - Screening Designs: theory/choosing-design/screening-designs.md
+        - Fractional Factorial Summary Tables: theory/choosing-design/fractional-factorial-tables.md
         - Plackett-Burman Designs: theory/choosing-design/plackett-burman.md
         - Response Surface Designs: theory/choosing-design/response-surface.md
         - Central Composite Designs: theory/choosing-design/central-composite.md
@@ -98,6 +111,8 @@ nav:
         - Blocking a Response Surface Design: theory/choosing-design/blocking-rsd.md
         - Adding Center Points: theory/choosing-design/center-points.md
         - Improving Fractional Design Resolution: theory/choosing-design/improving-resolution.md
+        - Mirror-Image Foldover Designs: theory/choosing-design/mirror-image-foldover.md
+        - Alternative Foldover Designs: theory/choosing-design/alternative-foldover.md
         - Three-Level Full Factorial Designs: theory/choosing-design/three-level.md
         - Three-Level, Mixed Level and Fractional Factorial Designs: theory/choosing-design/mixed-level.md
     - Analysis of DOE Data:
@@ -120,7 +135,90 @@ nav:
         - Repairing a Design: theory/advanced-topics/repairing-design.md
         - Optimizing a Process: theory/advanced-topics/optimizing-process.md
         - Single Response Case: theory/advanced-topics/single-response.md
+        - Path of Steepest Ascent (Single): theory/advanced-topics/single-response-steepest-ascent.md
+        - Confidence Region for Search Path: theory/advanced-topics/confidence-region.md
+        - Choosing the Step Length: theory/advanced-topics/step-length.md
+        - Optimization with Quadratic Fit: theory/advanced-topics/quadratic-fit-optimization.md
+        - Effect of Sampling Error: theory/advanced-topics/sampling-error-effect.md
+        - Constrained Optimization: theory/advanced-topics/constrained-optimization.md
         - Multiple Response Case: theory/advanced-topics/multiple-response.md
+        - Path of Steepest Ascent (Multiple): theory/advanced-topics/multiple-response-steepest-ascent.md
+        - Desirability Approach: theory/advanced-topics/multiple-response-desirability.md
+        - Mathematical Programming Approach: theory/advanced-topics/multiple-response-math-programming.md
+        - Mixture Designs: theory/advanced-topics/mixture-designs.md
+        - Mixture Screening Designs: theory/advanced-topics/mixture-screening.md
+        - Simplex-Lattice Designs: theory/advanced-topics/simplex-lattice.md
+        - Simplex-Centroid Designs: theory/advanced-topics/simplex-centroid.md
+        - Constrained Mixture Designs: theory/advanced-topics/constrained-mixture.md
+        - Mixture and Process Variables Together: theory/advanced-topics/mixture-process-vars.md
+        - Nested Variation: theory/advanced-topics/nested-variation.md
+        - Taguchi Designs: theory/advanced-topics/taguchi-designs.md
+        - John's 3/4 Fractional Factorial Designs: theory/advanced-topics/johns-34-designs.md
+        - Small Composite Designs: theory/advanced-topics/small-composite-designs.md
+        - An EDA Approach to Experiment Design: theory/advanced-topics/eda-approach.md
+        - Ordered Data Plot: theory/advanced-topics/eda-ordered-data-plot.md
+        - DOE Scatter Plot: theory/advanced-topics/eda-scatter-plot.md
+        - DOE Mean Plot: theory/advanced-topics/eda-mean-plot.md
+        - Interaction Effects Matrix Plot: theory/advanced-topics/eda-interaction-plot.md
+        - Block Plot: theory/advanced-topics/eda-block-plot.md
+        - DOE Youden Plot: theory/advanced-topics/eda-youden-plot.md
+        - Effects Plot: theory/advanced-topics/eda-effects-plot.md
+        - Statistical Significance: theory/advanced-topics/eda-effects-statistical.md
+        - Engineering Significance: theory/advanced-topics/eda-effects-engineering.md
+        - Numerical Significance: theory/advanced-topics/eda-effects-numerical.md
+        - Pattern Significance: theory/advanced-topics/eda-effects-pattern.md
+        - Half-Normal Probability Plot: theory/advanced-topics/eda-half-normal-plot.md
+        - Cumulative Residual Standard Deviation Plot: theory/advanced-topics/eda-cumulative-ressd-plot.md
+        - What is a Model?: theory/advanced-topics/eda-ressd-model.md
+        - Goodness-of-fit Metric: theory/advanced-topics/eda-ressd-goodness.md
+        - Constructing a Good Model: theory/advanced-topics/eda-ressd-good-model.md
+        - When to Stop Adding Terms: theory/advanced-topics/eda-ressd-terms.md
+        - Form of the Model: theory/advanced-topics/eda-ressd-form.md
+        - Advantages of Linear Combinatoric Model: theory/advanced-topics/eda-ressd-advantages.md
+        - Generating Predicted Values: theory/advanced-topics/eda-ressd-predicted.md
+        - Using the Model Beyond the Data Domain: theory/advanced-topics/eda-ressd-domain.md
+        - Best Confirmation Point: theory/advanced-topics/eda-ressd-confirmation.md
+        - Interpolation: theory/advanced-topics/eda-ressd-interpolation.md
+        - Extrapolation: theory/advanced-topics/eda-ressd-extrapolation.md
+        - DOE Contour Plot: theory/advanced-topics/eda-contour-plot.md
+        - Axes: theory/advanced-topics/eda-contour-axes.md
+        - Contour Curves: theory/advanced-topics/eda-contour-curves.md
+        - Optimal Response Value: theory/advanced-topics/eda-contour-optimal-value.md
+        - Best Corner: theory/advanced-topics/eda-contour-best-corner.md
+        - Steepest Ascent/Descent: theory/advanced-topics/eda-contour-steepest.md
+        - Optimal Curve: theory/advanced-topics/eda-contour-optimal-curve.md
+        - Optimal Setting: theory/advanced-topics/eda-contour-optimal-setting.md
+    - Case Studies:
+        - Overview: theory/case-studies/index.md
+        - Eddy Current Probe Sensitivity Study: theory/case-studies/eddy-current.md
+        - Background and Data: theory/case-studies/eddy-current-background.md
+        - Initial Plots and Main Effects: theory/case-studies/eddy-current-initial-plots.md
+        - Interaction Effects: theory/case-studies/eddy-current-interaction.md
+        - Block Plots: theory/case-studies/eddy-current-block-plots.md
+        - Estimate Effects: theory/case-studies/eddy-current-estimate-effects.md
+        - Modeling and Prediction: theory/case-studies/eddy-current-modeling.md
+        - Intermediate Conclusions: theory/case-studies/eddy-current-conclusions.md
+        - Important Factors: theory/case-studies/eddy-current-important-factors.md
+        - Validate the Model: theory/case-studies/eddy-current-validate.md
+        - Using the Model: theory/case-studies/eddy-current-using-model.md
+        - Conclusions and Next Step: theory/case-studies/eddy-current-next-step.md
+        - Work This Example Yourself: theory/case-studies/eddy-current-work-yourself.md
+        - Sonoluminescent Light Intensity Study: theory/case-studies/sonoluminescent.md
+        - Background and Data (Sono): theory/case-studies/sono-background.md
+        - Initial Plots and Main Effects (Sono): theory/case-studies/sono-initial-plots.md
+        - Interaction Effects (Sono): theory/case-studies/sono-interaction.md
+        - Block Plots (Sono): theory/case-studies/sono-block-plots.md
+        - Youden Plot: theory/case-studies/sono-youden-plot.md
+        - "|Effects| Plot": theory/case-studies/sono-effects-plot.md
+        - Half-Normal Probability Plot: theory/case-studies/sono-half-normal.md
+        - Cumulative Residual SD Plot: theory/case-studies/sono-cumulative-ressd.md
+        - DOE Contour Plot: theory/case-studies/sono-contour-plot.md
+        - Summary of Conclusions: theory/case-studies/sono-conclusions.md
+        - Work This Example Yourself (Sono): theory/case-studies/sono-work-yourself.md
+    - Glossary:
+        - A Glossary of DOE Terminology: theory/glossary/index.md
+    - References:
+        - References: theory/references/index.md
   - Reference:
     - Factorial Designs: reference/factorial.md
     - Response Surface Designs: reference/response_surface.md

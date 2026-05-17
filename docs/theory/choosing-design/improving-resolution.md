@@ -8,5 +8,5 @@ Earlier we saw how fractional factorial designs resulted in an alias structure t
 
 Two methods will be described for selecting these additional treatment combinations:
 
-- [Mirror-image foldover designs](https://www.itl.nist.gov/div898/handbook/pri/section3/pri3381.htm) (to build a resolution IV design from a resolution III design)
-- [Alternative foldover designs](https://www.itl.nist.gov/div898/handbook/pri/section3/pri3382.htm) (to break up specific alias patterns)
+- [Mirror-image foldover designs](../choosing-design/mirror-image-foldover.md) (to build a resolution IV design from a resolution III design)
+- [Alternative foldover designs](../choosing-design/alternative-foldover.md) (to break up specific alias patterns)

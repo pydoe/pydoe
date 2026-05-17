@@ -2,7 +2,7 @@
 
 *Polynomial approximation models only work for smoothly varying outputs*
 
-In this chapter we restrict ourselves to the case for which the response variable(s) are continuous outputs denoted as *Y*. Over the experimental range, the outputs must not only be continuous, but also reasonably smooth. A sharp falloff in *Y* values is likely to be missed by the approximating polynomials that we use because these polynomials assume a smoothly curving underlying response surface.
+In this chapter we restrict ourselves to the case for which the response variable(s) are continuous outputs denoted as $Y$. Over the experimental range, the outputs must not only be continuous, but also reasonably smooth. A sharp falloff in $Y$ values is likely to be missed by the approximating polynomials that we use because these polynomials assume a smoothly curving underlying response surface.
 
 *Piecewise smoothness requires separate experiments*
 
