@@ -94,8 +94,7 @@ array([[ 0.05,  0.05,  0.15,  0.15],
 ### Customizing with Statistical Distributions {#statistical_distribution_usage}
 
 Now, let's say we want to transform these designs to be normally
-distributed with means = [1, 2, 3, 4] and standard deviations = [0.1,
-0.5, 1, 0.25]:
+distributed with means = `[1, 2, 3, 4]` and standard deviations = `[0.1, 0.5, 1, 0.25]`:
 
 ```python
 >>> design = lhs(4, samples=10)

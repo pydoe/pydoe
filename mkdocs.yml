@@ -29,6 +29,7 @@ theme:
     - navigation.indexes # https://squidfunk.github.io/mkdocs-material/setup/setting-up-navigation/?h=navigation+instant#section-index-pages
     - toc.follow # https://squidfunk.github.io/mkdocs-material/setup/setting-up-navigation/?h=navigation+instant#anchor-following
     - navigation.top # https://squidfunk.github.io/mkdocs-material/setup/setting-up-navigation/?h=navigation+instant#back-to-top-button
+    - navigation.footer # https://squidfunk.github.io/mkdocs-material/setup/setting-up-navigation/#navigation-footer
     # search features
     - search.suggest # https://squidfunk.github.io/mkdocs-material/setup/setting-up-site-search/?h=search+highlight#search-suggestions
     - search.highlight # https://squidfunk.github.io/mkdocs-material/setup/setting-up-site-search/?h=search+highlight#search-highlighting
@@ -66,12 +67,60 @@ nav:
     - Contributing: contributing.md
     - License: license.md
     - Credits: credits.md
+    - Contributors: contributors.md
     - Users: users.md
   - Theory:
     - Introduction:
         - Overview: theory/introduction/index.md
+        - Experimental Design: theory/introduction/what-is-doe.md
         - Uses of DOE: theory/introduction/doe-uses.md
         - Steps of DOE: theory/introduction/doe-steps.md
+    - Assumptions:
+        - Overview: theory/assumptions/index.md
+        - Measurement System: theory/assumptions/measurement-system.md
+        - Process Stability: theory/assumptions/process-stability.md
+        - Simple Model: theory/assumptions/simple-model.md
+        - Residuals: theory/assumptions/residuals.md
+    - Choosing an Experimental Design:
+        - Overview: theory/choosing-design/index.md
+        - Set Objectives: theory/choosing-design/objectives.md
+        - Select Process Variables: theory/choosing-design/process-variables.md
+        - Select Experimental Design: theory/choosing-design/select-design.md
+        - Completely Randomized Designs: theory/choosing-design/completely-randomized.md
+        - Randomized Block Designs: theory/choosing-design/randomized-block.md
+        - Full Factorial Designs: theory/choosing-design/full-factorial.md
+        - Fractional Factorial Designs: theory/choosing-design/fractional-factorial.md
+        - Plackett-Burman Designs: theory/choosing-design/plackett-burman.md
+        - Response Surface Designs: theory/choosing-design/response-surface.md
+        - Central Composite Designs: theory/choosing-design/central-composite.md
+        - Box-Behnken Designs: theory/choosing-design/box-behnken.md
+        - Comparisons of Response Surface Designs: theory/choosing-design/design-comparisons.md
+        - Blocking a Response Surface Design: theory/choosing-design/blocking-rsd.md
+        - Adding Center Points: theory/choosing-design/center-points.md
+        - Improving Fractional Design Resolution: theory/choosing-design/improving-resolution.md
+        - Three-Level Full Factorial Designs: theory/choosing-design/three-level.md
+        - Three-Level, Mixed Level and Fractional Factorial Designs: theory/choosing-design/mixed-level.md
+    - Analysis of DOE Data:
+        - Overview: theory/analysis-doe/index.md
+        - DOE Analysis Steps: theory/analysis-doe/doe-analysis-steps.md
+        - Plotting DOE Data: theory/analysis-doe/plotting-doe-data.md
+        - Modeling DOE Data: theory/analysis-doe/modeling-doe-data.md
+        - Testing and Revising Models: theory/analysis-doe/testing-revising-models.md
+        - Interpreting DOE Results: theory/analysis-doe/interpreting-results.md
+        - Confirming DOE Results: theory/analysis-doe/confirming-results.md
+        - DOE Examples: theory/analysis-doe/doe-examples.md
+        - Full Factorial Example: theory/analysis-doe/full-factorial-example.md
+        - Fractional Factorial Example: theory/analysis-doe/fractional-factorial-example.md
+        - Response Surface Example: theory/analysis-doe/response-surface-example.md
+    - Advanced Topics:
+        - Overview: theory/advanced-topics/index.md
+        - When Classical Designs Don't Work: theory/advanced-topics/when-classical-fail.md
+        - Computer-Aided Designs: theory/advanced-topics/computer-aided-designs.md
+        - D-Optimal Designs: theory/advanced-topics/d-optimal.md
+        - Repairing a Design: theory/advanced-topics/repairing-design.md
+        - Optimizing a Process: theory/advanced-topics/optimizing-process.md
+        - Single Response Case: theory/advanced-topics/single-response.md
+        - Multiple Response Case: theory/advanced-topics/multiple-response.md
   - Reference:
     - Factorial Designs: reference/factorial.md
     - Response Surface Designs: reference/response_surface.md
@@ -81,6 +130,7 @@ nav:
     - Taguchi Designs: reference/taguchi.md
     - Optimal Designs: reference/doe_optimal.md
     - Sparse Grid Designs: reference/sparse_grid.md
+  - Changelog: changelog.md
 
 plugins:
   - search: # https://squidfunk.github.io/mkdocs-material/plugins/search

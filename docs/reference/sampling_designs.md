@@ -36,7 +36,7 @@ Morris samples can be created using the following simple syntax:
 >>> morris_samples = morris_sampling(num_vars=3, N=10, num_levels=4, seed=128)
 ```
 
-This creates 10 Morris trajectories for 3 variables with samples in the [0, 1] range,
+This creates 10 Morris trajectories for 3 variables with samples in the `[0, 1]` range,
 using a 4-level grid. The resulting sample matrix has shape $(N \times (D+1), D) = (30, 3)$.
 
 Available keyword arguments:
@@ -99,7 +99,7 @@ The Morris method estimates two sensitivity measures:
 - Suitable for high-dimensional problems
 - Provides screening of important variables
 - Good for preliminary sensitivity analysis
-- Returns samples in [0, 1] hypercube that can be easily transformed to any bounds
+- Returns samples in `[0, 1]` hypercube that can be easily transformed to any bounds
 
 ## Saltelli Sampling (`saltelli_sampling`) {#saltelli_sampling}
 
@@ -122,7 +122,7 @@ Saltelli samples can be created using the following simple syntax:
 
 This creates Saltelli samples for 3 variables with 1024 base samples, including
 second-order interaction terms. The resulting sample matrix has shape 
-$(N \times (2D+2), D) = (8192, 3)$. All samples are in the [0, 1] range.
+$(N \times (2D+2), D) = (8192, 3)$. All samples are in the `[0, 1]` range.
 
 Available keyword arguments:
 
@@ -226,7 +226,7 @@ The matrix consists of:
 - The method requires more model evaluations than Morris but provides quantitative results
 - Suitable for models where variance-based sensitivity analysis is needed
 - The implementation automatically skips initial Sobol' sequence points to improve quality
-- All samples are returned in the [0,1] hypercube and should be transformed to desired bounds
+- All samples are returned in the `[0,1]` hypercube and should be transformed to desired bounds
 
 ## References
 

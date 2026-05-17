@@ -27,8 +27,6 @@ classifiers = [
     "License :: OSI Approved :: BSD License",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -53,7 +51,7 @@ requires-python = ">=3.10"
 homepage = "https://pydoe.github.io/pydoe/"
 documentation = "https://pydoe.github.io/pydoe/"
 source = "https://github.com/pydoe/pydoe"
-# TODO: provide changelog URL from docs
+changelog = "https://pydoe.github.io/pydoe/changelog/"
 releasenotes = "https://github.com/pydoe/pydoe/releases/latest"
 issues = "https://github.com/pydoe/pydoe/issues"
 
@@ -64,7 +62,7 @@ dev = [
   {include-group = "test"}
 ]
 docs = [
-    "zensical>=0.0.23"
+    "zensical>=0.0.42"
 ]
 lint = [
     "ruff==0.15.*",

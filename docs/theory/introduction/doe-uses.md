@@ -2,19 +2,19 @@
 
 Below are seven examples illustrating situations in which experimental design can be used effectively.
 
-## Choosing Between Alternatives ([Comparative Experiment](https://www.itl.nist.gov/div898/handbook/pri/section3/pri33.htm))
+## Choosing Between Alternatives ([Comparative Experiment](../choosing-design/select-design.md))
 
 Supplier A vs. supplier B? Which new additive is the most effective? Is catalyst `x' an improvement over the existing catalyst? These and countless other choices between alternatives can be presented to us in a never-ending parade. Often we have the choice made for us by outside factors over which we have no control. But in many cases we are also asked to make the choice. It helps if one has valid data to back up one's decision.
 
 The preferred solution is to agree on a measurement by which competing choices can be compared, generate a sample of data from each alternative, and compare average results. The best average outcome will be our preference. We have performed a comparative experiment!
 
-Sometimes this comparison is performed under one common set of conditions. This is a comparative study with a narrow scope - which is suitable for some initial comparisons of possible alternatives. Other comparison studies, intended to validate that one alternative is preferred over a wide range of conditions, will purposely and systematically vary the background conditions under which the primary comparison is made in order to reach a conclusion that will be proven valid over a broad scope. We discuss experimental designs for each of these types of comparisons in Sections [5.3.3.1](https://www.itl.nist.gov/div898/handbook/pri/section3/pri331.htm) and [5.3.3.2](https://www.itl.nist.gov/div898/handbook/pri/section3/pri332.htm).
+Sometimes this comparison is performed under one common set of conditions. This is a comparative study with a narrow scope - which is suitable for some initial comparisons of possible alternatives. Other comparison studies, intended to validate that one alternative is preferred over a wide range of conditions, will purposely and systematically vary the background conditions under which the primary comparison is made in order to reach a conclusion that will be proven valid over a broad scope. We discuss experimental designs for each of these types of comparisons in [Completely Randomized Designs](../choosing-design/completely-randomized.md) and [Randomized Block Designs](../choosing-design/randomized-block.md).
 
-## Selecting the Key Factors Affecting a Response ([Screening Experiments](https://www.itl.nist.gov/div898/handbook/pri/section3/pri33.htm#Screening))
+## Selecting the Key Factors Affecting a Response ([Screening Experiments](../choosing-design/select-design.md#Screening))
 
 Often there are many possible factors, some of which may be critical and others which may have little or no effect on a response. It may be desirable, as a goal by itself, to reduce the number of factors to a relatively small set (2-5) so that attention can be focussed on controlling those factors with appropriate specifications, control charts, etc.
 
-Screening experiments are an efficient way, with a minimal number of runs, of determining the important factors. They may also be used as a first step when the ultimate goal is to model a response with a response surface. We will discuss experimental designs for screening a large number of factors in Sections [5.3.3.3](https://www.itl.nist.gov/div898/handbook/pri/section3/pri333.htm), [5.3.3.4](https://www.itl.nist.gov/div898/handbook/pri/section3/pri334.htm) and [5.3.3.5](https://www.itl.nist.gov/div898/handbook/pri/section3/pri335.htm).
+Screening experiments are an efficient way, with a minimal number of runs, of determining the important factors. They may also be used as a first step when the ultimate goal is to model a response with a response surface. We will discuss experimental designs for screening a large number of factors in [Full Factorial Designs](../choosing-design/full-factorial.md), [Fractional Factorial Designs](../choosing-design/fractional-factorial.md) and [Plackett-Burman Designs](../choosing-design/plackett-burman.md).
 
 ## Response Surface Modeling a Process
 
@@ -40,7 +40,7 @@ More complex forms of experimentation, such as the determination of the correct 
 
 ### Maximizing or Minimizing a Response
 
-Many processes are being run at sub-optimal settings, some of them for years, even though each factor has been optimized individually over time. Finding settings that increase yield or decrease the amount of scrap and rework represent opportunities for substantial financial gain. Often, however, one must experiment with multiple inputs to achieve a better output. Section 5.3.3.6 on second-order designs plus material in Section 5.5.3 will be useful for these applications.
+Many processes are being run at sub-optimal settings, some of them for years, even though each factor has been optimized individually over time. Finding settings that increase yield or decrease the amount of scrap and rework represent opportunities for substantial financial gain. Often, however, one must experiment with multiple inputs to achieve a better output. [Response Surface Designs](../choosing-design/response-surface.md) on second-order designs plus material in the Advanced Topics section will be useful for these applications.
 
 ![Pathway up the process response surface to an optimum](../../assets/images/optimum.png)
 ///caption
@@ -51,7 +51,7 @@ Figure 1 Pathway up the process response surface to an optimum
 
 A process may be performing with unacceptable consistency, meaning its internal variation is too high.
 
-Excessive variation can result from many causes. Sometimes it is due to the lack of having or following standard operating procedures. At other times, excessive variation is due to certain hard-to-control inputs that affect the critical output characteristics of the process. When this latter situation is the case, one may experiment with these hard-to-control factors, looking for a region where the surface is flatter and the process is easier to manage. To take advantage of such flatness in the surface, one must use designs - such as the second-order designs of Section 5.3.3.6 - that permit identification of these features. Contour or surface plots are useful for elucidating the key features of these fitted models. See also 5.5.3.1.4.
+Excessive variation can result from many causes. Sometimes it is due to the lack of having or following standard operating procedures. At other times, excessive variation is due to certain hard-to-control inputs that affect the critical output characteristics of the process. When this latter situation is the case, one may experiment with these hard-to-control factors, looking for a region where the surface is flatter and the process is easier to manage. To take advantage of such flatness in the surface, one must use designs - such as the [Response Surface Designs](../choosing-design/response-surface.md) - that permit identification of these features. Contour or surface plots are useful for elucidating the key features of these fitted models.
 
 
 ![Process before variation reduced](../../assets/images/unstable.png)
@@ -87,4 +87,4 @@ FIGURE 4  Overlaid contour plot of Deposition Rate and Capability (Cp)
 
 ## Regression Modeling
 
-Sometimes we require more than a rough approximating model over a local region. In such cases, the standard designs presented in this chapter for estimating first- or second-order polynomial models may not suffice. Chapter 4 covers the topic of experimental design and analysis for fitting general models for a single explanatory factor. If one has multiple factors, and either a nonlinear model or some other special model, the computer-aided designs of Section 5.5.2 may be useful.
+Sometimes we require more than a rough approximating model over a local region. In such cases, the standard designs presented in this chapter for estimating first- or second-order polynomial models may not suffice. Chapter 4 covers the topic of experimental design and analysis for fitting general models for a single explanatory factor. If one has multiple factors, and either a nonlinear model or some other special model, the computer-aided designs of the Advanced Topics section may be useful.
