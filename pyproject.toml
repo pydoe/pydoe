@@ -55,6 +55,9 @@ changelog = "https://pydoe.github.io/pydoe/changelog/"
 releasenotes = "https://github.com/pydoe/pydoe/releases/latest"
 issues = "https://github.com/pydoe/pydoe/issues"
 
+[project.scripts]
+pydoe = "pydoe.debug:main"
+
 [dependency-groups]
 dev = [
   {include-group = "docs"},

@@ -29,8 +29,8 @@ jobs:
           args: --version
 
       - name: Enforce Lint
-        run: ruff check pydoe/ pyproject.toml
+        run: ruff check .
 
       - name: Enforce Format
         run: |
-          ruff format --diff pydoe/ pyproject.toml
+          ruff format --diff .
