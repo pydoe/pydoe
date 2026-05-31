@@ -108,7 +108,6 @@ Total error       7    2.643   0.3776
 Lack-of-fit       5   1.4963   0.2993       0.52   0.7588
 Pure error        2   1.1467   0.5734
 
-
 Source           Estimate  Std. Error  t value  Pr(>|t|)   
 ------           --------  ----------  -------  -------- 
 Intercept          5.9273     0.1853    31.993  7.54e-09
@@ -209,7 +208,6 @@ Pure error        2  0.022200  0.01110
 Residual standard error:  0.0883 based on 7 degrees of freedom
 Multiple R-squared:  0.9848
 Adjusted R-squared:  0.9783 
-
 
 Source        Estimate  Std. Error  t value  Pr(>|t|)    
 ------        --------  ----------  -------  --------
