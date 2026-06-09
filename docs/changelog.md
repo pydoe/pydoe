@@ -4,6 +4,32 @@ All notable changes to PyDOE are documented here.
 
 ---
 
+## [**Latest**](https://github.com/pydoe/pydoe/releases/latest)
+
+### :material-plus-circle: Added
+- Simplex-lattice design (`simplex_lattice_design`) — mixture experiment design placing lattice points on the *q*-component simplex at resolution 1/*m*; supports fitting Scheffé polynomial models of degree *m* — [@saudzahirr](https://github.com/saudzahirr)
+- Simplex-centroid design (`simplex_centroid_design`) — mixture experiment design with the centroids of all $2^q - 1$ non-empty subsets; supports estimation of all Scheffé interaction blending coefficients — [@saudzahirr](https://github.com/saudzahirr)
+- John's 3/4 fractional factorial design (`john_three_quarter_design`) — semifoldover design using exactly 3/4 of the runs of the next full $2^k$ design; de-aliases all two-factor interactions involving the chosen factor — [@saudzahirr](https://github.com/saudzahirr)
+
+### :material-wrench: Fixed
+- Eliminate 604 test warnings by correctly catching `scipy.linalg.LinAlgWarning` in `regularized_inv`; suppress scipy Sobol advisory in the Saltelli path — [@saudzahirr](https://github.com/saudzahirr)
+
+### :material-file-document: Documentation
+- Fix contributing docs to reference `zensical` instead of `mkdocs serve` — [@saudzahirr](https://github.com/saudzahirr)
+- Add `Mixture Designs` reference page — [@saudzahirr](https://github.com/saudzahirr)
+
+---
+
+## [**v1.0.2**](https://github.com/pydoe/pydoe/releases/tag/v1.0.2) <small>2026-05-17</small>
+
+### :material-plus-circle: Added
+- Add theory documentation pages ([#114](https://github.com/pydoe/pydoe/pull/114)) — [@saudzahirr](https://github.com/saudzahirr)
+
+### :material-wrench: Fixed
+- Fix typo in `factorial.md` ([#111](https://github.com/pydoe/pydoe/pull/111)) — [@saudzahirr](https://github.com/saudzahirr)
+
+---
+
 ## [**v1.0.1**](https://github.com/pydoe/pydoe/releases/tag/v1.0.1) <small>2026-05-05</small>
 
 Patch release following the 1.0.0 stable release. — [@saudzahirr](https://github.com/saudzahirr)

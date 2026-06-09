@@ -6,9 +6,9 @@ Design methods not implemented in pydoe.
 
 The entire mixture design family is absent. Mixture experiments differ from standard factorial designs because the factors are proportions that must sum to 1.
 
+- [x] **Simplex-lattice designs** — place design points on a regular lattice over the simplex (all proportions summing to 1); parameterized by degree *m* giving ${q+m-1 \choose m}$ points for *q* components *(implemented: `simplex_lattice_design`)*
+- [x] **Simplex-centroid designs** — include all subsets of components at equal proportions; for *q* components generates $2^q - 1$ points (vertices, edge midpoints, face centroids, overall centroid) *(implemented: `simplex_centroid_design`)*
 - [ ] **Mixture screening designs** — screen important components in a mixture using a sparse design
-- [ ] **Simplex-lattice designs** — place design points on a regular lattice over the simplex (all proportions summing to 1); parameterized by degree *m* giving ${q+m-1 \choose m}$ points for *q* components
-- [ ] **Simplex-centroid designs** — include all subsets of components at equal proportions; for *q* components generates $2^q - 1$ points (vertices, edge midpoints, face centroids, overall centroid)
 - [ ] **Constrained mixture designs (Extreme-Vertices)** — handle lower and upper bounds on each component proportion; points are extreme vertices of the constrained region
 - [ ] **Mixture + process variable designs** — combined designs where some factors are mixture proportions and others are independent process variables
 

@@ -37,6 +37,7 @@ from .factorial import (
     john_three_quarter_design,
     pbdesign,
 )
+from .mixture import simplex_centroid_design, simplex_lattice_design
 from .optimal import (
     a_efficiency,
     a_optimality,
@@ -148,6 +149,8 @@ __all__ = [
     "scale_samples",
     "sequential_dykstra",
     "simple_exchange_wynn_mitchell",
+    "simplex_centroid_design",
+    "simplex_lattice_design",
     "sobol_sequence",
     "sparse_grid_dimension",
     "star",
