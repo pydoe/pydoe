@@ -39,6 +39,11 @@ It provides:
   - Plackett-Burman (``pbdesign``)
   - Generalized Subset Designs (``gsd``)
   - Fold-over Designs (``fold``)
+  - John's 3/4 Fractional Factorial (``john_three_quarter_design``)
+
+- **Mixture Designs**
+  - Simplex-Lattice Design (``simplex_lattice_design``)
+  - Simplex-Centroid Design (``simplex_centroid_design``)
 
 - **Response-Surface Designs**
   - Box-Behnken (``bbdesign``)
