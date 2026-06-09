@@ -34,6 +34,7 @@ from .factorial import (
     fracfact_opt,
     fullfact,
     gsd,
+    john_three_quarter_design,
     pbdesign,
 )
 from .optimal import (
@@ -130,6 +131,7 @@ __all__ = [
     "halton_sequence",
     "i_optimality",
     "information_matrix",
+    "john_three_quarter_design",
     "korobov_sequence",
     "lhs",
     "list_orthogonal_arrays",
