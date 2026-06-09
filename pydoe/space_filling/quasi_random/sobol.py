@@ -20,6 +20,8 @@ evaluation of integrals.” *Zh. Vych. Mat. Mat. Fiz.*, 7: 784-802 (in Russian);
 
 from __future__ import annotations
 
+import warnings
+
 import numpy as np
 from scipy.stats import qmc
 
@@ -88,8 +90,12 @@ def sobol_sequence(  # noqa: PLR0913
         m = int(np.log2(n))
         samples = sampler.random_base2(m)
     else:
-        # Generate exactly n samples
-        samples = sampler.random(n)
+        # Generate exactly n samples. Suppress scipy's power-of-2 advisory:
+        # callers that pass use_pow_of_2=False (e.g. saltelli_sampling) have
+        # already validated n and issued their own user-facing warning.
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", UserWarning)
+            samples = sampler.random(n)
 
     if bounds is not None:
         bounds = np.asarray(bounds)
