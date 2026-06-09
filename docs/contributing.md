@@ -73,7 +73,7 @@ uv run pytest -n auto tests
 It is recommeded to add documentation about your change using docstrings or editing docs files. If you have made any changes to the documentation, build and preview it locally. API docs are auto-generated from docstrings, however you need to add function manually to the relevant docs file. Be sure to check the warnings and errors while building the docs.
 
 ```bash
-uv run mkdocs serve --livereload
+uv run python -m zensical build --clean --strict
 ```
 
 ### Open a Pull Request
