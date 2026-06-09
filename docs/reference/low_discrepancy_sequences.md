@@ -64,14 +64,20 @@ used in numerical methods and uncertainty quantification.
 **Syntax**:
 
 ```python
-sobol_sequence(num_points, dimension, scramble=False, bounds=None, seed=None)
+sobol_sequence(n, d, *, scramble=False, seed=None, bounds=None,
+               skip=0, use_pow_of_2=True)
 ```
 
-- `num_points`: number of points to generate.
-- `dimension`: number of dimensions.
-- `scramble`: whether to use Owen scrambling (default: False).
-- `bounds`: optional (lower, upper) bounds for each dimension.
-- `seed`: optional integer seed for reproducibility.
+- `n`: number of points to generate.
+- `d`: number of dimensions (must be ≤ 21201).
+- `scramble`: whether to apply Owen scrambling (default: `False`).
+- `seed`: integer seed for reproducibility (only used when `scramble=True`).
+- `bounds`: array of shape `(d, 2)` with per-dimension `(min, max)` pairs.
+- `skip`: number of initial Sobol' points to skip via fast-forward (default: 0).
+- `use_pow_of_2`: if `True` (default), rounds `n` up to the nearest power of 2
+  and uses `random_base2` for ideal balance properties. If `False`, generates
+  exactly `n` samples using `random` — useful when an exact count is required
+  (e.g. inside `saltelli_sampling`).
 
 **Example**:
 
@@ -82,6 +88,12 @@ array([[0.    , 0.    ],
        [0.75  , 0.25  ],
        [0.25  , 0.75  ]])
 ```
+
+!!! note
+    For best balance and coverage, `n` should be a power of 2 and
+    `use_pow_of_2=True` (the default). Non-power-of-2 values are silently
+    rounded up when `use_pow_of_2=True`; set `use_pow_of_2=False` only when
+    the caller needs an exact sample count.
 
 ## Halton Sequence (`halton_sequence`) {#halton_sequence}
 
