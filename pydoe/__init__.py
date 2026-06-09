@@ -24,7 +24,6 @@ The following individuals forked `PyDOE2` and worked on `PyDOE3`:
 from importlib.metadata import PackageNotFoundError, version
 
 from .clustering import random_k_means
-from .mixture import simplex_centroid_design, simplex_lattice_design
 from .factorial import (
     alias_vector_indices,
     ff2n,
@@ -38,6 +37,7 @@ from .factorial import (
     john_three_quarter_design,
     pbdesign,
 )
+from .mixture import simplex_centroid_design, simplex_lattice_design
 from .optimal import (
     a_efficiency,
     a_optimality,
@@ -147,10 +147,10 @@ __all__ = [
     "s_optimality",
     "saltelli_sampling",
     "scale_samples",
-    "simplex_centroid_design",
-    "simplex_lattice_design",
     "sequential_dykstra",
     "simple_exchange_wynn_mitchell",
+    "simplex_centroid_design",
+    "simplex_lattice_design",
     "sobol_sequence",
     "sparse_grid_dimension",
     "star",

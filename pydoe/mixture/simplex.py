@@ -106,9 +106,7 @@ def simplex_lattice_design(q: int, m: int) -> np.ndarray:
 
     n = comb(q + m - 1, m)
     out = np.empty((n, q))
-    for row_idx, combo in enumerate(
-        combinations_with_replacement(range(q), m)
-    ):
+    for row_idx, combo in enumerate(combinations_with_replacement(range(q), m)):
         counts = [0] * q
         for idx in combo:
             counts[idx] += 1

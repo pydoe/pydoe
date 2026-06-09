@@ -4,7 +4,7 @@ All notable changes to PyDOE are documented here.
 
 ---
 
-## **Unreleased**
+## [**Latest**](https://github.com/pydoe/pydoe/releases/latest)
 
 ### :material-plus-circle: Added
 - Simplex-lattice design (`simplex_lattice_design`) — mixture experiment design placing lattice points on the *q*-component simplex at resolution 1/*m*; supports fitting Scheffé polynomial models of degree *m* — [@saudzahirr](https://github.com/saudzahirr)
@@ -17,6 +17,16 @@ All notable changes to PyDOE are documented here.
 ### :material-file-document: Documentation
 - Fix contributing docs to reference `zensical` instead of `mkdocs serve` — [@saudzahirr](https://github.com/saudzahirr)
 - Add `Mixture Designs` reference page — [@saudzahirr](https://github.com/saudzahirr)
+
+---
+
+## [**v1.0.2**](https://github.com/pydoe/pydoe/releases/tag/v1.0.2) <small>2026-05-17</small>
+
+### :material-plus-circle: Added
+- Add theory documentation pages ([#114](https://github.com/pydoe/pydoe/pull/114)) — [@saudzahirr](https://github.com/saudzahirr)
+
+### :material-wrench: Fixed
+- Fix typo in `factorial.md` ([#111](https://github.com/pydoe/pydoe/pull/111)) — [@saudzahirr](https://github.com/saudzahirr)
 
 ---
 

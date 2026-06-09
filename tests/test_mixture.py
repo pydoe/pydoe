@@ -157,12 +157,12 @@ class TestSimplexCentroid(unittest.TestCase):
 
     def test_values_q3(self):
         expected = np.array([
-            [1.0, 0.0, 0.0],        # vertex 1
-            [0.0, 1.0, 0.0],        # vertex 2
-            [0.0, 0.0, 1.0],        # vertex 3
-            [0.5, 0.5, 0.0],        # edge centroid 12
-            [0.5, 0.0, 0.5],        # edge centroid 13
-            [0.0, 0.5, 0.5],        # edge centroid 23
+            [1.0, 0.0, 0.0],  # vertex 1
+            [0.0, 1.0, 0.0],  # vertex 2
+            [0.0, 0.0, 1.0],  # vertex 3
+            [0.5, 0.5, 0.0],  # edge centroid 12
+            [0.5, 0.0, 0.5],  # edge centroid 13
+            [0.0, 0.5, 0.5],  # edge centroid 23
             [1 / 3, 1 / 3, 1 / 3],  # overall centroid
         ])
         np.testing.assert_allclose(simplex_centroid_design(3), expected)
