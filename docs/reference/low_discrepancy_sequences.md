@@ -12,6 +12,8 @@ This section includes the following quasi-random designs:
 - [Hammersley Point Set](#hammersley_sequence)
 - [Rank-1 Lattice Design](#rank1_lattice)
 - [Korobov Sequence](#korobov_sequence)
+- [Faure Sequence](#faure_sequence)
+- [Niederreiter Sequence](#niederreiter_sequence)
 - [Cranley-Patterson Randomization](#cranley_patterson)
 
 !!! hint
@@ -20,7 +22,8 @@ This section includes the following quasi-random designs:
     ```python
     >>> from pydoe import (sukharev_grid, sobol_sequence,
     ...     halton_sequence, hammersley_sequence, rank1_lattice,
-    ...     korobov_sequence, cranley_patterson_shift)
+    ...     korobov_sequence, faure_sequence, niederreiter_sequence,
+    ...     cranley_patterson_shift)
     ```
 
 ## Sukharev Grid (`sukharev_grid`) {#sukharev_grid}
@@ -207,6 +210,73 @@ array([[0, 0, 0],
        [4, 2, 1]])
 ```
 
+## Faure Sequence (`faure_sequence`) {#faure_sequence}
+
+The **Faure sequence** is a low-discrepancy sequence that uses a single
+prime base $b \geq \max(\text{dimension}, 2)$ for every dimension. Each
+dimension's digit expansion is obtained by applying a Pascal
+(binomial-coefficient) permutation matrix, raised to a dimension-dependent
+power, to the base-$b$ digits of the sequence index. This yields better
+uniformity than the Halton sequence in higher dimensions.
+
+**Syntax**:
+
+```python
+faure_sequence(num_points, dimension, skip=0)
+```
+
+- `num_points`: number of points to generate, must be at least 1.
+- `dimension`: number of dimensions, must be at least 1.
+- `skip`: number of initial sequence indices to skip (default: 0).
+
+**Example**:
+
+```python
+>>> faure_sequence(5, 2)
+array([[0.   , 0.   ],
+       [0.5  , 0.5  ],
+       [0.25 , 0.75 ],
+       [0.75 , 0.25 ],
+       [0.125, 0.625]])
+```
+
+!!! note
+    For `dimension == 1`, `faure_sequence` reduces to the van der Corput
+    sequence in base 2.
+
+## Niederreiter Sequence (`niederreiter_sequence`) {#niederreiter_sequence}
+
+The **Niederreiter sequence** is a digital $(t, m, s)$-net constructed in
+base 2. Each dimension's generating matrix is built from the
+linear-feedback-shift-register (LFSR) sequence of a primitive polynomial
+over $\mathrm{GF}(2)$, achieving optimal theoretical discrepancy bounds for
+high-dimensional integration.
+
+**Syntax**:
+
+```python
+niederreiter_sequence(num_points, dimension, n_bits=30)
+```
+
+- `num_points`: number of points to generate, must be at least 1.
+- `dimension`: number of dimensions, must be between 1 and 20 (inclusive).
+- `n_bits`: number of bits of precision used to build the generating
+  matrices (default: 30, must be at least 2).
+
+**Example**:
+
+```python
+>>> niederreiter_sequence(4, 2)
+array([[0.        , 0.        ],
+       [0.42857143, 0.18110236],
+       [0.85714286, 0.36220472],
+       [0.71428571, 0.4488189 ]])
+```
+
+!!! note
+    `dimension` is limited to 20 by the table of pre-verified primitive
+    polynomials over $\mathrm{GF}(2)$ used to build the generating matrices.
+
 ## Cranley-Patterson Randomization (`cranley_patterson_shift`) {#cranley_patterson}
 
 The **Cranley-Patterson method** applies a random shift to a
@@ -249,3 +319,6 @@ array([[0.77395605, 0.43887844],
 - [Halton, J. H. (1964). "Algorithm 247: Radical-inverse quasi-random point sequence." *Communications of the ACM*, 7(12), 701.](https://doi.org/10.1145/355588.365104)
 - [Sobol', I. M. (1967). "Distribution of points in a cube and approximate evaluation of integrals." *Zh. Vych. Mat. Mat. Fiz.*, 7: 784-802 (in Russian); *U.S.S.R. Comput. Maths. Math. Phys.*, 7: 86-112.](https://doi.org/10.1016/0041-5553(71)90008-5)
 - [Hammersley, J. M. (1960). "Monte Carlo methods for solving multivariate problems." *Annals of the New York Academy of Sciences*, 86(1), 844-874.](https://doi.org/10.1111/j.1749-6632.1960.tb42846.x)
+- Faure, H. (1982). "Discrépance de suites associées à un système de numération (en dimension s)." *Acta Arithmetica*, 41(4), 337-351.
+- Niederreiter, H. (1988). "Low-discrepancy and low-dispersion sequences." *Journal of Number Theory*, 30(1), 51-70.
+- [Bratley, P., & Fox, B. L. (1988). "Algorithm 659: Implementing Sobol's quasirandom sequence generator." *ACM Transactions on Mathematical Software*, 14(1), 88-100.](https://doi.org/10.1145/42288.214372)
