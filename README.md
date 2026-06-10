@@ -66,6 +66,11 @@ It provides:
   - Latin-Hypercube (``lhs``)
   - Orthogonal Array-based Latin Hypercube (``oa_lhd``)
   - Sliced Latin Hypercube (``sliced_lhs``)
+  - Nested Latin Hypercube (``nested_lhs``)
+  - Maximin Distance Design (``maximin_design``)
+  - Minimax Distance Design (``minimax_design``)
+  - Maximum Projection Design (``maxpro_design``)
+  - Nearly Orthogonal Latin Hypercube (``nearly_orthogonal_lhs``)
   - Random Uniform (``random_uniform``)
 
 - **Low-Discrepancy Sequences**
@@ -75,6 +80,8 @@ It provides:
   - Hammersley Point Set (``hammersley_sequence``)
   - Rank-1 Lattice Design (``rank1_lattice``)
   - Korobov Sequence (``korobov_sequence``)
+  - Faure Sequence (``faure_sequence``)
+  - Niederreiter Sequence (``niederreiter_sequence``)
   - Cranley-Patterson Randomization (``cranley_patterson_shift``)
 
 - **Clustering Designs**
@@ -102,6 +109,11 @@ It provides:
 - **Specialized Designs**
   - Definitive Screening Design (``definitive_screening_design``)
   - Supersaturated Design (``supersaturated_design``)
+
+- **Sequential / Adaptive Designs**
+  - Sequential Design Driver (``sequential_design``)
+  - Gaussian Process Surrogate (``GaussianProcessRegressor``)
+  - Acquisition Functions (``expected_improvement``, ``probability_of_improvement``, ``upper_confidence_bound``)
 
 Installation
 ------------

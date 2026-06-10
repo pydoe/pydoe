@@ -84,17 +84,30 @@ from .response_surface import (
     union,
 )
 from .sensitivity_analysis import morris_sampling, saltelli_sampling
+from .sequential import (
+    GaussianProcessRegressor,
+    expected_improvement,
+    probability_of_improvement,
+    sequential_design,
+    upper_confidence_bound,
+)
 from .space_filling.quasi_random import (
     cranley_patterson_shift,
+    faure_sequence,
     halton_sequence,
     hammersley_sequence,
     korobov_sequence,
+    niederreiter_sequence,
     rank1_lattice,
     sobol_sequence,
     sukharev_grid,
 )
 from .space_filling.stochastic import (
     lhs,
+    maximin_design,
+    maxpro_design,
+    minimax_design,
+    nearly_orthogonal_lhs,
     nested_lhs,
     oa_lhd,
     random_uniform,
@@ -118,6 +131,7 @@ except PackageNotFoundError:
     __version__ = "unknown"
 
 __all__ = [
+    "GaussianProcessRegressor",
     "TaguchiObjective",
     "a_efficiency",
     "a_optimality",
@@ -140,7 +154,9 @@ __all__ = [
     "doehlert_shell_design",
     "doehlert_simplex_design",
     "e_optimality",
+    "expected_improvement",
     "extreme_vertices_design",
+    "faure_sequence",
     "fedorov",
     "ff2n",
     "fold",
@@ -165,14 +181,20 @@ __all__ = [
     "latin_square",
     "lhs",
     "list_orthogonal_arrays",
+    "maximin_design",
+    "maxpro_design",
+    "minimax_design",
     "mixture_axial_design",
     "mixture_process_design",
     "modified_fedorov",
     "morris_sampling",
+    "nearly_orthogonal_lhs",
     "nested_lhs",
+    "niederreiter_sequence",
     "oa_lhd",
     "optimal_design",
     "pbdesign",
+    "probability_of_improvement",
     "random_k_means",
     "random_uniform",
     "rank1_lattice",
@@ -180,6 +202,7 @@ __all__ = [
     "s_optimality",
     "saltelli_sampling",
     "scale_samples",
+    "sequential_design",
     "sequential_dykstra",
     "simple_exchange_wynn_mitchell",
     "simplex_centroid_design",
@@ -194,6 +217,7 @@ __all__ = [
     "t_optimality",
     "taguchi_design",
     "union",
+    "upper_confidence_bound",
     "v_optimality",
     "var_regression_matrix",
 ]
