@@ -7,6 +7,25 @@ All notable changes to PyDOE are documented here.
 ## [**Latest**](https://github.com/pydoe/pydoe/releases/latest)
 
 ### :material-plus-circle: Added
+- Latin square (`latin_square`), Graeco-Latin square (`graeco_latin_square`), and hyper-Graeco-Latin square (`hyper_graeco_latin_square`) designs — remove the effect of two, three, or more nuisance factors using mutually orthogonal Latin squares — [@saudzahirr](https://github.com/saudzahirr)
+- Hammersley point set (`hammersley_sequence`) — finite, fixed-size low-discrepancy point set with one equispaced coordinate and the remaining coordinates from the Halton sequence — [@saudzahirr](https://github.com/saudzahirr)
+- Iman-Conover method (`iman_conover`) — induces a target rank correlation structure among sampled variables while preserving their marginal distributions — [@saudzahirr](https://github.com/saudzahirr)
+- Mixture axial (screening) design (`mixture_axial_design`) — places one point at the simplex centroid and one axial point per component for screening blending effects — [@saudzahirr](https://github.com/saudzahirr)
+- Extreme-vertices design (`extreme_vertices_design`) — enumerates the vertices of a constrained mixture region defined by per-component lower/upper bounds — [@saudzahirr](https://github.com/saudzahirr)
+- Mixture-process variable design (`mixture_process_design`) — crosses a mixture design with an independent process-variable design — [@saudzahirr](https://github.com/saudzahirr)
+- Blocking of full factorial designs (`block_full_factorial`) — splits a $2^k$ factorial into $2^p$ blocks by confounding chosen interactions with block effects — [@saudzahirr](https://github.com/saudzahirr)
+- Orthogonally-blocked central composite design (`block_ccdesign`) — splits a CCD into a factorial block and an axial block with `alpha` chosen for orthogonal blocking — [@saudzahirr](https://github.com/saudzahirr)
+- Hartley's small composite design (`small_composite_design`) — augments a resolution-III fractional factorial with star points, requiring fewer runs than a standard CCD — [@saudzahirr](https://github.com/saudzahirr)
+- Definitive screening design (`definitive_screening_design`) — three-level Jones-Nachtsheim design requiring only $2k+1$ runs, built from a Paley conference matrix and its fold-over — [@saudzahirr](https://github.com/saudzahirr)
+- Supersaturated design (`supersaturated_design`) — random-search construction of $k > n$ two-level designs minimizing $E(s^2)$ for screening under effect sparsity — [@saudzahirr](https://github.com/saudzahirr)
+- Orthogonal array-based Latin hypercube design (`oa_lhd`) — Tang's (1993) construction turning a symmetric orthogonal array into a Latin hypercube with improved two-dimensional uniformity — [@saudzahirr](https://github.com/saudzahirr)
+- Sliced Latin hypercube design (`sliced_lhs`) — partitions an $N=mt$-point Latin hypercube into $t$ slices of $m$ points, each a Latin hypercube in its own right — [@saudzahirr](https://github.com/saudzahirr)
+
+---
+
+## [**v1.1.0**](https://github.com/pydoe/pydoe/releases/tag/v1.1.0) <small>2026-06-09</small>
+
+### :material-plus-circle: Added
 - Simplex-lattice design (`simplex_lattice_design`) — mixture experiment design placing lattice points on the *q*-component simplex at resolution 1/*m*; supports fitting Scheffé polynomial models of degree *m* — [@saudzahirr](https://github.com/saudzahirr)
 - Simplex-centroid design (`simplex_centroid_design`) — mixture experiment design with the centroids of all $2^q - 1$ non-empty subsets; supports estimation of all Scheffé interaction blending coefficients — [@saudzahirr](https://github.com/saudzahirr)
 - John's 3/4 fractional factorial design (`john_three_quarter_design`) — semifoldover design using exactly 3/4 of the runs of the next full $2^k$ design; de-aliases all two-factor interactions involving the chosen factor — [@saudzahirr](https://github.com/saudzahirr)

@@ -2,11 +2,20 @@ In this section, the following mixture designs are described:
 
 - [Simplex-Lattice Design](#simplex-lattice-design-simplex_lattice_design)
 - [Simplex-Centroid Design](#simplex-centroid-design-simplex_centroid_design)
+- [Axial (Screening) Design](#axial-screening-design-mixture_axial_design)
+- [Extreme-Vertices Design](#extreme-vertices-design-extreme_vertices_design)
+- [Mixture-Process Variable Design](#mixture-process-variable-design-mixture_process_design)
 
 !!! note
     All available designs can be accessed after a simple import statement:
     ```pycon
-    >>> from pydoe import simplex_lattice_design, simplex_centroid_design
+    >>> from pydoe import (
+    ...     simplex_lattice_design,
+    ...     simplex_centroid_design,
+    ...     mixture_axial_design,
+    ...     extreme_vertices_design,
+    ...     mixture_process_design,
+    ... )
     ```
 
 ## Background
@@ -130,6 +139,94 @@ The design always contains:
     lattice design provides a regular grid.  For fitting full Scheffé
     canonical polynomial models, the centroid design is often preferred
     because it supports estimation of all interaction blending coefficients.
+
+## Axial (Screening) Design (`mixture_axial_design`) {#axial-screening-design-mixture_axial_design}
+
+An **axial design** places one point at the overall centroid plus, for
+each component, one point a fraction `delta` of the way from the
+centroid towards that component's pure vertex. It is a simple way to
+screen which components most affect the response.
+
+```pycon
+>>> mixture_axial_design(q, delta=0.5)  # (1)!
+```
+
+1. `q` — number of components (≥ 2). `delta` — fraction of the distance
+   from the centroid to each vertex, $0 < \delta \le 1$ (default 0.5).
+
+```pycon
+>>> mixture_axial_design(3)
+array([[0.33333333, 0.33333333, 0.33333333],
+       [0.66666667, 0.16666667, 0.16666667],
+       [0.16666667, 0.66666667, 0.16666667],
+       [0.16666667, 0.16666667, 0.66666667]])
+```
+
+!!! note
+    Every row sums to 1. The first row is always the centroid; row $i+1$
+    perturbs only component $i$ relative to the centroid.
+
+## Extreme-Vertices Design (`extreme_vertices_design`) {#extreme-vertices-design-extreme_vertices_design}
+
+When each component is restricted to its own range
+$l_i \le x_i \le u_i$, the feasible mixture region becomes a polytope
+nested inside the simplex. An **extreme-vertices design** places a
+design point at every vertex of this polytope.
+
+```pycon
+>>> extreme_vertices_design(lower, upper)  # (1)!
+```
+
+1. `lower`, `upper` — arrays of per-component lower and upper bounds,
+   with $\sum_i l_i \le 1 \le \sum_i u_i$.
+
+```pycon
+>>> extreme_vertices_design([0.1, 0.1, 0.1], [0.6, 0.6, 0.6])
+array([[0.1, 0.3, 0.6],
+       [0.1, 0.6, 0.3],
+       [0.3, 0.1, 0.6],
+       [0.3, 0.6, 0.1],
+       [0.6, 0.1, 0.3],
+       [0.6, 0.3, 0.1]])
+```
+
+!!! note
+    This implementation enumerates vertices of regions defined by simple
+    per-component bounds only; it does not support additional general
+    linear constraints between components.
+
+## Mixture-Process Variable Design (`mixture_process_design`) {#mixture-process-variable-design-mixture_process_design}
+
+Many mixture experiments also vary independent **process variables**
+(temperature, mixing time, etc.) that are not subject to the
+sum-to-one constraint. `mixture_process_design` crosses a mixture
+design with a process-variable design, running every combination of
+the two.
+
+```pycon
+>>> mixture_process_design(mixture, process)  # (1)!
+```
+
+1. `mixture` — an `(n1, q)` mixture design matrix (rows summing to 1).
+   `process` — an `(n2, p)` process-variable design matrix, e.g. from
+   `ff2n`.
+
+```pycon
+>>> mixture = np.array([[1.0, 0.0], [0.5, 0.5], [0.0, 1.0]])
+>>> process = np.array([[-1.0], [1.0]])
+>>> mixture_process_design(mixture, process)
+array([[ 1. ,  0. , -1. ],
+       [ 1. ,  0. ,  1. ],
+       [ 0.5,  0.5, -1. ],
+       [ 0.5,  0.5,  1. ],
+       [ 0. ,  1. , -1. ],
+       [ 0. ,  1. ,  1. ]])
+```
+
+!!! note
+    The result has `n1 * n2` rows and `q + p` columns: the first `q`
+    columns are mixture proportions, the last `p` columns are
+    process-variable settings.
 
 ## More Information
 

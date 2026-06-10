@@ -9,6 +9,7 @@ This section includes the following quasi-random designs:
 - [Sukharev Grid](#sukharev_grid)
 - [Sobol' Sequence](#sobol_sequence)
 - [Halton Sequence](#halton_sequence)
+- [Hammersley Point Set](#hammersley_sequence)
 - [Rank-1 Lattice Design](#rank1_lattice)
 - [Korobov Sequence](#korobov_sequence)
 - [Cranley-Patterson Randomization](#cranley_patterson)
@@ -18,8 +19,8 @@ This section includes the following quasi-random designs:
 
     ```python
     >>> from pydoe import (sukharev_grid, sobol_sequence,
-    ...     halton_sequence, rank1_lattice, korobov_sequence,
-    ...     cranley_patterson_shift)
+    ...     halton_sequence, hammersley_sequence, rank1_lattice,
+    ...     korobov_sequence, cranley_patterson_shift)
     ```
 
 ## Sukharev Grid (`sukharev_grid`) {#sukharev_grid}
@@ -121,6 +122,39 @@ array([[0.        , 0.        ],
        [0.125     , 0.44444444]])
 ```
 
+## Hammersley Point Set (`hammersley_sequence`) {#hammersley_sequence}
+
+The **Hammersley point set** is a finite, fixed-size low-discrepancy
+point set. Its first coordinate places one point at $i / N$ for
+$i = 0, \ldots, N-1$, while the remaining coordinates are generated using
+the van der Corput sequence with successive prime bases, exactly as in
+the Halton sequence. Because it is defined for a fixed sample size $N$,
+it achieves better uniformity than the Halton sequence for that size.
+
+**Syntax**:
+
+```python
+>>> hammersley_sequence(num_points, dimension)
+```
+
+- `num_points`: number of points to generate, must be at least 1.
+- `dimension`: number of dimensions, must be at least 1.
+
+**Example**:
+
+```python
+>>> hammersley_sequence(4, 2)
+array([[0.  , 0.  ],
+       [0.25, 0.5 ],
+       [0.5 , 0.25],
+       [0.75, 0.75]])
+```
+
+!!! note
+    Unlike `halton_sequence`, `hammersley_sequence` cannot be extended
+    incrementally — the entire point set depends on `num_points`. Use it
+    when the total sample size is known in advance.
+
 ## Rank-1 Lattice Design (`rank1_lattice`) {#rank1_lattice}
 
 A **Rank-1 Lattice** is a deterministic method to construct points that
@@ -214,3 +248,4 @@ array([[0.77395605, 0.43887844],
 - [Cranley, R., and Patterson, T. N. L. (1976). "Randomization of Number Theoretic Methods for Multiple Integration." *SIAM Journal on Numerical Analysis*, 13(6), 904-914.](https://doi.org/10.1137/0713071)
 - [Halton, J. H. (1964). "Algorithm 247: Radical-inverse quasi-random point sequence." *Communications of the ACM*, 7(12), 701.](https://doi.org/10.1145/355588.365104)
 - [Sobol', I. M. (1967). "Distribution of points in a cube and approximate evaluation of integrals." *Zh. Vych. Mat. Mat. Fiz.*, 7: 784-802 (in Russian); *U.S.S.R. Comput. Maths. Math. Phys.*, 7: 86-112.](https://doi.org/10.1016/0041-5553(71)90008-5)
+- [Hammersley, J. M. (1960). "Monte Carlo methods for solving multivariate problems." *Annals of the New York Academy of Sciences*, 86(1), 844-874.](https://doi.org/10.1111/j.1749-6632.1960.tb42846.x)

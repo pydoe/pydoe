@@ -2,6 +2,8 @@ In this section, the following kinds of *randomized designs* will
 be described:
 
 - Latin-Hypercube
+- Orthogonal Array-based Latin Hypercube
+- Sliced Latin Hypercube
 - Random K-Means
 - Random Uniform
 
@@ -9,7 +11,7 @@ be described:
     All available designs can be accessed after a simple import statement:
 
     ```pycon
-    >>> from pydoe import lhs, random_k_means, random_uniform
+    >>> from pydoe import lhs, oa_lhd, random_k_means, random_uniform, sliced_lhs
     ```
 
 ## Latin-Hypercube (`lhs`) {#latin-hypercube}
@@ -119,6 +121,90 @@ array([[ 0.84947986,  2.16716215,  2.81669487,  3.96369414],
 
 !!! note
     Methods for "space-filling" designs and "orthogonal" designs are in the works, so stay tuned! However, simply increasing the samples reduces the need for these anyway.
+
+## Orthogonal Array-based Latin Hypercube (`oa_lhd`) {#orthogonal-array-based-latin-hypercube}
+
+`oa_lhd` builds a Latin hypercube design from a symmetric orthogonal
+array using Tang's (1993) construction. Each column of the result is a
+permutation of all `N` cell midpoints, jittered within the cell, while
+respecting the level structure of the orthogonal array. This gives
+better two-dimensional uniformity than a plain random Latin hypercube.
+
+```pycon
+>>> oa_lhd(oa, [seed])
+```
+
+where
+
+* **oa**: a 2D array-like `OA(N, k, s, 2)` with integer levels
+  `0, ..., s - 1`, each level appearing exactly `N / s` times in every
+  column (e.g. from [`get_orthogonal_array`](taguchi.md))
+* **seed**: an integer or `np.random.Generator` for reproducibility
+  (default: `None`)
+
+The output design scales to the unit hypercube $[0, 1)^k$ with `N`
+cells.
+
+### Examples
+
+```pycon
+>>> from pydoe import get_orthogonal_array, oa_lhd
+>>> oa = get_orthogonal_array("L9(3^4)")
+>>> oa_lhd(oa, seed=0)
+array([[0.31813099, 0.17127347, 0.03330132, 0.26918747],
+       [0.00314663, 0.34714259, 0.63006938, 0.40524328],
+       [0.17948723, 0.70929751, 0.88857888, 0.77564837],
+       [0.63172689, 0.29449548, 0.52093853, 0.82099127],
+       [0.45945517, 0.63572093, 0.94726159, 0.14558243],
+       [0.38731504, 0.98772087, 0.32600484, 0.59531058],
+       [0.9523922 , 0.03576327, 0.7327    , 0.48199014],
+       [0.71017989, 0.54336382, 0.13635084, 0.9581319 ],
+       [0.78711282, 0.87029379, 0.4207887 , 0.0265966 ]])
+```
+
+## Sliced Latin Hypercube (`sliced_lhs`) {#sliced-latin-hypercube}
+
+`sliced_lhs` partitions an $N = mt$-point Latin hypercube design into
+`t` slices of `m` points each, such that the full design is a Latin
+hypercube over `N` cells *and* every individual slice, once rescaled
+to its own unit hypercube, is itself a Latin hypercube over `m` cells.
+This is useful for computer experiments that mix qualitative levels
+(one per slice) with quantitative factors.
+
+```pycon
+>>> sliced_lhs(n_factors, m, t, [seed])
+```
+
+where
+
+* **n_factors**: an integer that designates the number of factors
+  (required, must be at least 1)
+* **m**: an integer that designates the number of points per slice
+  (required, must be at least 1)
+* **t**: an integer that designates the number of slices (required,
+  must be at least 1)
+* **seed**: an integer or `np.random.Generator` for reproducibility
+  (default: `None`)
+
+`sliced_lhs` returns a tuple `(design, slices)` where `design` is an
+`(m * t, n_factors)` array in $[0, 1)^\text{n\_factors}$ and `slices`
+is a length-`m * t` array of slice labels `0, ..., t - 1`.
+
+### Examples
+
+```pycon
+>>> from pydoe import sliced_lhs
+>>> design, slices = sliced_lhs(2, 3, 2, seed=0)
+>>> design
+array([[0.4344393 , 0.45491609],
+       [0.09060417, 0.1558454 ],
+       [0.30264226, 0.16712308],
+       [0.97623405, 0.67226426],
+       [0.78827591, 0.86260927],
+       [0.64386315, 0.59024354]])
+>>> slices
+array([0, 0, 0, 1, 1, 1])
+```
 
 ## Random K-Means (`random_k_means`) {#random-k-means}
 

@@ -47,6 +47,19 @@ cd pydoe
 uv sync
 ```
 
+### Git Hooks
+
+The repo ships a pre-commit hook in `.git-hooks/pre-commit` that runs
+`ruff format --check`, `ruff check`, and the full test suite before each
+commit, mirroring the CI checks. Enable it once per clone with:
+
+```bash
+git config core.hooksPath .git-hooks
+```
+
+If any of these checks fail, the commit is aborted so you can fix the
+issue before committing.
+
 ### Commit Changes
 
 Switch to a new branch for your changes.
