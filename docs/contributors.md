@@ -12,7 +12,7 @@ PyDOE is built and maintained by a community of developers and researchers.
 
     **[Saud Zahir](https://github.com/saudzahirr)** · *Core Contributor*
 
-    Python and Rust developer focused on the scientific Python ecosystem.
+    Python and C++ developer focused on the scientific Python ecosystem.
 
 -   <figure markdown="span">
       [![tisimst](https://github.com/tisimst.png){ width=64 style="border-radius: 50%;" }](https://github.com/tisimst)
