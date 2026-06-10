@@ -5,7 +5,13 @@ from math import comb
 
 import numpy as np
 
-from pydoe import simplex_centroid_design, simplex_lattice_design
+from pydoe import (
+    extreme_vertices_design,
+    mixture_axial_design,
+    mixture_process_design,
+    simplex_centroid_design,
+    simplex_lattice_design,
+)
 
 
 class TestSimplexLattice(unittest.TestCase):
@@ -211,3 +217,136 @@ class TestSimplexCentroid(unittest.TestCase):
     def test_raises_q_zero(self):
         with self.assertRaises(ValueError):
             simplex_centroid_design(0)
+
+
+class TestMixtureAxialDesign(unittest.TestCase):
+    def test_shape(self):
+        for q in [2, 3, 4, 5]:
+            design = mixture_axial_design(q)
+            self.assertEqual(design.shape, (q + 1, q))
+
+    def test_rows_sum_to_one(self):
+        for q in [2, 3, 4]:
+            design = mixture_axial_design(q, delta=0.3)
+            np.testing.assert_allclose(design.sum(axis=1), 1.0)
+
+    def test_first_row_is_centroid(self):
+        q = 4
+        design = mixture_axial_design(q)
+        np.testing.assert_allclose(design[0], np.full(q, 1.0 / q))
+
+    def test_values_non_negative(self):
+        design = mixture_axial_design(5, delta=1.0)
+        self.assertTrue(np.all(design >= 0))
+
+    def test_delta_one_gives_vertices_after_centroid(self):
+        q = 3
+        design = mixture_axial_design(q, delta=1.0)
+        np.testing.assert_allclose(design[1:], np.eye(q))
+
+    def test_exact_values_q3(self):
+        expected = np.array([
+            [1 / 3, 1 / 3, 1 / 3],
+            [2 / 3, 1 / 6, 1 / 6],
+            [1 / 6, 2 / 3, 1 / 6],
+            [1 / 6, 1 / 6, 2 / 3],
+        ])
+        np.testing.assert_allclose(mixture_axial_design(3, delta=0.5), expected)
+
+    def test_raises_q_less_than_2(self):
+        with self.assertRaises(ValueError):
+            mixture_axial_design(1)
+
+    def test_raises_invalid_delta(self):
+        with self.assertRaises(ValueError):
+            mixture_axial_design(3, delta=0.0)
+        with self.assertRaises(ValueError):
+            mixture_axial_design(3, delta=1.5)
+
+
+class TestExtremeVerticesDesign(unittest.TestCase):
+    def test_rows_sum_to_one(self):
+        verts = extreme_vertices_design([0.1, 0.1, 0.1], [0.6, 0.6, 0.6])
+        np.testing.assert_allclose(verts.sum(axis=1), 1.0)
+
+    def test_within_bounds(self):
+        lower = [0.0, 0.2, 0.0]
+        upper = [1.0, 0.5, 0.7]
+        verts = extreme_vertices_design(lower, upper)
+        self.assertTrue(np.all(verts >= np.array(lower) - 1e-9))
+        self.assertTrue(np.all(verts <= np.array(upper) + 1e-9))
+
+    def test_exact_values_symmetric_region(self):
+        expected = np.array([
+            [0.1, 0.3, 0.6],
+            [0.1, 0.6, 0.3],
+            [0.3, 0.1, 0.6],
+            [0.3, 0.6, 0.1],
+            [0.6, 0.1, 0.3],
+            [0.6, 0.3, 0.1],
+        ])
+        verts = extreme_vertices_design([0.1, 0.1, 0.1], [0.6, 0.6, 0.6])
+        np.testing.assert_allclose(verts, expected)
+
+    def test_unconstrained_region_gives_simplex_vertices(self):
+        verts = extreme_vertices_design([0.0, 0.0, 0.0], [1.0, 1.0, 1.0])
+        np.testing.assert_allclose(
+            np.sort(verts, axis=0), np.sort(np.eye(3), axis=0)
+        )
+
+    def test_no_duplicate_rows(self):
+        verts = extreme_vertices_design([0.1, 0.1, 0.1], [0.6, 0.6, 0.6])
+        self.assertEqual(len(np.unique(verts, axis=0)), len(verts))
+
+    def test_raises_shape_mismatch(self):
+        with self.assertRaises(ValueError):
+            extreme_vertices_design([0.1, 0.1], [0.6, 0.6, 0.6])
+
+    def test_raises_lower_exceeds_upper(self):
+        with self.assertRaises(ValueError):
+            extreme_vertices_design([0.7, 0.1, 0.1], [0.6, 0.6, 0.6])
+
+    def test_raises_infeasible_lower_sum(self):
+        with self.assertRaises(ValueError):
+            extreme_vertices_design([0.5, 0.5, 0.5], [0.9, 0.9, 0.9])
+
+    def test_raises_infeasible_upper_sum(self):
+        with self.assertRaises(ValueError):
+            extreme_vertices_design([0.0, 0.0, 0.0], [0.2, 0.2, 0.2])
+
+
+class TestMixtureProcessDesign(unittest.TestCase):
+    def test_shape(self):
+        mixture = simplex_lattice_design(3, 1)
+        process = np.array([[-1.0, -1.0], [-1.0, 1.0], [1.0, -1.0], [1.0, 1.0]])
+        design = mixture_process_design(mixture, process)
+        self.assertEqual(design.shape, (3 * 4, 3 + 2))
+
+    def test_mixture_columns_sum_to_one(self):
+        mixture = simplex_lattice_design(3, 2)
+        process = np.array([[-1.0], [1.0]])
+        design = mixture_process_design(mixture, process)
+        np.testing.assert_allclose(design[:, :3].sum(axis=1), 1.0)
+
+    def test_exact_values(self):
+        mixture = np.array([[1.0, 0.0], [0.5, 0.5], [0.0, 1.0]])
+        process = np.array([[-1.0], [1.0]])
+        expected = np.array([
+            [1.0, 0.0, -1.0],
+            [1.0, 0.0, 1.0],
+            [0.5, 0.5, -1.0],
+            [0.5, 0.5, 1.0],
+            [0.0, 1.0, -1.0],
+            [0.0, 1.0, 1.0],
+        ])
+        np.testing.assert_allclose(
+            mixture_process_design(mixture, process), expected
+        )
+
+    def test_full_factorial_pairing(self):
+        mixture = np.eye(2)
+        process = np.eye(3)
+        design = mixture_process_design(mixture, process)
+        self.assertEqual(design.shape, (6, 5))
+        # First two rows pair mixture row 0 with each process row
+        np.testing.assert_allclose(design[:3, :2], np.tile(mixture[0], (3, 1)))

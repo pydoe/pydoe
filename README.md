@@ -43,10 +43,14 @@ It provides:
   - Latin Square Designs (``latin_square``)
   - Graeco-Latin Square Designs (``graeco_latin_square``)
   - Hyper-Graeco-Latin Square Designs (``hyper_graeco_latin_square``)
+  - Blocking of Full Factorial Designs (``block_full_factorial``)
 
 - **Mixture Designs**
   - Simplex-Lattice Design (``simplex_lattice_design``)
   - Simplex-Centroid Design (``simplex_centroid_design``)
+  - Axial (Screening) Design (``mixture_axial_design``)
+  - Extreme-Vertices Design (``extreme_vertices_design``)
+  - Mixture-Process Variable Design (``mixture_process_design``)
 
 - **Response-Surface Designs**
   - Box-Behnken (``bbdesign``)
@@ -55,6 +59,8 @@ It provides:
   - Star Designs (``star``)
   - Union Designs (``union``)
   - Repeated Center Points (``repeat_center``)
+  - Blocked Central Composite Design (``block_ccdesign``)
+  - Small Composite Design (``small_composite_design``)
 
 - **Space-Filling Designs**
   - Latin-Hypercube (``lhs``)

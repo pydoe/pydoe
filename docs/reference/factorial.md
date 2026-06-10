@@ -9,6 +9,7 @@ In this section, the following kinds of factorial designs will be described:
 - [Latin Square Designs](#latin-square-designs-latin_square)
 - [Graeco-Latin Square Designs](#graeco-latin-square-designs-graeco_latin_square)
 - [Hyper-Graeco-Latin Square Designs](#hyper-graeco-latin-square-designs-hyper_graeco_latin_square)
+- [Blocking a Full Factorial Design](#blocking-a-full-factorial-design-block_full_factorial)
 
 !!! note
     All available designs can be accessed after a simple import statement:
@@ -23,6 +24,7 @@ In this section, the following kinds of factorial designs will be described:
     ...     latin_square,
     ...     graeco_latin_square,
     ...     hyper_graeco_latin_square,
+    ...     block_full_factorial,
     ... )
     ```
 
@@ -582,6 +584,43 @@ array([[0, 1, 2, 3, 4],
     $a = 1, \ldots, k$. For prime $n$, a complete set of $n - 1$ mutually
     orthogonal Latin squares exists, so `k` must satisfy
     $2 \le k \le n - 1$.
+
+## Blocking a Full Factorial Design (`block_full_factorial`) {#blocking-a-full-factorial-design-block_full_factorial}
+
+When the runs of a $2^k$ factorial design cannot all be carried out
+under homogeneous conditions, the design can be split into $2^p$
+blocks by confounding one or more high-order interactions with the
+block effect.
+
+```pycon
+>>> design, blocks = block_full_factorial(k, generators)  # (1)!
+```
+
+1. `k` — number of factors (≥ 2). `generators` — a list of tuples of
+   0-based factor indices; each tuple's interaction column defines one
+   block contrast, giving $2^{\text{len(generators)}}$ blocks.
+
+Confound the three-factor interaction `ABC` with two blocks:
+
+```pycon
+>>> design, blocks = block_full_factorial(3, [(0, 1, 2)])
+>>> design
+array([[-1., -1., -1.],
+       [-1., -1.,  1.],
+       [-1.,  1., -1.],
+       [-1.,  1.,  1.],
+       [ 1., -1., -1.],
+       [ 1., -1.,  1.],
+       [ 1.,  1., -1.],
+       [ 1.,  1.,  1.]])
+>>> blocks
+array([1, 0, 0, 1, 0, 1, 1, 0])
+```
+
+!!! note
+    The chosen interactions (and their generalized interactions) become
+    completely confounded with block effects, so they should be
+    interactions believed to be negligible.
 
 ## More Information
 

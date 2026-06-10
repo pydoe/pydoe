@@ -1,3 +1,4 @@
+from .blocking import block_full_factorial
 from .factorial import (
     alias_vector_indices,
     ff2n,
@@ -20,6 +21,7 @@ from .plackett_burman import pbdesign
 
 __all__ = [
     "alias_vector_indices",
+    "block_full_factorial",
     "ff2n",
     "fold",
     "fracfact",

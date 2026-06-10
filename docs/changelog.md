@@ -13,6 +13,12 @@ All notable changes to PyDOE are documented here.
 - Latin square (`latin_square`), Graeco-Latin square (`graeco_latin_square`), and hyper-Graeco-Latin square (`hyper_graeco_latin_square`) designs — remove the effect of two, three, or more nuisance factors using mutually orthogonal Latin squares — [@saudzahirr](https://github.com/saudzahirr)
 - Hammersley point set (`hammersley_sequence`) — finite, fixed-size low-discrepancy point set with one equispaced coordinate and the remaining coordinates from the Halton sequence — [@saudzahirr](https://github.com/saudzahirr)
 - Iman-Conover method (`iman_conover`) — induces a target rank correlation structure among sampled variables while preserving their marginal distributions — [@saudzahirr](https://github.com/saudzahirr)
+- Mixture axial (screening) design (`mixture_axial_design`) — places one point at the simplex centroid and one axial point per component for screening blending effects — [@saudzahirr](https://github.com/saudzahirr)
+- Extreme-vertices design (`extreme_vertices_design`) — enumerates the vertices of a constrained mixture region defined by per-component lower/upper bounds — [@saudzahirr](https://github.com/saudzahirr)
+- Mixture-process variable design (`mixture_process_design`) — crosses a mixture design with an independent process-variable design — [@saudzahirr](https://github.com/saudzahirr)
+- Blocking of full factorial designs (`block_full_factorial`) — splits a $2^k$ factorial into $2^p$ blocks by confounding chosen interactions with block effects — [@saudzahirr](https://github.com/saudzahirr)
+- Orthogonally-blocked central composite design (`block_ccdesign`) — splits a CCD into a factorial block and an axial block with `alpha` chosen for orthogonal blocking — [@saudzahirr](https://github.com/saudzahirr)
+- Hartley's small composite design (`small_composite_design`) — augments a resolution-III fractional factorial with star points, requiring fewer runs than a standard CCD — [@saudzahirr](https://github.com/saudzahirr)
 
 ### :material-wrench: Fixed
 - Eliminate 604 test warnings by correctly catching `scipy.linalg.LinAlgWarning` in `regularized_inv`; suppress scipy Sobol advisory in the Saltelli path — [@saudzahirr](https://github.com/saudzahirr)

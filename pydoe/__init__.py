@@ -26,6 +26,7 @@ from importlib.metadata import PackageNotFoundError, version
 from .clustering import random_k_means
 from .factorial import (
     alias_vector_indices,
+    block_full_factorial,
     ff2n,
     fold,
     fracfact,
@@ -40,7 +41,13 @@ from .factorial import (
     latin_square,
     pbdesign,
 )
-from .mixture import simplex_centroid_design, simplex_lattice_design
+from .mixture import (
+    extreme_vertices_design,
+    mixture_axial_design,
+    mixture_process_design,
+    simplex_centroid_design,
+    simplex_lattice_design,
+)
 from .optimal import (
     a_efficiency,
     a_optimality,
@@ -67,10 +74,12 @@ from .optimal import (
 )
 from .response_surface import (
     bbdesign,
+    block_ccdesign,
     ccdesign,
     doehlert_shell_design,
     doehlert_simplex_design,
     repeat_center,
+    small_composite_design,
     star,
     union,
 )
@@ -107,6 +116,8 @@ __all__ = [
     "a_optimality",
     "alias_vector_indices",
     "bbdesign",
+    "block_ccdesign",
+    "block_full_factorial",
     "build_design_matrix",
     "build_uniform_moment_matrix",
     "c_optimality",
@@ -121,6 +132,7 @@ __all__ = [
     "doehlert_shell_design",
     "doehlert_simplex_design",
     "e_optimality",
+    "extreme_vertices_design",
     "fedorov",
     "ff2n",
     "fold",
@@ -145,6 +157,8 @@ __all__ = [
     "latin_square",
     "lhs",
     "list_orthogonal_arrays",
+    "mixture_axial_design",
+    "mixture_process_design",
     "modified_fedorov",
     "morris_sampling",
     "optimal_design",
@@ -160,6 +174,7 @@ __all__ = [
     "simple_exchange_wynn_mitchell",
     "simplex_centroid_design",
     "simplex_lattice_design",
+    "small_composite_design",
     "sobol_sequence",
     "sparse_grid_dimension",
     "star",
