@@ -8,9 +8,9 @@ The entire mixture design family is absent. Mixture experiments differ from stan
 
 - [x] **Simplex-lattice designs** — place design points on a regular lattice over the simplex (all proportions summing to 1); parameterized by degree *m* giving ${q+m-1 \choose m}$ points for *q* components *(implemented: `simplex_lattice_design`)*
 - [x] **Simplex-centroid designs** — include all subsets of components at equal proportions; for *q* components generates $2^q - 1$ points (vertices, edge midpoints, face centroids, overall centroid) *(implemented: `simplex_centroid_design`)*
-- [ ] **Mixture screening designs** — screen important components in a mixture using a sparse design
-- [ ] **Constrained mixture designs (Extreme-Vertices)** — handle lower and upper bounds on each component proportion; points are extreme vertices of the constrained region
-- [ ] **Mixture + process variable designs** — combined designs where some factors are mixture proportions and others are independent process variables
+- [x] **Mixture screening designs** — screen important components in a mixture using a sparse design *(implemented: `mixture_axial_design`)*
+- [x] **Constrained mixture designs (Extreme-Vertices)** — handle lower and upper bounds on each component proportion; points are extreme vertices of the constrained region *(implemented: `extreme_vertices_design`)*
+- [x] **Mixture + process variable designs** — combined designs where some factors are mixture proportions and others are independent process variables *(implemented: `mixture_process_design`)*
 
 ## Factorial Design Extensions
 
@@ -19,19 +19,19 @@ The entire mixture design family is absent. Mixture experiments differ from stan
 - [x] **Hyper-Graeco-Latin square designs** — extension to four or more orthogonal Latin squares *(implemented: `hyper_graeco_latin_square`)*
 - [x] **Mirror-image foldover designs** — augment a resolution III fractional factorial with its mirror image to achieve resolution IV *(implemented: `fold` with the default `columns=None`)*
 - [x] **Alternative foldover designs** — selective foldover on a single factor to break specific alias pairs without running a full mirror image *(implemented: `fold` with a `columns` subset)*
-- [ ] **Blocking of full factorial designs** — partition a full $2^k$ design into blocks while keeping main effects and interactions estimable
-- [ ] **Blocking of response surface designs** — orthogonally block CCC/CCI central composite designs into factorial and axial blocks (currently `ccdesign` has no blocking support)
+- [x] **Blocking of full factorial designs** — partition a full $2^k$ design into blocks while keeping main effects and interactions estimable *(implemented: `block_full_factorial`)*
+- [x] **Blocking of response surface designs** — orthogonally block CCC/CCI central composite designs into factorial and axial blocks (currently `ccdesign` has no blocking support) *(implemented: `block_ccdesign`)*
 
 ## Specialized Designs
 
-- [ ] **Small composite designs (Hartley)** — augment a resolution III fractional factorial with star points to fit a quadratic model with fewer runs than a standard CCD; particularly useful for 4–5 factors in a single batch
-- [ ] **Supersaturated designs** — designs with more factors than runs; used in screening when only a very small fraction of factors are active; typically constructed to minimize the squared off-diagonal elements of $X^T X$
-- [ ] **Definitive Screening Designs (DSD)** — three-level designs introduced by Jones & Nachtsheim (2011) that can estimate all main effects, all quadratic effects, and any two-factor interaction clear of other quadratic effects; require only $2k+1$ runs for $k$ factors
+- [x] **Small composite designs (Hartley)** — augment a resolution III fractional factorial with star points to fit a quadratic model with fewer runs than a standard CCD; particularly useful for 4–5 factors in a single batch *(implemented: `small_composite_design`)*
+- [x] **Supersaturated designs** — designs with more factors than runs; used in screening when only a very small fraction of factors are active; typically constructed to minimize the squared off-diagonal elements of $X^T X$ *(implemented: `supersaturated_design`)*
+- [x] **Definitive Screening Designs (DSD)** — three-level designs introduced by Jones & Nachtsheim (2011) that can estimate all main effects, all quadratic effects, and any two-factor interaction clear of other quadratic effects; require only $2k+1$ runs for $k$ factors *(implemented: `definitive_screening_design`)*
 
 ## Space-Filling Design Extensions
 
-- [ ] **Orthogonal Array-based Latin Hypercube (OA-LHD)** — construct Latin hypercube designs whose projection on every pair of factors is an orthogonal array; better two-dimensional uniformity than plain LHS
-- [ ] **Sliced Latin Hypercube Design (SLHD)** — partition a Latin hypercube into slices such that each slice is itself a scaled Latin hypercube; useful for computer experiments with qualitative and quantitative factors
+- [x] **Orthogonal Array-based Latin Hypercube (OA-LHD)** — construct Latin hypercube designs whose projection on every pair of factors is an orthogonal array; better two-dimensional uniformity than plain LHS *(implemented: `oa_lhd`)*
+- [x] **Sliced Latin Hypercube Design (SLHD)** — partition a Latin hypercube into slices such that each slice is itself a scaled Latin hypercube; useful for computer experiments with qualitative and quantitative factors *(implemented: `sliced_lhs`)*
 - [ ] **Nested Latin Hypercube Design** — construct two or more LHDs such that one is nested inside the other; useful for multi-fidelity simulation experiments
 - [ ] **Maximum Projection (MaxPro) Design** — minimize the average reciprocal of squared pairwise distances across all subsets of dimensions; guarantees good projections onto any subset of factors
 - [ ] **Nearly Orthogonal Latin Hypercubes (NOLH)** — LHDs constructed to be nearly orthogonal (near-zero pairwise correlations) while remaining space-filling; available via Cioppa & Lucas (2007) tables

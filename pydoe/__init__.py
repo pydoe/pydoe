@@ -93,7 +93,13 @@ from .space_filling.quasi_random import (
     sobol_sequence,
     sukharev_grid,
 )
-from .space_filling.stochastic import lhs, oa_lhd, random_uniform, sliced_lhs
+from .space_filling.stochastic import (
+    lhs,
+    nested_lhs,
+    oa_lhd,
+    random_uniform,
+    sliced_lhs,
+)
 from .sparse_grid import doe_sparse_grid, sparse_grid_dimension
 from .specialized import definitive_screening_design, supersaturated_design
 from .taguchi import (
@@ -163,6 +169,7 @@ __all__ = [
     "mixture_process_design",
     "modified_fedorov",
     "morris_sampling",
+    "nested_lhs",
     "oa_lhd",
     "optimal_design",
     "pbdesign",
