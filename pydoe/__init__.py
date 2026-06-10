@@ -33,8 +33,11 @@ from .factorial import (
     fracfact_by_res,
     fracfact_opt,
     fullfact,
+    graeco_latin_square,
     gsd,
+    hyper_graeco_latin_square,
     john_three_quarter_design,
+    latin_square,
     pbdesign,
 )
 from .mixture import simplex_centroid_design, simplex_lattice_design
@@ -75,6 +78,7 @@ from .sensitivity_analysis import morris_sampling, saltelli_sampling
 from .space_filling.quasi_random import (
     cranley_patterson_shift,
     halton_sequence,
+    hammersley_sequence,
     korobov_sequence,
     rank1_lattice,
     sobol_sequence,
@@ -89,7 +93,7 @@ from .taguchi import (
     list_orthogonal_arrays,
     taguchi_design,
 )
-from .utils import scale_samples, var_regression_matrix
+from .utils import iman_conover, scale_samples, var_regression_matrix
 
 
 try:  # noqa: RUF067
@@ -128,12 +132,17 @@ __all__ = [
     "g_optimality",
     "generate_candidate_set",
     "get_orthogonal_array",
+    "graeco_latin_square",
     "gsd",
     "halton_sequence",
+    "hammersley_sequence",
+    "hyper_graeco_latin_square",
     "i_optimality",
+    "iman_conover",
     "information_matrix",
     "john_three_quarter_design",
     "korobov_sequence",
+    "latin_square",
     "lhs",
     "list_orthogonal_arrays",
     "modified_fedorov",

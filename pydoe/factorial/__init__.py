@@ -10,6 +10,11 @@ from .factorial import (
 from .fold import fold
 from .gsd import gsd
 from .john_three_quarter import john_three_quarter_design
+from .latin_square import (
+    graeco_latin_square,
+    hyper_graeco_latin_square,
+    latin_square,
+)
 from .plackett_burman import pbdesign
 
 
@@ -22,7 +27,10 @@ __all__ = [
     "fracfact_by_res",
     "fracfact_opt",
     "fullfact",
+    "graeco_latin_square",
     "gsd",
+    "hyper_graeco_latin_square",
     "john_three_quarter_design",
+    "latin_square",
     "pbdesign",
 ]

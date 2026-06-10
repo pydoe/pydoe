@@ -6,6 +6,9 @@ In this section, the following kinds of factorial designs will be described:
 - [Plackett-Burman](#plackett-burman)
 - [Generalized Subset Design](#generalized-subset-design)
 - [John's 3/4 Fractional Factorial](#johns-34-fractional-factorial-john_three_quarter_design)
+- [Latin Square Designs](#latin-square-designs-latin_square)
+- [Graeco-Latin Square Designs](#graeco-latin-square-designs-graeco_latin_square)
+- [Hyper-Graeco-Latin Square Designs](#hyper-graeco-latin-square-designs-hyper_graeco_latin_square)
 
 !!! note
     All available designs can be accessed after a simple import statement:
@@ -17,6 +20,9 @@ In this section, the following kinds of factorial designs will be described:
     ...     pbdesign,
     ...     gsd,
     ...     john_three_quarter_design,
+    ...     latin_square,
+    ...     graeco_latin_square,
+    ...     hyper_graeco_latin_square,
     ... )
     ```
 
@@ -481,6 +487,101 @@ factor whose two-factor interactions are most important to estimate:
     The `fold_on` parameter (default ``1``) selects which factor's two-factor
     interactions are de-aliased by the semifoldover.  See NIST Handbook
     Section 5.5.7 for the full alias analysis.
+
+## Latin Square Designs (`latin_square`) {#latin-square-designs-latin_square}
+
+A **Latin square** of order $n$ is an $n \times n$ array filled with $n$
+different symbols, each occurring exactly once in each row and exactly
+once in each column. Latin square designs are used to remove the effect
+of two nuisance factors (rows and columns) while studying a single
+treatment factor with $n$ levels, using only $n^2$ runs instead of the
+$n^3$ runs a full factorial would require.
+
+```pycon
+>>> latin_square(n)  # (1)!
+```
+
+1. `n` — order of the square (number of levels), must be at least 2.
+
+`latin_square` builds the square using the cyclic construction
+$L[i, j] = (i + j) \bmod n$, which guarantees every row and column is a
+permutation of $0, 1, \ldots, n-1$:
+
+```pycon
+>>> latin_square(4)
+array([[0, 1, 2, 3],
+       [1, 2, 3, 0],
+       [2, 3, 0, 1],
+       [3, 0, 1, 2]])
+```
+
+!!! note
+    Row $i$ corresponds to a level of the first nuisance (blocking)
+    factor, column $j$ to a level of the second nuisance factor, and the
+    entry $L[i, j]$ gives the treatment level to apply in that cell.
+
+## Graeco-Latin Square Designs (`graeco_latin_square`) {#graeco-latin-square-designs-graeco_latin_square}
+
+A **Graeco-Latin square** superimposes two orthogonal Latin squares,
+allowing a *third* nuisance factor to be removed while still studying a
+single treatment factor in only $n^2$ runs. Two Latin squares are
+*orthogonal* if, when superimposed, every ordered pair of symbols occurs
+exactly once.
+
+```pycon
+>>> latin, graeco = graeco_latin_square(n)  # (1)!
+```
+
+1. `n` — order of the squares; must be a **prime number** greater than 2.
+
+```pycon
+>>> latin, graeco = graeco_latin_square(3)
+>>> latin
+array([[0, 1, 2],
+       [1, 2, 0],
+       [2, 0, 1]])
+>>> graeco
+array([[0, 2, 1],
+       [1, 0, 2],
+       [2, 1, 0]])
+```
+
+!!! note
+    Both squares are constructed with $L_a[i, j] = (i + a j) \bmod n$ for
+    $a \in \{1, 2\}$. For prime $n$ this guarantees orthogonality, but it
+    also means `graeco_latin_square` only supports prime $n > 2$ (e.g.
+    3, 5, 7, 11, ...).
+
+## Hyper-Graeco-Latin Square Designs (`hyper_graeco_latin_square`) {#hyper-graeco-latin-square-designs-hyper_graeco_latin_square}
+
+A **hyper-Graeco-Latin square** extends the Graeco-Latin square idea to
+four or more mutually orthogonal Latin squares, removing that many
+nuisance factors while studying a single treatment factor in $n^2$ runs.
+
+```pycon
+>>> squares = hyper_graeco_latin_square(n, k)  # (1)!
+```
+
+1. `n` — order of the squares (a **prime number** greater than 2); `k` —
+   number of mutually orthogonal Latin squares, with $2 \le k \le n - 1$.
+
+```pycon
+>>> squares = hyper_graeco_latin_square(5, 3)
+>>> squares.shape
+(3, 5, 5)
+>>> squares[0]
+array([[0, 1, 2, 3, 4],
+       [1, 2, 3, 4, 0],
+       [2, 3, 4, 0, 1],
+       [3, 4, 0, 1, 2],
+       [4, 0, 1, 2, 3]])
+```
+
+!!! note
+    Each square is built with $L_a[i, j] = (i + a j) \bmod n$ for
+    $a = 1, \ldots, k$. For prime $n$, a complete set of $n - 1$ mutually
+    orthogonal Latin squares exists, so `k` must satisfy
+    $2 \le k \le n - 1$.
 
 ## More Information
 

@@ -40,6 +40,9 @@ It provides:
   - Generalized Subset Designs (``gsd``)
   - Fold-over Designs (``fold``)
   - John's 3/4 Fractional Factorial (``john_three_quarter_design``)
+  - Latin Square Designs (``latin_square``)
+  - Graeco-Latin Square Designs (``graeco_latin_square``)
+  - Hyper-Graeco-Latin Square Designs (``hyper_graeco_latin_square``)
 
 - **Mixture Designs**
   - Simplex-Lattice Design (``simplex_lattice_design``)
@@ -61,6 +64,7 @@ It provides:
   - Sukharev Grid (``sukharev_grid``)
   - Sobol’ Sequence (``sobol_sequence``)
   - Halton Sequence (``halton_sequence``)
+  - Hammersley Point Set (``hammersley_sequence``)
   - Rank-1 Lattice Design (``rank1_lattice``)
   - Korobov Sequence (``korobov_sequence``)
   - Cranley-Patterson Randomization (``cranley_patterson_shift``)
@@ -71,6 +75,7 @@ It provides:
 - **Sensitivity Analysis Designs**
   - Morris Method (``morris_sampling``)
   - Saltelli Sampling (``saltelli_sampling``)
+  - Iman-Conover Method (``iman_conover``)
 
 - **Taguchi Designs**
   - Orthogonal arrays and robust design utilities (``taguchi_design``, ``compute_snr``, ``get_orthogonal_array``, ``list_orthogonal_arrays``, ``TaguchiObjective``)

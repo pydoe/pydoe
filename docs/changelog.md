@@ -10,6 +10,9 @@ All notable changes to PyDOE are documented here.
 - Simplex-lattice design (`simplex_lattice_design`) — mixture experiment design placing lattice points on the *q*-component simplex at resolution 1/*m*; supports fitting Scheffé polynomial models of degree *m* — [@saudzahirr](https://github.com/saudzahirr)
 - Simplex-centroid design (`simplex_centroid_design`) — mixture experiment design with the centroids of all $2^q - 1$ non-empty subsets; supports estimation of all Scheffé interaction blending coefficients — [@saudzahirr](https://github.com/saudzahirr)
 - John's 3/4 fractional factorial design (`john_three_quarter_design`) — semifoldover design using exactly 3/4 of the runs of the next full $2^k$ design; de-aliases all two-factor interactions involving the chosen factor — [@saudzahirr](https://github.com/saudzahirr)
+- Latin square (`latin_square`), Graeco-Latin square (`graeco_latin_square`), and hyper-Graeco-Latin square (`hyper_graeco_latin_square`) designs — remove the effect of two, three, or more nuisance factors using mutually orthogonal Latin squares — [@saudzahirr](https://github.com/saudzahirr)
+- Hammersley point set (`hammersley_sequence`) — finite, fixed-size low-discrepancy point set with one equispaced coordinate and the remaining coordinates from the Halton sequence — [@saudzahirr](https://github.com/saudzahirr)
+- Iman-Conover method (`iman_conover`) — induces a target rank correlation structure among sampled variables while preserving their marginal distributions — [@saudzahirr](https://github.com/saudzahirr)
 
 ### :material-wrench: Fixed
 - Eliminate 604 test warnings by correctly catching `scipy.linalg.LinAlgWarning` in `regularized_inv`; suppress scipy Sobol advisory in the Saltelli path — [@saudzahirr](https://github.com/saudzahirr)

@@ -14,20 +14,19 @@ The entire mixture design family is absent. Mixture experiments differ from stan
 
 ## Factorial Design Extensions
 
-- [ ] **Latin square designs** — arrange treatments in a square grid so that each treatment appears exactly once in each row and column; removes two nuisance factors simultaneously
-- [ ] **Graeco-Latin square designs** — superimpose two orthogonal Latin squares; removes three nuisance factors
-- [ ] **Hyper-Graeco-Latin square designs** — extension to four or more orthogonal Latin squares
+- [x] **Latin square designs** — arrange treatments in a square grid so that each treatment appears exactly once in each row and column; removes two nuisance factors simultaneously *(implemented: `latin_square`)*
+- [x] **Graeco-Latin square designs** — superimpose two orthogonal Latin squares; removes three nuisance factors *(implemented: `graeco_latin_square`)*
+- [x] **Hyper-Graeco-Latin square designs** — extension to four or more orthogonal Latin squares *(implemented: `hyper_graeco_latin_square`)*
+- [x] **Mirror-image foldover designs** — augment a resolution III fractional factorial with its mirror image to achieve resolution IV *(implemented: `fold` with the default `columns=None`)*
+- [x] **Alternative foldover designs** — selective foldover on a single factor to break specific alias pairs without running a full mirror image *(implemented: `fold` with a `columns` subset)*
 - [ ] **Blocking of full factorial designs** — partition a full $2^k$ design into blocks while keeping main effects and interactions estimable
 - [ ] **Blocking of response surface designs** — orthogonally block CCC/CCI central composite designs into factorial and axial blocks (currently `ccdesign` has no blocking support)
-- [ ] **Mirror-image foldover designs** — augment a resolution III fractional factorial with its mirror image to achieve resolution IV
-- [ ] **Alternative foldover designs** — selective foldover on a single factor to break specific alias pairs without running a full mirror image
 
 ## Specialized Designs
 
 - [ ] **Small composite designs (Hartley)** — augment a resolution III fractional factorial with star points to fit a quadratic model with fewer runs than a standard CCD; particularly useful for 4–5 factors in a single batch
 - [ ] **Supersaturated designs** — designs with more factors than runs; used in screening when only a very small fraction of factors are active; typically constructed to minimize the squared off-diagonal elements of $X^T X$
 - [ ] **Definitive Screening Designs (DSD)** — three-level designs introduced by Jones & Nachtsheim (2011) that can estimate all main effects, all quadratic effects, and any two-factor interaction clear of other quadratic effects; require only $2k+1$ runs for $k$ factors
-- [ ] **Mirror-image foldover designs** — augment a resolution III fractional factorial with its mirror image to achieve resolution IV
 
 ## Space-Filling Design Extensions
 
@@ -41,10 +40,10 @@ The entire mixture design family is absent. Mixture experiments differ from stan
 ## Low-Discrepancy Sequence Extensions
 
 - [ ] **Faure sequences** — base-$p$ ($p$ prime) low-discrepancy sequences with better uniformity than Halton in higher dimensions; use permuted digit expansions
-- [ ] **Hammersley point set** — finite, fixed-size low-discrepancy point set that places one coordinate as $i/n$ and the rest as a Halton sequence; optimal for fixed sample sizes
+- [x] **Hammersley point set** — finite, fixed-size low-discrepancy point set that places one coordinate as $i/n$ and the rest as a Halton sequence; optimal for fixed sample sizes *(implemented: `hammersley_sequence`)*
 - [ ] **Niederreiter sequences** — generalization of Faure sequences using formal Laurent series over finite fields; achieve optimal theoretical discrepancy for high dimensions
 
 ## Sequential and Adaptive Designs
 
 - [ ] **Sequential DOE / Adaptive designs** — designs that use the results of previous runs to select the next run location; includes Bayesian optimization acquisition functions (EI, UCB, PI) and active learning strategies
-- [ ] **Iman-Conover method** — induce target rank correlations among inputs sampled from arbitrary marginal distributions; used in Monte Carlo sensitivity analysis to model correlated uncertain parameters
+- [x] **Iman-Conover method** — induce target rank correlations among inputs sampled from arbitrary marginal distributions; used in Monte Carlo sensitivity analysis to model correlated uncertain parameters *(implemented: `iman_conover`)*
