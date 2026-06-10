@@ -64,6 +64,8 @@ It provides:
 
 - **Space-Filling Designs**
   - Latin-Hypercube (``lhs``)
+  - Orthogonal Array-based Latin Hypercube (``oa_lhd``)
+  - Sliced Latin Hypercube (``sliced_lhs``)
   - Random Uniform (``random_uniform``)
 
 - **Low-Discrepancy Sequences**
