@@ -8,7 +8,7 @@
 #   - pytest (including doctests)
 #
 # Enable with:
-#   git config core.hooksPath .githooks
+#   git config core.hooksPath .git-hooks
 
 set -euo pipefail
 
