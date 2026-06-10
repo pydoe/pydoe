@@ -95,6 +95,7 @@ from .space_filling.quasi_random import (
 )
 from .space_filling.stochastic import lhs, random_uniform
 from .sparse_grid import doe_sparse_grid, sparse_grid_dimension
+from .specialized import definitive_screening_design, supersaturated_design
 from .taguchi import (
     TaguchiObjective,
     compute_snr,
@@ -127,6 +128,7 @@ __all__ = [
     "criterion_value",
     "d_efficiency",
     "d_optimality",
+    "definitive_screening_design",
     "detmax",
     "doe_sparse_grid",
     "doehlert_shell_design",
@@ -179,6 +181,7 @@ __all__ = [
     "sparse_grid_dimension",
     "star",
     "sukharev_grid",
+    "supersaturated_design",
     "t_optimality",
     "taguchi_design",
     "union",

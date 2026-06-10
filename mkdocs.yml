@@ -131,6 +131,7 @@ nav:
     - Taguchi Designs: reference/taguchi.md
     - Optimal Designs: reference/doe_optimal.md
     - Sparse Grid Designs: reference/sparse_grid.md
+    - Specialized Designs: reference/specialized.md
   - Changelog: changelog.md
 
 plugins:

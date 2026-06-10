@@ -19,6 +19,8 @@ All notable changes to PyDOE are documented here.
 - Blocking of full factorial designs (`block_full_factorial`) — splits a $2^k$ factorial into $2^p$ blocks by confounding chosen interactions with block effects — [@saudzahirr](https://github.com/saudzahirr)
 - Orthogonally-blocked central composite design (`block_ccdesign`) — splits a CCD into a factorial block and an axial block with `alpha` chosen for orthogonal blocking — [@saudzahirr](https://github.com/saudzahirr)
 - Hartley's small composite design (`small_composite_design`) — augments a resolution-III fractional factorial with star points, requiring fewer runs than a standard CCD — [@saudzahirr](https://github.com/saudzahirr)
+- Definitive screening design (`definitive_screening_design`) — three-level Jones-Nachtsheim design requiring only $2k+1$ runs, built from a Paley conference matrix and its fold-over — [@saudzahirr](https://github.com/saudzahirr)
+- Supersaturated design (`supersaturated_design`) — random-search construction of $k > n$ two-level designs minimizing $E(s^2)$ for screening under effect sparsity — [@saudzahirr](https://github.com/saudzahirr)
 
 ### :material-wrench: Fixed
 - Eliminate 604 test warnings by correctly catching `scipy.linalg.LinAlgWarning` in `regularized_inv`; suppress scipy Sobol advisory in the Saltelli path — [@saudzahirr](https://github.com/saudzahirr)

@@ -97,6 +97,10 @@ It provides:
   - Sparse Grid Design (``doe_sparse_grid``)
   - Sparse Grid Dimension (``sparse_grid_dimension``)
 
+- **Specialized Designs**
+  - Definitive Screening Design (``definitive_screening_design``)
+  - Supersaturated Design (``supersaturated_design``)
+
 Installation
 ------------
 
