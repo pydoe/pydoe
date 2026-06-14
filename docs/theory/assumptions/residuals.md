@@ -54,9 +54,9 @@ The steps in forming a normal probability plot are:
 
 $$P(\text{i-th residual}) = \frac{i}{N+1}$$
 
-with *P* denoting the cumulative probability of a point, *i* is the order of the value in the list and *N* is the number of entries in the list.
+with $P$ denoting the cumulative probability of a point, $i$ is the order of the value in the list and $N$ is the number of entries in the list.
 
-- Plot the calculated *p*-values versus the residual value on normal probability paper.
+- Plot the calculated $p$-values versus the residual value on normal probability paper.
 
 The normal probability plot should produce an approximately straight line if the points come from a normal distribution.
 
