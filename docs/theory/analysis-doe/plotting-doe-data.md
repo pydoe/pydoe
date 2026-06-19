@@ -4,7 +4,7 @@
 
 The right graphs, plots or visual displays of a dataset can uncover anomalies or provide insights that go beyond what most quantitative techniques are capable of discovering. Indeed, in many cases quantitative techniques and models are tools used to confirm and extend the conclusions an analyst has already formulated after carefully "looking" at the data.
 
-Most software packages have a selection of different kinds of plots for displaying DOE data. Some of these useful ways of looking at data are mentioned below, with links to detailed explanations in Chapter 1 (Exploratory Data Analysis or EDA) or to other places where they are illustrated and explained. In addition, examples and detailed explanations of visual (EDA) DOE techniques can be found in [An EDA Approach to Experiment Design](https://www.itl.nist.gov/div898/handbook/pri/section5/pri59.htm).
+Most software packages have a selection of different kinds of plots for displaying DOE data. Some of these useful ways of looking at data are mentioned below, with links to detailed explanations in Chapter 1 (Exploratory Data Analysis or EDA) or to other places where they are illustrated and explained. In addition, examples and detailed explanations of visual (EDA) DOE techniques can be found in [An EDA Approach to Experiment Design](../advanced-topics/eda-approach.md).
 
 *Plots for viewing the response data*
 

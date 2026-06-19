@@ -265,7 +265,6 @@ Total error      14   0.61896   0.04421
 Lack-of-fit      12   0.58980   0.04915
 Pure error        2   0.02916   0.01458    3.371    0.2514
 
-
 Source      Estimate  Std. Error  t value  Pr(>|t|) 
 ---------   --------  ----------  -------  --------   
 Intercept    3.85702     0.04702   82.035   < 2e-16 ***

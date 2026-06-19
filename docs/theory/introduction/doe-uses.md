@@ -53,7 +53,6 @@ A process may be performing with unacceptable consistency, meaning its internal 
 
 Excessive variation can result from many causes. Sometimes it is due to the lack of having or following standard operating procedures. At other times, excessive variation is due to certain hard-to-control inputs that affect the critical output characteristics of the process. When this latter situation is the case, one may experiment with these hard-to-control factors, looking for a region where the surface is flatter and the process is easier to manage. To take advantage of such flatness in the surface, one must use designs - such as the [Response Surface Designs](../choosing-design/response-surface.md) - that permit identification of these features. Contour or surface plots are useful for elucidating the key features of these fitted models.
 
-
 ![Process before variation reduced](../../assets/images/unstable.png)
 ///caption
 Figure 2 Process before variation reduced
