@@ -1,17 +1,14 @@
 name: Python Versions Sync
 
 # Keeps the Python versions declared in pyproject.toml in step with the
-# versions upstream still supports.
+# versions upstream still supports, using endoflife.date as the source.
 #
-# The active set is fetched from endoflife.date rather than hardcoded --
-# the same source the build matrix in the test workflow uses -- so the
-# classifiers, the requires-python floor and the CI matrix cannot drift
-# apart from each other.
+# When the declaration differs from the active set, this opens a PR from a
+# new branch as github-actions[bot]. A PR opened with GITHUB_TOKEN does not
+# trigger further workflow runs; close and reopen it to run the full checks.
 #
-# When the declaration differs from the active set this opens a PR as
-# github-actions[bot]. Note that a PR opened with GITHUB_TOKEN does not
-# itself trigger further workflow runs; close and reopen it if you need
-# the full check suite to run against the branch.
+# Requires: Settings > Actions > General > "Allow GitHub Actions to create
+# and approve pull requests" enabled.
 
 on:
   schedule:
@@ -36,10 +33,7 @@ jobs:
       - name: Fetch supported Python versions
         id: fetch-versions
         run: |
-          # Without pipefail this pipeline reports jq's exit status rather
-          # than curl's, so a network failure is masked: jq reads empty
-          # input and emits [], which reads as "every version is EOL" and
-          # would strip the classifiers wholesale.
+          # pipefail so a curl failure isn't masked by jq emitting [].
           set -euo pipefail
 
           versions=$(curl -fsSL --retry 3 --retry-all-errors --connect-timeout 15 \
@@ -71,35 +65,15 @@ jobs:
 
       - name: Open pull request
         if: steps.update.outputs.changed == 'true'
-        env:
-          GH_TOKEN: ${{ github.token }}
-          BASE: ${{ github.event.repository.default_branch }}
-          PR_BODY_FILE: ${{ runner.temp }}/pr-body.md
-        run: |
-          set -euo pipefail
-          BRANCH="chore/python-versions-sync"
-          TITLE="chore: sync Python versions in pyproject.toml"
-
-          git config user.name  "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          git checkout -B "$BRANCH"
-          git add pyproject.toml
-          if git diff --cached --quiet; then
-            echo "Nothing staged; the tree already matches."
-            exit 0
-          fi
-
-          git commit -m "$TITLE" -m "$(cat "$PR_BODY_FILE")"
-
-          # The branch is bot-owned and always rebuilt from the default
-          # branch, so an existing one is intentionally replaced.
-          git push --force-with-lease origin "$BRANCH"
-
-          existing=$(gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number // empty')
-          if [ -n "$existing" ]; then
-            echo "Updated existing PR #$existing"
-          else
-            gh pr create --base "$BASE" --head "$BRANCH" \
-              --title "$TITLE" --body-file "$PR_BODY_FILE"
-          fi
+        uses: peter-evans/create-pull-request@v8
+        with:
+          token: ${{ github.token }}
+          base: ${{ github.event.repository.default_branch }}
+          branch: chore/python-versions-sync
+          branch-suffix: timestamp
+          add-paths: pyproject.toml
+          commit-message: "chore: sync Python versions in pyproject.toml"
+          title: "chore: sync Python versions in pyproject.toml"
+          body-path: ${{ runner.temp }}/pr-body.md
+          committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+          author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
