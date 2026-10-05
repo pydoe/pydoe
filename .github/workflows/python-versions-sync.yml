@@ -8,10 +8,15 @@ name: Python Versions Sync
 # classifiers, the requires-python floor and the CI matrix cannot drift
 # apart from each other.
 #
-# When the declaration differs from the active set this opens a PR as
-# github-actions[bot]. Note that a PR opened with GITHUB_TOKEN does not
-# itself trigger further workflow runs; close and reopen it if you need
-# the full check suite to run against the branch.
+# When the declaration differs from the active set this commits to a NEW
+# branch (never the default branch, never a force push) and opens a NEW PR
+# as github-actions[bot]. It does not touch any existing PR or branch.
+# Note that a PR opened with GITHUB_TOKEN does not itself trigger further
+# workflow runs; close and reopen it if you need the full check suite to
+# run against the branch.
+#
+# Requires: Settings > Actions > General > "Allow GitHub Actions to create
+# and approve pull requests" enabled.
 
 on:
   schedule:
@@ -77,13 +82,16 @@ jobs:
           PR_BODY_FILE: ${{ runner.temp }}/pr-body.md
         run: |
           set -euo pipefail
-          BRANCH="chore/python-versions-sync"
+          PREFIX="chore/python-versions-sync"
+          # Unique per run (and per re-run attempt), so the branch can never
+          # already exist and a plain, non-force push always works.
+          BRANCH="${PREFIX}-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
           TITLE="chore: sync Python versions in pyproject.toml"
 
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git checkout -B "$BRANCH"
+          git checkout -b "$BRANCH"
           git add pyproject.toml
           if git diff --cached --quiet; then
             echo "Nothing staged; the tree already matches."
@@ -92,14 +100,9 @@ jobs:
 
           git commit -m "$TITLE" -m "$(cat "$PR_BODY_FILE")"
 
-          # The branch is bot-owned and always rebuilt from the default
-          # branch, so an existing one is intentionally replaced.
-          git push --force-with-lease origin "$BRANCH"
+          # Plain push to the new branch only. Nothing is force-pushed and
+          # the default branch is never pushed to.
+          git push origin "$BRANCH"
 
-          existing=$(gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number // empty')
-          if [ -n "$existing" ]; then
-            echo "Updated existing PR #$existing"
-          else
-            gh pr create --base "$BASE" --head "$BRANCH" \
-              --title "$TITLE" --body-file "$PR_BODY_FILE"
-          fi
+          gh pr create --base "$BASE" --head "$BRANCH" \
+            --title "$TITLE" --body-file "$PR_BODY_FILE"
