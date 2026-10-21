@@ -72,6 +72,7 @@ from .criterion import (
     v_optimality,
 )
 from .efficiency import a_efficiency, d_efficiency
+from .fisher import fisher_information, jacobian_optimal_design
 from .model import (
     build_design_matrix,
     build_uniform_moment_matrix,
@@ -98,11 +99,13 @@ __all__ = [
     "detmax",
     "e_optimality",
     "fedorov",
+    "fisher_information",
     "g_optimality",
     "generate_candidate_set",
     "i_optimality",
     # Utilities
     "information_matrix",
+    "jacobian_optimal_design",
     "modified_fedorov",
     # Main functions
     "optimal_design",
