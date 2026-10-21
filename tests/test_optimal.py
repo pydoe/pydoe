@@ -26,6 +26,7 @@ from pydoe import (
     t_optimality,
     v_optimality,
 )
+from pydoe.optimal.criterion import regularized_inv
 
 
 class TestOptimalDesign(unittest.TestCase):
@@ -1014,6 +1015,24 @@ class TestOptimalDesign(unittest.TestCase):
             self.assertFalse(
                 np.isinf(score), f"{criterion} produced infinite score"
             )
+
+
+class TestRegularizedInv(unittest.TestCase):
+    def test_indefinite_matrix_is_regularized(self):
+        Q, _ = np.linalg.qr(np.random.default_rng(123).normal(size=(15, 15)))
+        M = (Q * np.array([1.0] * 14 + [-1e-15])) @ Q.T
+        inverse = regularized_inv(M)
+        assert np.all(np.isfinite(inverse))
+        assert np.trace(inverse) > 0
+
+    def test_well_conditioned_matches_numpy(self):
+        A = np.random.default_rng(0).normal(size=(6, 6))
+        M = A @ A.T + 6 * np.eye(6)
+        np.testing.assert_allclose(regularized_inv(M), np.linalg.inv(M))
+
+    def test_negative_definite_raises(self):
+        with self.assertRaises(np.linalg.LinAlgError):
+            regularized_inv(-np.eye(3))
 
 
 if __name__ == "__main__":
