@@ -112,8 +112,8 @@ def fisher_information(
         raise ValueError("jacobian must be 2D (N, p) or 3D (N, p, K).")
     rows = np.arange(J.shape[0]) if rows is None else np.asarray(rows, int)
     W = _precision(covariance, rows)
-    Js = J[rows]
-    return np.einsum("npk,nm,mqk->pq", Js, W, Js) / J.shape[2]
+    j_sel = J[rows]
+    return np.einsum("npk,nm,mqk->pq", j_sel, W, j_sel) / J.shape[2]
 
 
 def jacobian_optimal_design(  # ruff: ignore[too-many-arguments, too-many-positional-arguments]
