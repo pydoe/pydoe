@@ -49,10 +49,15 @@ def regularized_inv(M: np.ndarray, reg_param: float = 1e-8) -> np.ndarray:
     ``M_reg = M + reg_param * I``, which shifts every eigenvalue up by
     *reg_param* and guarantees positive-definiteness.
 
+    Both inversions use ``assume_a="pos"`` (Cholesky), so a numerically
+    indefinite matrix (e.g. a positive-semidefinite information matrix with
+    a tiny negative eigenvalue from roundoff) is regularized instead of
+    yielding an inverse with a negative trace.
+
     Parameters
     ----------
     M : ndarray of shape (p, p)
-        Square matrix to invert.
+        Symmetric matrix to invert.
     reg_param : float, optional
         Tikhonov regularization strength (default 1e-8).
 
@@ -60,14 +65,19 @@ def regularized_inv(M: np.ndarray, reg_param: float = 1e-8) -> np.ndarray:
     -------
     ndarray of shape (p, p)
         Inverse (or regularized inverse) of M.
+
+    Raises
+    ------
+    numpy.linalg.LinAlgError
+        If M is still not positive-definite after regularization.
     """
     with warnings.catch_warnings():
         warnings.simplefilter("error", LinAlgWarning)
         try:
-            return inv(M)
+            return inv(M, assume_a="pos")
         except (np.linalg.LinAlgError, LinAlgWarning):
             M_reg = M + reg_param * np.eye(M.shape[0])
-            return inv(M_reg)
+            return inv(M_reg, assume_a="pos")
 
 
 def d_optimality(M: np.ndarray) -> float:
