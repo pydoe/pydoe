@@ -59,7 +59,9 @@ def test_design_3d_and_covariance_shift_points():
 
 @pytest.mark.parametrize("criterion", ["A", "E", "S"])
 def test_other_criteria_run(criterion):
-    idx, info = jacobian_optimal_design(_line_jacobian(), 4, criterion=criterion)
+    idx, info = jacobian_optimal_design(
+        _line_jacobian(), 4, criterion=criterion
+    )
     assert len(idx) == 4
     assert info["fim"].shape == (2, 2)
 

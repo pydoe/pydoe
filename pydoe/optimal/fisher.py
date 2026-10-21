@@ -116,7 +116,7 @@ def fisher_information(
     return np.einsum("npk,nm,mqk->pq", j_sel, W, j_sel) / J.shape[2]
 
 
-def jacobian_optimal_design(  # ruff: ignore[too-many-arguments, too-many-positional-arguments]
+def jacobian_optimal_design(
     jacobian: np.ndarray,
     n_points: int,
     covariance: np.ndarray | float | None = None,

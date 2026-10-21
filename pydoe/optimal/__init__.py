@@ -72,12 +72,12 @@ from .criterion import (
     v_optimality,
 )
 from .efficiency import a_efficiency, d_efficiency
+from .fisher import fisher_information, jacobian_optimal_design
 from .model import (
     build_design_matrix,
     build_uniform_moment_matrix,
     generate_candidate_set,
 )
-from .fisher import fisher_information, jacobian_optimal_design
 from .optimal import optimal_design
 from .utils import criterion_value, information_matrix
 
