@@ -35,6 +35,12 @@ is the number of center points to include. If no inputs given to
 `center`, then a pre-determined number of points are automatically
 included.
 
+For 3, 4 and 5 factors, every pair of factors carries a $2^2$ factorial.
+For 6, 7, 9, 10, 11, 12 and 16 factors, the design is Box and Behnken's
+(1960) published design in incomplete blocks of 3, 4 or 5 factors: 48, 56,
+120, 160, 176, 192 and 384 runs before the center points. Other numbers of
+factors pair every two factors.
+
 ### Examples
 
 The default 3-factor Box-Behnken design:
