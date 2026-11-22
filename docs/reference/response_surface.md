@@ -96,7 +96,7 @@ array([[-1., -1.,  0.,  0.],
 Central composite designs can be created and customized using the syntax:
 
 ```python
-ccdesign(n, center, alpha, face, generators=None)
+ccdesign(n, center, alpha, face, *, generators=None)
 ```
 
 where
@@ -117,7 +117,7 @@ if you are uncertain which options are suitable for your situation.
 For five or more factors a central composite design is usually built on a
 resolution V half or quarter fraction. For 5 factors on the 16-run half
 fraction, the rotatable distance is $16^{1/4} = 2$, as in Box and Draper
-(2007, p. 491) and Montgomery (2013, p. 511):
+(2007, p. 491) and Montgomery (2012, p. 511):
 
 ```pycon
 >>> H = ccdesign(5, center=(0, 0), alpha="r", generators="a b c d abcd")
@@ -127,7 +127,7 @@ fraction, the rotatable distance is $16^{1/4} = 2$, as in Box and Draper
 2.0
 ```
 
-The star points alone come from `star(n, alpha, center, n_cube=None)`, where
+The star points alone come from `star(n, alpha, center, *, n_cube=None)`, where
 `n_cube` is the run count of the cube (by default $2^n$).
 
 !!! note

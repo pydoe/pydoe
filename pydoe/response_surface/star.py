@@ -48,8 +48,8 @@ def star(
         ``None`` (default) counts the :math:`2^n` runs of the full
         factorial. Give the run count of a fractional factorial cube so
         that the 'orthogonal' and 'rotatable' distances use it: the
-        rotatable distance is then ``n_cube ** 0.25``. Ignored for
-        'faced'.
+        rotatable distance is then ``n_cube ** 0.25``. 'faced' does not
+        use it, but it must still be a positive integer.
 
     Returns
     -------

@@ -42,7 +42,7 @@ class TestComposite(unittest.TestCase):
         self.assertAlmostEqual(np.abs(H).max(), 2.0)
 
     def test_composite_rotatable_alpha_matches_textbooks(self):
-        # Box and Draper (2007), p. 491; Montgomery (2013), p. 511.
+        # Box and Draper (2007), p. 491; Montgomery (2012), p. 511.
         cases = [
             (5, "a b c d abcd", 2.0),
             (6, "a b c d e abcde", 2.3784),
@@ -70,3 +70,7 @@ class TestComposite(unittest.TestCase):
     def test_composite_rejects_generators_for_other_n(self):
         with self.assertRaises(ValueError):
             ccdesign(5, generators="a b c ab")
+
+    def test_composite_rejects_non_string_generators(self):
+        with self.assertRaises(TypeError):
+            ccdesign(5, generators=["a", "b", "c", "d", "abcd"])

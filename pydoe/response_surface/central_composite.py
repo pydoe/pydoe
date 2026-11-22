@@ -96,10 +96,11 @@ def ccdesign(
 
     Notes
     -----
-    - A fractional factorial cube, given by ``generators``, should be of
-      resolution V or more for the full quadratic model to be estimable;
-      [`small_composite_design`][pydoe.small_composite_design] uses a
-      smaller cube.
+    - The full quadratic model is estimable when the fractional factorial
+      cube, given by ``generators``, is of resolution V or more. A smaller
+      cube also works if no two-factor interaction is aliased with
+      another; [`small_composite_design`][pydoe.small_composite_design]
+      builds such cubes.
     - 'ccc' and 'cci' can be rotatable design, but 'ccf' cannot.
     - If ``face`` is specified, while ``alpha`` is not, then the default value
       of ``alpha`` is 'orthogonal'.
@@ -111,6 +112,8 @@ def ccdesign(
 
     Raises
     ------
+    TypeError
+        If ``generators`` is neither ``None`` nor a string.
     ValueError
         If input parameters are invalid.
 
@@ -158,6 +161,10 @@ def ccdesign(
         "ccf",
     }:
         raise ValueError(f'Invalid value for "face": {face}')
+    if generators is not None and not isinstance(generators, str):
+        raise TypeError(
+            f'"generators" must be a string or None, got {generators!r}'
+        )
     H1 = ff2n(n) if generators is None else fracfact(generators)
     if H1.shape[1] != n:
         raise ValueError(

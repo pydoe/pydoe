@@ -29,7 +29,7 @@ class TestStar(unittest.TestCase):
         self.assertAlmostEqual(a, (3 * (1 + 4 / 6) / (1 + 4 / 8)) ** 0.5)
 
     def test_star_rotatable_with_fractional_cube(self):
-        # Box and Draper (2007), p. 491; Montgomery (2013), p. 511.
+        # Box and Draper (2007), p. 491; Montgomery (2012), p. 511.
         for n, n_cube, expected in [
             (5, 16, 2.0),
             (6, 32, 2.3784),
