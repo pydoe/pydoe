@@ -241,11 +241,12 @@ array([0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1])
 
 Hartley's small composite design augments a two-level fractional
 factorial (instead of a full $2^n$ factorial) with star points and
-center runs. The fraction is the smallest one in which no two-factor
+center runs. The fraction is the smallest regular fraction the search
+finds (the smallest possible for up to 18 factors) in which no two-factor
 interaction is aliased with another; a main effect may be aliased with a
 two-factor interaction, which the star points then separate. The design
-fits the full quadratic model with substantially fewer runs than a
-central composite design. For 3, 4, 5, 6, 7 and 9 factors the cube has
+fits the full quadratic model with fewer runs than a central composite
+design on the full $2^n$ factorial. For 3, 4, 5, 6, 7 and 9 factors the cube has
 4, 8, 16, 16, 32 and 64 runs, as in Box and Draper (2007, p. 501).
 
 ```pycon

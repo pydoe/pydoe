@@ -3,7 +3,7 @@ Hartley's small composite design.
 
 A standard central composite design augments a full :math:`2^k`
 factorial with axial (star) points and center runs. Hartley's small
-composite design instead augments the smallest two-level fractional
+composite design instead augments a small regular two-level fractional
 factorial in which no two-factor interaction is aliased with another
 two-factor interaction (a main effect may be aliased with one: the star
 points separate them) with star points and center runs. This reduces
@@ -117,7 +117,7 @@ def _cube_columns(n: int) -> tuple[int, list[int]]:
     columns : list of int
         The ``n`` columns, base factors first.
     """
-    m = n.bit_length()  # n distinct nonzero columns need 2**m - 1 >= n
+    m = int(n).bit_length()  # n distinct nonzero columns need 2**m - 1 >= n
     while m < n:
         base = [1 << i for i in range(m)]
         candidates = sorted(
@@ -159,12 +159,12 @@ def small_composite_design(
     r"""
     Generate Hartley's small composite design for ``n`` factors.
 
-    The "cube" portion is the smallest two-level fraction, with
-    :math:`n_c` runs (rather than the :math:`2^n` runs of a full
-    factorial), in which no two-factor interaction is aliased with
-    another two-factor interaction, so that the full quadratic model
-    can be fitted. Star
-    points are placed at distance ``alpha`` along each axis, with
+    The "cube" portion is the smallest regular two-level fraction the
+    search finds, with :math:`n_c` runs (rather than the :math:`2^n`
+    runs of a full factorial), in which no two-factor interaction is
+    aliased with another two-factor interaction, so that the full
+    quadratic model can be fitted. Star points are placed at distance
+    ``alpha`` along each axis, with
     :math:`\\alpha` chosen by the same orthogonal-blocking formula used
     by [`star`][pydoe.star], but with :math:`n_c` substituted for
     :math:`2^n`:
@@ -238,7 +238,7 @@ def small_composite_design(
     runs, as in Box and Draper (2007, p. 501). The cube is found by a
     search, and is the smallest possible for up to 18 factors.
 
-    With ``center=(0, 0)`` the star distance is :math:`\\sqrt{n}`, so
+    With ``center=(0, 0)`` the star distance is :math:`\sqrt{n}`, so
     every run lies on a sphere and the intercept cannot be told apart
     from the sum of the squared terms: give at least one center run.
 
