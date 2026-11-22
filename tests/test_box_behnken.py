@@ -96,3 +96,48 @@ class TestBoxBehnken(unittest.TestCase):
                 np.testing.assert_allclose(
                     H.T @ H, np.diag(np.diag(H.T @ H)), atol=1e-12
                 )
+
+    def test_box_behnken_blocks_match_box_and_draper(self):
+        # Box and Draper (2007), Table 15.9: the factors (numbered from 0)
+        # that each block varies, each block carrying a 2^3 factorial.
+        printed = {
+            6: [
+                (0, 1, 3),
+                (0, 2, 5),
+                (0, 3, 4),
+                (1, 2, 4),
+                (1, 4, 5),
+                (2, 3, 5),
+            ],
+            7: [
+                (0, 1, 3),
+                (0, 2, 4),
+                (0, 5, 6),
+                (1, 2, 5),
+                (1, 4, 6),
+                (2, 3, 6),
+                (3, 4, 5),
+            ],
+        }
+        for n, blocks in printed.items():
+            with self.subTest(n=n):
+                H = bbdesign(n, center=0)
+                supports = {tuple(np.flatnonzero(row)) for row in H}
+                for block in supports:
+                    rows = H[
+                        np.all((H != 0) == np.isin(range(n), block), axis=1)
+                    ]
+                    self.assertEqual(
+                        {tuple(r[list(block)]) for r in rows},
+                        set(itertools.product((-1.0, 1.0), repeat=3)),
+                    )
+                # Seven factors are written cyclically: the printed design up
+                # to a relabelling of the factors.
+                relabelled = any(
+                    {tuple(sorted(p[f] for f in b)) for b in supports}
+                    == set(blocks)
+                    for p in itertools.permutations(range(n))
+                )
+                self.assertTrue(relabelled)
+                if n == 6:
+                    self.assertEqual(supports, set(blocks))
