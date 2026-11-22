@@ -24,6 +24,8 @@ def star(
     n: int,
     alpha: Literal["faced", "orthogonal", "rotatable"] = "faced",
     center: np.ndarray[int] | tuple[int] = (1, 1),
+    *,
+    n_cube: int | None = None,
 ) -> tuple[np.ndarray, float]:
     """
     Create the star points of various design matrices
@@ -41,6 +43,13 @@ def star(
         A 1-by-2 array of integers indicating the number of center points
         assigned in each block of the response surface design. Default is
         (1, 1).
+    n_cube : int, optional
+        The number of runs in the factorial (cube) portion of the design.
+        ``None`` (default) counts the :math:`2^n` runs of the full
+        factorial. Give the run count of a fractional factorial cube so
+        that the 'orthogonal' and 'rotatable' distances use it: the
+        rotatable distance is then ``n_cube ** 0.25``. 'faced' does not
+        use it, but it must still be a positive integer.
 
     Returns
     -------
@@ -52,7 +61,8 @@ def star(
     Raises
     ------
     ValueError
-        If ``alpha`` is not one of the accepted strings.
+        If ``alpha`` is not one of the accepted strings, or ``n_cube`` is
+        not a positive integer.
 
     Examples
     --------
@@ -66,19 +76,34 @@ def star(
                [ 0.,  0., -1.],
                [ 0.,  0.,  1.]]), 1)
 
+    For 5 factors on the 16-run half fraction, the rotatable distance is
+    :math:`16^{1/4} = 2`, not the :math:`32^{1/4}` of the full factorial:
+
+        >>> float(star(5, alpha="rotatable", n_cube=16)[1])
+        2.0
+
     """
+    if n_cube is None:
+        n_cube = 2**n
+    elif (
+        isinstance(n_cube, bool)
+        or not isinstance(n_cube, int | np.integer)
+        or n_cube < 1
+    ):
+        raise ValueError(f'"n_cube" must be a positive integer, got {n_cube!r}')
+
     # Star points at the center of each face of the factorial
     if alpha == "faced":
         a = 1
     elif alpha == "orthogonal":
-        nc = 2**n  # factorial points
+        nc = n_cube  # factorial points
         nco = center[0]  # center points to factorial
         na = 2 * n  # axial points
         nao = center[1]  # center points to axial design
         # value of alpha in orthogonal design
         a = (n * (1 + nao / float(na)) / (1 + nco / float(nc))) ** 0.5
     elif alpha == "rotatable":
-        nc = 2**n  # number of factorial points
+        nc = n_cube  # number of factorial points
         a = nc ** (0.25)  # value of alpha in rotatable design
     else:
         raise ValueError(f'Invalid value for "alpha": {alpha}')
