@@ -269,6 +269,12 @@ design that reaches resolution IV is $2^{4-1}_{IV}$:
 (8, 4)
 ```
 
+Among the designs with that number of runs, the one returned has the
+highest resolution the search finds. Six factors at resolution V need 32 runs,
+and in 32 runs they reach resolution VI, so the design is
+$2^{6-1}_{VI}$ (Montgomery, 2012, p. 374) rather than a resolution V
+design of the same size.
+
 !!! note "How the resolution is guaranteed"
 
     A regular design with $n$ factors in $2^k$ runs is a choice of $n$

@@ -350,7 +350,10 @@ def fracfact_by_res(n: int, res: int) -> np.ndarray:
     and resolution `res`.
 
     The design uses the smallest number of runs :math:`2^k` in which `n`
-    factors can be accommodated at resolution `res` or better.
+    factors can be accommodated at resolution `res` or better. Among the
+    designs of that size, it has the highest resolution the search finds:
+    ``fracfact_by_res(6, 5)`` is the :math:`2^{6-1}_{VI}` design, and
+    ``fracfact_by_res(7, 5)`` the :math:`2^{7-1}_{VII}`.
 
     Parameters
     ----------
@@ -492,6 +495,7 @@ def fracfact_by_res(n: int, res: int) -> np.ndarray:
             continue
         columns, spent = _resolution_columns(k, n, res)
         if columns is not None:
+            columns = _highest_resolution_columns(k, n, res, columns)
             return fracfact(_generator_from_columns(columns, k))
         if spent > _SEARCH_EFFORT_LIMIT:
             exhausted += 1
@@ -502,6 +506,45 @@ def fracfact_by_res(n: int, res: int) -> np.ndarray:
         f"no design with {n} factors at resolution {res} could be "
         "constructed; use a lower resolution or fewer factors"
     )
+
+
+def _highest_resolution_columns(
+    k: int, n: int, res: int, columns: list[int]
+) -> list[int]:
+    """
+    Columns of the highest resolution that ``n`` factors reach in the same
+    :math:`2^k` runs: ``columns``, unless the search finds a higher one.
+
+    Montgomery (2012, p. 374): the smallest design of resolution at least V
+    for 6 factors is the :math:`2^{6-1}_{VI}`, and for 7 factors the
+    :math:`2^{7-1}_{VII}`. Resolutions are tried from the highest possible,
+    ``n``, down to ``res + 1``, each under the same search budget.
+
+    Parameters
+    ----------
+    k : int
+        Number of base factors.
+    n : int
+        Number of factors.
+    res : int
+        The resolution already reached.
+    columns : list of int
+        The columns that reach resolution ``res``.
+
+    Returns
+    -------
+    list of int
+        The columns, as for ``_resolution_columns``.
+    """
+    if k >= n:  # the full factorial has no defining relation
+        return columns
+    for higher in range(n, res, -1):
+        if _max_factors_for_resolution(k, higher) < n:
+            continue
+        found, _ = _resolution_columns(k, n, higher)
+        if found is not None:
+            return found
+    return columns
 
 
 def _max_factors_for_resolution(k: int, res: int) -> int:

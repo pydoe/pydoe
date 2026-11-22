@@ -342,6 +342,25 @@ class TestFactorial(unittest.TestCase):
                 err_msg=f"fracfact_by_res({n}, {res}) != fracfact({gen!r})",
             )
 
+    def test_fracfact_by_res_highest_resolution_at_same_runs(self):
+        """Among designs of the smallest run count, the highest resolution.
+
+        Montgomery, *Design and Analysis of Experiments* (8th ed.), p. 374:
+        the smallest design of resolution at least V for 6 factors is the
+        2^(6-1)_VI, and for 7 factors the 2^(7-1)_VII.
+        """
+        cases = {
+            (6, 5): (32, 6),
+            (7, 5): (64, 7),
+            (4, 3): (8, 4),
+            (5, 4): (16, 5),
+            (8, 6): (128, 8),
+        }
+        for (n, res), (runs, achieved) in cases.items():
+            design = fracfact_by_res(n, res)
+            self.assertEqual(design.shape, (runs, n), msg=f"({n}, {res})")
+            self.assertEqual(_resolution(design), achieved, msg=f"({n}, {res})")
+
     def test_fracfact_by_res_fewer_factors_than_base(self):
         """n <= k used to raise from islice(); it is a full factorial."""
         for n, res in [(2, 4), (2, 5), (3, 5), (4, 5), (3, 4)]:
