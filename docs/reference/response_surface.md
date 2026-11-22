@@ -102,7 +102,7 @@ array([[-1., -1.,  0.,  0.],
 Central composite designs can be created and customized using the syntax:
 
 ```python
-ccdesign(n, center, alpha, face)
+ccdesign(n, center, alpha, face, *, generators=None)
 ```
 
 where
@@ -111,6 +111,7 @@ where
 - `center` is a 2-tuple of center points (one for the factorial block, one for the star block, default (4, 4))
 - `alpha` is either "orthogonal" (or "o", default) or "rotatable" (or "r")
 - `face` is either "circumscribed" (or "ccc", default), "inscribed" (or "cci"), or "faced" (or "ccf").
+- `generators` (keyword only) is a [`fracfact`](factorial.md) generator string, such as `"a b c d abcd"`, for a fractional factorial cube instead of the full $2^n$ factorial (the default, `None`). The "orthogonal" and "rotatable" distances then use the cube's run count $n_F$: the rotatable distance is $n_F^{1/4}$.
 
 ![Central composite design variations](http://www.itl.nist.gov/div898/handbook/pri/section3/gifs/ccd2.gif)
 
@@ -118,6 +119,22 @@ The two optional keyword arguments `alpha` and `face` help describe
 how the variance in the quadratic approximation is distributed. Please
 see the [NIST](http://www.itl.nist.gov/div898/handbook/pri/pri.htm) web pages
 if you are uncertain which options are suitable for your situation.
+
+For five or more factors a central composite design is usually built on a
+resolution V half or quarter fraction. For 5 factors on the 16-run half
+fraction, the rotatable distance is $16^{1/4} = 2$, as in Box and Draper
+(2007, p. 491) and Montgomery (2012, p. 511):
+
+```pycon
+>>> H = ccdesign(5, center=(0, 0), alpha="r", generators="a b c d abcd")
+>>> H.shape
+(26, 5)
+>>> float(abs(H).max())
+2.0
+```
+
+The star points alone come from `star(n, alpha, center, *, n_cube=None)`, where
+`n_cube` is the run count of the cube (by default $2^n$).
 
 !!! note
     - 'ccc' and 'cci' can be rotatable designs, but 'ccf' cannot.

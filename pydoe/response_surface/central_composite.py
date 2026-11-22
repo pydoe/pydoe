@@ -19,7 +19,7 @@ from typing import Literal
 
 import numpy as np
 
-from pydoe.factorial.factorial import ff2n
+from pydoe.factorial.factorial import ff2n, fracfact
 from pydoe.response_surface.center_design import repeat_center
 from pydoe.response_surface.star import star
 from pydoe.response_surface.union import union
@@ -35,6 +35,8 @@ def ccdesign(
     face: Literal[
         "circumscribed", "ccc", "inscribed", "cci", "faced", "ccf"
     ] = "circumscribed",
+    *,
+    generators: str | None = None,
 ) -> np.ndarray:
     """
     Central composite design
@@ -84,9 +86,21 @@ def ccdesign(
            factorial or resolution V design with appropriate star points can
            also produce this design.
 
+    generators : str, optional
+        A generator string for [`fracfact`][pydoe.fracfact], such as
+        ``"a b c d abcd"``, for a fractional factorial cube instead of the
+        full :math:`2^n` factorial (the default, ``None``). It must define
+        ``n`` factors. The 'orthogonal' and 'rotatable' distances then use
+        the cube's run count: for the 16-run half fraction of 5 factors,
+        the rotatable distance is :math:`16^{1/4} = 2`.
+
     Notes
     -----
-    - Fractional factorial designs are not (yet) available here.
+    - The full quadratic model is estimable when the fractional factorial
+      cube, given by ``generators``, is of resolution V or more. A smaller
+      cube also works if no two-factor interaction is aliased with
+      another; [`small_composite_design`][pydoe.small_composite_design]
+      builds such cubes.
     - 'ccc' and 'cci' can be rotatable design, but 'ccf' cannot.
     - If ``face`` is specified, while ``alpha`` is not, then the default value
       of ``alpha`` is 'orthogonal'.
@@ -98,6 +112,8 @@ def ccdesign(
 
     Raises
     ------
+    TypeError
+        If ``generators`` is neither ``None`` nor a string.
     ValueError
         If input parameters are invalid.
 
@@ -145,6 +161,15 @@ def ccdesign(
         "ccf",
     }:
         raise ValueError(f'Invalid value for "face": {face}')
+    if generators is not None and not isinstance(generators, str):
+        raise TypeError(
+            f'"generators" must be a string or None, got {generators!r}'
+        )
+    H1 = ff2n(n) if generators is None else fracfact(generators)
+    if H1.shape[1] != n:
+        raise ValueError(
+            f'"generators" defines {H1.shape[1]} factors, expected {n}'
+        )
 
     nc = len(center)
     if nc != 2:
@@ -154,26 +179,20 @@ def ccdesign(
 
     # Orthogonal Design
     if alpha.lower() in {"orthogonal", "o"}:
-        H2, a = star(n, alpha="orthogonal", center=center)
+        H2, a = star(n, alpha="orthogonal", center=center, n_cube=len(H1))
 
     # Rotatable Design
     if alpha.lower() in {"rotatable", "r"}:
-        H2, a = star(n, alpha="rotatable")
+        H2, a = star(n, alpha="rotatable", n_cube=len(H1))
 
     # Inscribed CCD
     if face.lower() in {"inscribed", "cci"}:
-        H1 = ff2n(n)
-        H1 /= a  # Scale down the factorial points
+        H1 = H1 / a  # Scale down the factorial points
         H2, a = star(n)
 
     # Faced CCD
     if face.lower() in {"faced", "ccf"}:
         H2, a = star(n)  # Value of alpha is always 1 in Faced CCD
-        H1 = ff2n(n)
-
-    # Circumscribed CCD
-    if face.lower() in {"circumscribed", "ccc"}:
-        H1 = ff2n(n)
 
     C1 = repeat_center(n, center[0])
     C2 = repeat_center(n, center[1])
