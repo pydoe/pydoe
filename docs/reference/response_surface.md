@@ -35,6 +35,12 @@ is the number of center points to include. If no inputs given to
 `center`, then a pre-determined number of points are automatically
 included.
 
+For 3, 4 and 5 factors, every pair of factors carries a $2^2$ factorial.
+For 6, 7, 9, 10, 11, 12 and 16 factors, the design is Box and Behnken's
+(1960) published design in incomplete blocks of 3, 4 or 5 factors: 48, 56,
+120, 160, 176, 192 and 384 runs before the center points. Other numbers of
+factors pair every two factors.
+
 ### Examples
 
 The default 3-factor Box-Behnken design:
@@ -96,7 +102,7 @@ array([[-1., -1.,  0.,  0.],
 Central composite designs can be created and customized using the syntax:
 
 ```python
-ccdesign(n, center, alpha, face)
+ccdesign(n, center, alpha, face, *, generators=None)
 ```
 
 where
@@ -105,6 +111,7 @@ where
 - `center` is a 2-tuple of center points (one for the factorial block, one for the star block, default (4, 4))
 - `alpha` is either "orthogonal" (or "o", default) or "rotatable" (or "r")
 - `face` is either "circumscribed" (or "ccc", default), "inscribed" (or "cci"), or "faced" (or "ccf").
+- `generators` (keyword only) is a [`fracfact`](factorial.md) generator string, such as `"a b c d abcd"`, for a fractional factorial cube instead of the full $2^n$ factorial (the default, `None`). The "orthogonal" and "rotatable" distances then use the cube's run count $n_F$: the rotatable distance is $n_F^{1/4}$.
 
 ![Central composite design variations](http://www.itl.nist.gov/div898/handbook/pri/section3/gifs/ccd2.gif)
 
@@ -112,6 +119,22 @@ The two optional keyword arguments `alpha` and `face` help describe
 how the variance in the quadratic approximation is distributed. Please
 see the [NIST](http://www.itl.nist.gov/div898/handbook/pri/pri.htm) web pages
 if you are uncertain which options are suitable for your situation.
+
+For five or more factors a central composite design is usually built on a
+resolution V half or quarter fraction. For 5 factors on the 16-run half
+fraction, the rotatable distance is $16^{1/4} = 2$, as in Box and Draper
+(2007, p. 491) and Montgomery (2012, p. 511):
+
+```pycon
+>>> H = ccdesign(5, center=(0, 0), alpha="r", generators="a b c d abcd")
+>>> H.shape
+(26, 5)
+>>> float(abs(H).max())
+2.0
+```
+
+The star points alone come from `star(n, alpha, center, *, n_cube=None)`, where
+`n_cube` is the run count of the cube (by default $2^n$).
 
 !!! note
     - 'ccc' and 'cci' can be rotatable designs, but 'ccf' cannot.
@@ -239,10 +262,15 @@ array([0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1])
 
 ## Small Composite Design (Hartley) (`small_composite_design`) {#small-composite-design-hartley-small_composite_design}
 
-Hartley's small composite design augments a resolution-III fractional
+Hartley's small composite design augments a two-level fractional
 factorial (instead of a full $2^n$ factorial) with star points and
-center runs, fitting a full quadratic model with substantially fewer
-runs — particularly useful for 4-5 factors.
+center runs. The fraction is the smallest regular fraction the search
+finds (the smallest possible for up to 18 factors) in which no two-factor
+interaction is aliased with another; a main effect may be aliased with a
+two-factor interaction, which the star points then separate. The design
+fits the full quadratic model with fewer runs than a central composite
+design on the full $2^n$ factorial. For 3, 4, 5, 6, 7 and 9 factors the cube has
+4, 8, 16, 16, 32 and 64 runs, as in Box and Draper (2007, p. 501).
 
 ```pycon
 >>> small_composite_design(n, center=(4, 4))  # (1)!
@@ -261,7 +289,7 @@ built on the full $2^4$ factorial:
 
 !!! note
     Reference: Hartley, H. O. (1959). Smallest composite designs for
-    quadratic response surfaces. *Technometrics*, 1(4), 56-63.
+    quadratic response surfaces. *Biometrics*, 15(4), 611-624.
 
 ## More Information
 

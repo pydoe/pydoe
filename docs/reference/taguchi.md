@@ -32,6 +32,13 @@ You can list all available Taguchi orthogonal arrays:
 
 Each array is described using notation like "$L_9(3^4)$", meaning an array with 9 runs and 4 factors each at 3 levels.
 
+!!! note
+    `L27(3^13)` and `L36(2^11 3^12)` were called `L27(2^1 3^12)` and
+    `L36(3^23)`, names that did not describe the arrays. The former names
+    still work, with a `DeprecationWarning`. `L18(2^1 3^7)` is Taguchi's
+    standard L18, for one two-level and seven three-level factors, and
+    `L64(2^31)` is the fold-over of `L32(2^31)`.
+
 ## Retrieving an Orthogonal Array
 
 Get a numeric orthogonal array by name:

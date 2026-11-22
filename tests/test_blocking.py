@@ -1,4 +1,6 @@
+import itertools
 import unittest
+from unittest import mock
 
 import numpy as np
 
@@ -132,3 +134,57 @@ class TestSmallCompositeDesign(unittest.TestCase):
     def test_raises_invalid_center(self):
         with self.assertRaises(ValueError):
             small_composite_design(4, center=(1,))
+
+    def test_fits_full_quadratic_model(self):
+        # Hartley (1959): the design must estimate the full second-order
+        # model, with any center runs.
+        for n in range(3, 13):
+            for center in ((4, 4), (1, 0)):
+                with self.subTest(n=n, center=center):
+                    H = small_composite_design(n, center=center)
+                    pairs = itertools.combinations(range(n), 2)
+                    X = np.column_stack([
+                        np.ones(len(H)),
+                        *H.T,
+                        *(H[:, i] * H[:, j] for i, j in pairs),
+                        *(H**2).T,
+                    ])
+                    self.assertEqual(np.linalg.matrix_rank(X), X.shape[1])
+
+    def test_no_two_factor_interactions_aliased_in_cube(self):
+        for n in range(3, 13):
+            with self.subTest(n=n):
+                H = small_composite_design(n, center=(0, 0))
+                cube = H[: len(H) - 2 * n]
+                columns = [
+                    cube[:, i] * cube[:, j]
+                    for i, j in itertools.combinations(range(n), 2)
+                ]
+                for a, b in itertools.combinations(columns, 2):
+                    self.assertLess(abs(a @ b), len(cube))
+
+    def test_runs_match_box_and_draper(self):
+        # Box and Draper (2007), p. 501: cube plus star runs.
+        published = {3: 10, 4: 16, 5: 26, 6: 28, 7: 46, 9: 82}
+        for n, runs in published.items():
+            with self.subTest(n=n):
+                H = small_composite_design(n, center=(0, 0))
+                self.assertEqual(H.shape, (runs, n))
+
+    def test_accepts_numpy_integer(self):
+        # As on master, a numpy integer number of factors works.
+        np.testing.assert_array_equal(
+            small_composite_design(np.int64(5)), small_composite_design(5)
+        )
+
+    def test_falls_back_to_full_factorial_when_budget_runs_out(self):
+        # With no search steps, no fraction is found: the cube is the full
+        # 2^3 factorial (8 runs), not the 4-run fraction with C = AB.
+        with mock.patch(
+            "pydoe.response_surface.small_composite._SEARCH_BUDGET", 0
+        ):
+            design = small_composite_design(3, center=(0, 0))
+        self.assertEqual(design.shape, (8 + 6, 3))
+        self.assertEqual(
+            small_composite_design(3, center=(0, 0)).shape, (10, 3)
+        )
