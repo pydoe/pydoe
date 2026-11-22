@@ -262,10 +262,15 @@ array([0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1])
 
 ## Small Composite Design (Hartley) (`small_composite_design`) {#small-composite-design-hartley-small_composite_design}
 
-Hartley's small composite design augments a resolution-III fractional
+Hartley's small composite design augments a two-level fractional
 factorial (instead of a full $2^n$ factorial) with star points and
-center runs, fitting a full quadratic model with substantially fewer
-runs — particularly useful for 4-5 factors.
+center runs. The fraction is the smallest regular fraction the search
+finds (the smallest possible for up to 18 factors) in which no two-factor
+interaction is aliased with another; a main effect may be aliased with a
+two-factor interaction, which the star points then separate. The design
+fits the full quadratic model with fewer runs than a central composite
+design on the full $2^n$ factorial. For 3, 4, 5, 6, 7 and 9 factors the cube has
+4, 8, 16, 16, 32 and 64 runs, as in Box and Draper (2007, p. 501).
 
 ```pycon
 >>> small_composite_design(n, center=(4, 4))  # (1)!
@@ -284,7 +289,7 @@ built on the full $2^4$ factorial:
 
 !!! note
     Reference: Hartley, H. O. (1959). Smallest composite designs for
-    quadratic response surfaces. *Technometrics*, 1(4), 56-63.
+    quadratic response surfaces. *Biometrics*, 15(4), 611-624.
 
 ## More Information
 
