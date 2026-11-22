@@ -98,6 +98,22 @@ L_18_6_1_3_6 = (
     np.loadtxt(f"{ORTHOGONAL_ARRAYS_DIR}/L_18_6_1_3_6.oa", dtype=int) - 1
 )
 
+#   $$ L_{18}(2^1 3^7) $$
+# Taguchi's standard L18 Orthogonal Design
+# Number of factors                 = 8
+# Number of levels for each factor  = 2 for factor 1, 3 for factors 2 to 8
+# Number of Experiments             = 18
+#
+# Built from L18(6^1 3^6) by splitting its six-level column v (levels 0 to 5)
+# into a two-level column v // 3 and a three-level column v % 3, which keeps
+# every pair of columns balanced.
+
+L_18_2_1_3_7 = np.column_stack([
+    L_18_6_1_3_6[:, 0] // 3,
+    L_18_6_1_3_6[:, 0] % 3,
+    L_18_6_1_3_6[:, 1:],
+])
+
 #   $$ L_{25}(5^6) $$
 # Taguchi L25 Orthogonal Design
 # Number of factors                 = 6
@@ -108,17 +124,15 @@ L_18_6_1_3_6 = (
 
 L_25_5_6 = np.loadtxt(f"{ORTHOGONAL_ARRAYS_DIR}/L_25_5_6.oa", dtype=int) - 1
 
-# $$ L_{27}(2^1 3^{12}) $$
+#   $$ L_{27}(3^{13}) $$
 # Taguchi L27 Orthogonal Design
 # Number of factors                 = 13
-# Number of levels for each factor  = 2 for factor 1, 3 for factors 2 to 13
+# Number of levels for each factor  = 3
 # Number of Experiments             = 27
 #
 # Reference: https://www.itl.nist.gov/div898/software/dataplot/dex/L27.DAT
 
-L_27_2_1_3_12 = (
-    np.loadtxt(f"{ORTHOGONAL_ARRAYS_DIR}/L_27_2_1_3_12.oa", dtype=int) - 1
-)
+L_27_3_13 = np.loadtxt(f"{ORTHOGONAL_ARRAYS_DIR}/L_27_3_13.oa", dtype=int) - 1
 
 #   $$ L_{32}(2^{31}) $$
 # Taguchi L32 Orthogonal Design
@@ -144,15 +158,18 @@ L_32_2_1_4_9 = (
 )
 
 
-#   $$ L_{36}(3^{23}) $$
+#   $$ L_{36}(2^{11} 3^{12}) $$
 # Taguchi L36 Orthogonal Design
 # Number of factors                 = 23
-# Number of levels for each factor  = 3
+# Number of levels for each factor  = 2 for factors 1 to 11,
+#                                     3 for factors 12 to 23
 # Number of Experiments             = 36
 #
 # Reference: https://www.itl.nist.gov/div898/software/dataplot/dex/L36.DAT
 
-L_36_3_23 = np.loadtxt(f"{ORTHOGONAL_ARRAYS_DIR}/L_36_3_23.oa", dtype=int) - 1
+L_36_2_11_3_12 = (
+    np.loadtxt(f"{ORTHOGONAL_ARRAYS_DIR}/L_36_2_11_3_12.oa", dtype=int) - 1
+)
 
 #   $$ L_{50}(2^1 5^{11}) $$
 # Taguchi L50 Orthogonal Design
@@ -184,9 +201,13 @@ L_54_2_1_3_25 = (
 # Number of levels for each factor  = 2
 # Number of Experiments             = 64
 #
-# Reference: https://www.itl.nist.gov/div898/software/dataplot/dex/L64.DAT
+# The fold-over of L32(2^31): its 32 runs, then the same runs with the two
+# levels swapped. Every pair of columns is balanced, and the product of any
+# three columns sums to zero, so main effects are clear of two-factor
+# interactions. (The array formerly stored here had 59 unbalanced pairs of
+# columns.)
 
-L_64_2_31 = np.loadtxt(f"{ORTHOGONAL_ARRAYS_DIR}/L_64_2_31.oa", dtype=int) - 1
+L_64_2_31 = np.vstack([L_32_2_31, 1 - L_32_2_31])
 
 #   $$ L_{64}(4^{21}) $$
 # Taguchi L64 (Type B) Orthogonal Design
@@ -216,11 +237,12 @@ L_12_2_11.flags.writeable = False
 L_16_2_15.flags.writeable = False
 L_16_4_5.flags.writeable = False
 L_18_6_1_3_6.flags.writeable = False
+L_18_2_1_3_7.flags.writeable = False
 L_25_5_6.flags.writeable = False
-L_27_2_1_3_12.flags.writeable = False
+L_27_3_13.flags.writeable = False
 L_32_2_31.flags.writeable = False
 L_32_2_1_4_9.flags.writeable = False
-L_36_3_23.flags.writeable = False
+L_36_2_11_3_12.flags.writeable = False
 L_50_2_1_5_11.flags.writeable = False
 L_54_2_1_3_25.flags.writeable = False
 L_64_2_31.flags.writeable = False
@@ -236,14 +258,19 @@ ORTHOGONAL_ARRAYS = {
     "L16(2^15)": L_16_2_15,
     "L16(4^5)": L_16_4_5,
     "L18(6^1 3^6)": L_18_6_1_3_6,
+    "L18(2^1 3^7)": L_18_2_1_3_7,
     "L25(5^6)": L_25_5_6,
-    "L27(2^1 3^12)": L_27_2_1_3_12,
+    "L27(3^13)": L_27_3_13,
     "L32(2^31)": L_32_2_31,
     "L32(2^1 4^9)": L_32_2_1_4_9,
-    "L36(3^23)": L_36_3_23,
+    "L36(2^11 3^12)": L_36_2_11_3_12,
     "L50(2^1 5^11)": L_50_2_1_5_11,
     "L54(2^1 3^25)": L_54_2_1_3_25,
     "L64(2^31)": L_64_2_31,
     "L64(4^21)": L_64_4_21,
     "L81(3^40)": L_81_3_40,
 }
+
+# Former names that did not describe their arrays: get_orthogonal_array and
+# taguchi_design still accept them, with a DeprecationWarning.
+RENAMED_ARRAYS = {"L27(2^1 3^12)": "L27(3^13)", "L36(3^23)": "L36(2^11 3^12)"}

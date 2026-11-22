@@ -22,10 +22,11 @@ from __future__ import annotations
 
 from enum import Enum, unique
 from typing import Literal
+from warnings import warn
 
 import numpy as np
 
-from pydoe.taguchi.orthogonal_arrays import ORTHOGONAL_ARRAYS
+from pydoe.taguchi.orthogonal_arrays import ORTHOGONAL_ARRAYS, RENAMED_ARRAYS
 
 
 __all__ = [
@@ -44,17 +45,61 @@ ORTHOGONAL_ARRAY_NAMES = Literal[
     "L16(2^15)",
     "L16(4^5)",
     "L18(6^1 3^6)",
+    "L18(2^1 3^7)",
     "L25(5^6)",
-    "L27(2^1 3^12)",
+    "L27(3^13)",
     "L32(2^31)",
     "L32(2^1 4^9)",
-    "L36(3^23)",
+    "L36(2^11 3^12)",
     "L50(2^1 5^11)",
     "L54(2^1 3^25)",
     "L64(2^31)",
     "L64(4^21)",
     "L81(3^40)",
+    # Former names, still accepted with a DeprecationWarning.
+    "L27(2^1 3^12)",
+    "L36(3^23)",
 ]
+
+
+def _array(oa_name: str, stacklevel: int) -> np.ndarray:
+    """
+    Return the orthogonal array named ``oa_name``, accepting former names.
+
+    Parameters
+    ----------
+    oa_name : str
+        Name of the array, or one of its former names.
+    stacklevel : int
+        The stack level of the caller to name in a deprecation warning,
+        counted from the public function that calls this one.
+
+    Returns
+    -------
+    np.ndarray
+        The orthogonal array (zero-indexed factor levels).
+
+    Raises
+    ------
+    ValueError
+        If the array name is not found.
+    """
+    if oa_name in RENAMED_ARRAYS:
+        new_name = RENAMED_ARRAYS[oa_name]
+        warn(
+            f"The orthogonal array name '{oa_name}' is deprecated because "
+            "it does not describe the array, and will be removed in a "
+            f"future version. Please use '{new_name}'",
+            DeprecationWarning,
+            stacklevel=stacklevel + 1,
+        )
+        oa_name = new_name
+    if oa_name not in ORTHOGONAL_ARRAYS:
+        raise ValueError(
+            f"Orthogonal array '{oa_name}' not found. "
+            f"Available: {list(ORTHOGONAL_ARRAYS.keys())}"
+        )
+    return ORTHOGONAL_ARRAYS[oa_name]
 
 
 def get_orthogonal_array(oa_name: ORTHOGONAL_ARRAY_NAMES) -> np.ndarray:
@@ -75,13 +120,15 @@ def get_orthogonal_array(oa_name: ORTHOGONAL_ARRAY_NAMES) -> np.ndarray:
     ------
     ValueError
         If the array name is not found.
+
+    Warns
+    -----
+    DeprecationWarning
+        If ``oa_name`` is a former name, ``'L27(2^1 3^12)'`` or
+        ``'L36(3^23)'``, which did not describe the arrays; use
+        ``'L27(3^13)'`` or ``'L36(2^11 3^12)'``.
     """
-    if oa_name not in ORTHOGONAL_ARRAYS:
-        raise ValueError(
-            f"Orthogonal array '{oa_name}' not found. "
-            f"Available: {list(ORTHOGONAL_ARRAYS.keys())}"
-        )
-    return ORTHOGONAL_ARRAYS[oa_name]
+    return _array(oa_name, stacklevel=2)
 
 
 def list_orthogonal_arrays() -> list[str]:
@@ -120,8 +167,14 @@ def taguchi_design(
     ------
     ValueError
         If number of levels does not match number of factors.
+
+    Warns
+    -----
+    DeprecationWarning
+        If ``oa_name`` is a former name; see
+        [`get_orthogonal_array`][pydoe.get_orthogonal_array].
     """
-    array = get_orthogonal_array(oa_name)
+    array = _array(oa_name, stacklevel=2)
     n_factors = array.shape[1]
 
     if len(levels_per_factor) != n_factors:
