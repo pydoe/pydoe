@@ -19,22 +19,16 @@ from scipy.linalg import hankel, toeplitz
 
 __all__ = ["pbdesign"]
 
-# Plackett and Burman's (1946) generating rows, as Box and Draper (2007,
-# p. 153) print them; Montgomery (2013, Table 8.23) prints the same rows for
-# 24 and 36 runs. The rows for 24, 44, 48 and 60 runs are Paley's quadratic
-# residue rows; 36 is not of that form.
-_PRINTED_ROWS = {
-    24: "+++++-+-++--++--+-+----",
-    36: "-+-+++---+++++-+++--+----+-+-++--+-",
-    44: "++--+-+--+++-+++++---+-+++-----+---++-+-++-",
-    48: "+++++-++++--+-+-+++--+--++-++---+-+-++----+----",
-    60: "++-+++-+-+--+--+++-++++--+++++-----++----+---++-++-+-+---+-",
-}
+# Plackett and Burman's (1946) generating row for 36 runs, as Box and Draper
+# (2007, p. 153) and Montgomery (2012, Table 8.23) print it. Their rows for
+# 24, 44, 48 and 60 runs are identical to the rows of Paley's first
+# construction, which builds them; 36 is not of that form.
+_PRINTED_ROWS = {36: "-+-+++---+++++-+++--+----+-+-++--+-"}
 
 # Box and Draper (2007), Table 5.8: the three 9 x 9 blocks X, Y and Z of
 # Plackett and Burman's 28-run design, row by row. The design is the blocks
 # written as X Y Z / Z X Y / Y Z X, then a run of minus signs (Montgomery,
-# 2013, Table 8.23).
+# 2012, Table 8.23).
 _BLOCKS_28 = (
     (
         "+-++++---",
@@ -204,8 +198,10 @@ def _goethals_seidel(rows: tuple[str, str, str, str]) -> np.ndarray:
 
 
 def _published(runs: int) -> np.ndarray | None:
-    """Return Plackett and Burman's design of ``runs`` runs, as a Hadamard
-    matrix, where they give it by a generating row or by blocks.
+    """Return the cyclic or block design of ``runs`` runs, as a Hadamard
+    matrix: Plackett and Burman's printed row for 36 runs, Paley's first
+    construction when ``runs - 1`` is a prime equal to 3 (mod 4), or
+    Plackett and Burman's blocks for 28 runs.
 
     Parameters
     ----------
@@ -222,9 +218,9 @@ def _published(runs: int) -> np.ndarray | None:
         return _cyclic(_signs(_PRINTED_ROWS[runs]))
     if _is_prime(q) and q % 4 == 3:
         # Paley's first construction: +1 at 0 and on the non-zero squares
-        # modulo q, so that each column has as many + as - signs. For 12,
-        # 20, 24, 44, 48 and 60 runs, the printed rows are this row up to a
-        # cyclic shift, a reversal or a change of sign.
+        # modulo q, so that each column has as many + as - signs. For 24,
+        # 44, 48 and 60 runs this is the row Box and Draper (2007, p. 153)
+        # print.
         squares = {0} | {(v * v) % q for v in range(1, q)}
         return _cyclic(
             np.array([1.0 if v in squares else -1.0 for v in range(q)])
@@ -278,9 +274,8 @@ def _paley_ii(runs: int) -> np.ndarray | None:
 def _hadamard(runs: int) -> np.ndarray | None:
     """Return a Hadamard matrix of order ``runs`` with a first column of ones.
 
-    The constructions are tried in this order: Plackett and Burman's own
-    designs (printed rows, Paley's first construction, the 28-run blocks),
-    doubling a smaller matrix as they do for 40 and 56 runs, Paley's second
+    The constructions are tried in this order: the cyclic and block designs
+    of ``_published``, doubling a smaller matrix, Paley's second
     construction, and the Goethals-Seidel array for 92 runs.
 
     Parameters
@@ -364,13 +359,18 @@ def pbdesign(n: int) -> np.ndarray:
     Notes
     -----
     Run counts of the form :math:`2^e`, 12 and :math:`20 \\times 2^e` double
-    the 1-, 12- or 20-run core, as before. The others follow Plackett and
-    Burman (1946): their generating rows for 24, 36, 44, 48 and 60 runs, as
-    Box and Draper (2007, p. 153) print them; Paley's first construction,
-    which gives the same cyclic designs, for 68, 72, 84, 104 and 108 runs;
-    their blocks for 28 runs; doubling for 56, 88, 96 and 112 runs; Paley's
-    second construction for 52, 76 and 100 runs; and the Williamson
-    matrices of Baumert, Golomb and Hall (1962) for 92 runs.
+    the 1-, 12- or 20-run core, as before. Up to 112 runs, the others use:
+
+    - Paley's first construction, for 24, 44, 48, 60, 68, 72, 84, 104 and
+      108 runs. For 24 to 60 runs it gives the cyclic designs of Plackett
+      and Burman (1946), with the generating rows Box and Draper (2007,
+      p. 153) print.
+    - Plackett and Burman's generating row for 36 runs, and their blocks
+      for 28 runs.
+    - Paley's second construction, for 52, 76 and 100 runs.
+    - Doubling, for 56, 88, 96 and 112 runs.
+    - The Williamson matrices of Baumert, Golomb and Hall (1962), for 92
+      runs. Plackett and Burman give no design of this size.
 
     References
     ----------

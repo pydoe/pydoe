@@ -392,11 +392,11 @@ the number of rows is always one less than the next higher multiple of four.
 
 Every multiple of four up to 112 runs is available (the first that is not
 is 116). Run counts of the form $2^e$, 12 and $20 \times 2^e$ double a 1-,
-12- or 20-run core; the others are Plackett and Burman's (1946) own designs:
-their generating rows for 24, 36, 44, 48 and 60 runs, as Box and Draper
-(2007, p. 153) print them, their blocks for 28 runs, and Paley's
-constructions, doubling or the Williamson matrices of Baumert, Golomb and
-Hall (1962) for the rest.
+12- or 20-run core. The 24- to 60-run designs are Plackett and Burman's
+(1946): their cyclic designs, with the generating rows Box and Draper
+(2007, p. 153) print, and their blocks for 28 runs. The other run counts
+use Paley's two constructions, doubling, and, for 92 runs, the Williamson
+matrices of Baumert, Golomb and Hall (1962).
 
 For example, I can use up to 3 factors in a design with 4 rows:
 

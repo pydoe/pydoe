@@ -37,7 +37,7 @@ def _signs(row):
 
 
 # Box and Draper (2007), p. 153: the generating rows of Plackett and
-# Burman's (1946) designs. Montgomery (2013, Table 8.23) prints the same rows
+# Burman's (1946) designs. Montgomery (2012, Table 8.23) prints the same rows
 # for 24 and 36 runs.
 PRINTED_ROWS = {
     24: "+ + + + + - + - + + - - + + - - + - + - - - -",
@@ -75,7 +75,7 @@ class TestPlackettBurmanSizes(unittest.TestCase):
                 np.testing.assert_array_equal(H[-1], -1)
 
     def test_28_runs_printed_blocks(self):
-        # Box and Draper (2007), Table 5.8, and Montgomery (2013), Table 8.23:
+        # Box and Draper (2007), Table 5.8, and Montgomery (2012), Table 8.23:
         # blocks X Y Z / Z X Y / Y Z X, then a run of minus signs.
         H = pbdesign(27)
         first = "+ - + + + + - - - - + - - - + - - + + + - + - + + - +"
