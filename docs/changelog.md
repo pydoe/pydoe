@@ -13,7 +13,7 @@ All notable changes to PyDOE are documented here.
 
 ### :material-refresh: Changed
 - Generalize `definitive_screening_design` with arbitrary continuous-factor counts, two-level categorical factors, orthogonal and interaction-de-aliased methods, minimum-run augmentation, and fake factors while preserving historical one-argument results ([#145](https://github.com/pydoe/pydoe/pull/145)) — [@danieleongari](https://github.com/danieleongari)
-- `fracfact_by_res` returns, among the designs of the smallest run count, the one of the highest resolution available. The run counts are unchanged; the resolution rises where the same runs allow it: `fracfact_by_res(6, 5)` is now the 2^(6-1)_VI design and `fracfact_by_res(7, 5)` the 2^(7-1)_VII, as in Montgomery (2012, p. 374), and `fracfact_by_res(4, 3)` is the 2^(4-1)_IV ([#194](https://github.com/pydoe/pydoe/issues/194)) — [@kgdunn](https://github.com/kgdunn)
+- `fracfact_by_res` returns, among the designs of the smallest run count, the one of the highest resolution the search finds. The run counts are unchanged; the resolution rises where the same runs allow it: `fracfact_by_res(6, 5)` is now the 2^(6-1)_VI design and `fracfact_by_res(7, 5)` the 2^(7-1)_VII, as in Montgomery (2012, p. 374), and `fracfact_by_res(4, 3)` is the 2^(4-1)_IV ([#194](https://github.com/pydoe/pydoe/issues/194)) — [@kgdunn](https://github.com/kgdunn)
 
 ### :material-speedometer: Performance
 - `fracfact_aliasing` reduces each contrast to the bit pattern of its negative rows, so the elementwise product of a subset of columns becomes a bitwise exclusive or. The alias structure of a 15-factor design is now found in well under a second instead of about a minute ([#152](https://github.com/pydoe/pydoe/issues/152))
