@@ -4,25 +4,47 @@ All notable changes to PyDOE are documented here.
 
 ---
 
-## [**Latest**](https://github.com/pydoe/pydoe/compare/v1.3.0...master)
+## [**Latest**](https://github.com/pydoe/pydoe/compare/v1.6.0...master)
 
 ### :material-plus-circle: Added
 - `ccdesign` takes a fractional factorial cube through the keyword `generators` (a `fracfact` generator string), and `star` takes the cube's run count through the keyword `n_cube`. The orthogonal and rotatable axial distances use that count instead of $2^n$: for 5 factors on the 16-run half fraction the rotatable distance is now 2, as in Box and Draper (2007) and Montgomery (2012), not the 2.378 of the full factorial. Existing calls are unchanged ([#188](https://github.com/pydoe/pydoe/issues/188)) — [@kgdunn](https://github.com/kgdunn)
 
 ### :material-wrench: Fixed
 - `bbdesign` now returns Box and Behnken's (1960) published designs for 6, 7, 9, 10, 11, 12 and 16 factors: incomplete blocks of 3, 4 or 5 factors, each carrying a two-level factorial (a half fraction for 11 factors). It paired every two factors for any number of factors, which is the published design only for 3 to 5 factors and uses 12.5% to 50% more runs from 6 factors on (84 instead of 56 runs for 7 factors). The 7-factor design is now rotatable, and `bbdesign(6)` has the 54 runs that Table 3.28 of the docs gives. Designs for 3 to 5, 8, and 13 to 15 or more than 16 factors are unchanged, and the docstring now states the default number of center points ([#186](https://github.com/pydoe/pydoe/issues/186)) — [@kgdunn](https://github.com/kgdunn)
-- `fracfact_opt` no longer rejects saturated designs. The feasibility check compared the number of erased factors against $\binom{n_{\text{aliases}}}{p}$ instead of against the number of available interaction columns $2^m - m - 1$, so every resolution III design with $k = 2^m - 1$ factors in $2^m$ runs — such as $2^{7-4}_{III}$ and $2^{15-11}_{III}$ — raised *"Too many erased factors to create aliasing"*. `fracfact_opt(n, 0)` also raised `IndexError` instead of returning the full factorial ([#152](https://github.com/pydoe/pydoe/issues/152))
 - Orthogonal arrays: `L27(2^1 3^12)` and `L36(3^23)` are renamed `L27(3^13)` and `L36(2^11 3^12)`, the arrays they always held; the former names still work in `get_orthogonal_array` and `taguchi_design`, with a `DeprecationWarning`; `ORTHOGONAL_ARRAYS` and `list_orthogonal_arrays` hold only the new names. `L64(2^31)` had 59 unbalanced pairs of columns and is now the fold-over of `L32(2^31)`, which is balanced and keeps main effects clear of two-factor interactions. Taguchi's standard `L18(2^1 3^7)` is added, built from `L18(6^1 3^6)` ([#193](https://github.com/pydoe/pydoe/issues/193)) — [@kgdunn](https://github.com/kgdunn)
-- `fracfact_by_res` now returns the smallest design that actually reaches the requested resolution. It was driven by a hand-written table of base-factor counts and a generator rule that only bounded the length of each generator taken on its own, which had three consequences: `fracfact_by_res(7, 3)` used 16 runs instead of the 8 of the saturated $2^{7-4}_{III}$ design; resolution IV and V requests were over-provisioned by a factor of two throughout; and resolution V requests for 9 or more factors silently returned resolution **IV** designs, because products of generators can be shorter than the generators themselves. Columns are now selected directly against the $\mathrm{GF}(2)^k$ criterion — resolution $\ge R$ iff no $R-1$ or fewer columns sum to zero — so the guarantee covers the whole defining relation. Requests with fewer factors than base factors, such as `fracfact_by_res(4, 5)`, no longer raise from `itertools.islice` ([#153](https://github.com/pydoe/pydoe/issues/153))
 - `small_composite_design` now builds Hartley's (1959) design for 5 or more factors. Its cube was the smallest resolution III fraction (`fracfact_by_res(n, 3)`), which from 5 factors on aliases two-factor interactions with each other, so the full quadratic model could not be fitted with any number of center runs. The cube is now the smallest regular fraction the search finds (the smallest possible for up to 18 factors) in which no two-factor interaction is aliased with another; for 3, 4, 5, 6, 7 and 9 factors it has 4, 8, 16, 16, 32 and 64 runs, as in Box and Draper (2007, p. 501). Designs for 3 and 4 factors are unchanged ([#187](https://github.com/pydoe/pydoe/issues/187)) — [@kgdunn](https://github.com/kgdunn)
 
 ### :material-refresh: Changed
 - `pbdesign` builds every multiple of 4 up to 112 runs. It built only 2^e, 12 x 2^e and 20 x 2^e runs, so 28, 36, 44, 52, 56, 60, 68, 72, 76, 84, 88, 92 and 100 runs raised "n must be a multiple of 4". The 24- to 60-run designs are Plackett and Burman's (1946) cyclic and block designs; the other new sizes, and many above 112 runs, use Paley's two constructions, doubling, and, for 92 runs, the Williamson matrices of Baumert, Golomb and Hall (1962). The designs of 12 x 2^e runs above 12 (24, 48, 96, 192, 384, ...) change: they were the 12-run design doubled, in which 11 sets of three columns of the 24-run design have a constant product, and are now Plackett and Burman's cyclic 24- and 48-run designs and their doublings. All other run counts are unchanged ([#192](https://github.com/pydoe/pydoe/issues/192)) — [@kgdunn](https://github.com/kgdunn)
-- Generalize `definitive_screening_design` with arbitrary continuous-factor counts, two-level categorical factors, orthogonal and interaction-de-aliased methods, minimum-run augmentation, and fake factors while preserving historical one-argument results ([#145](https://github.com/pydoe/pydoe/pull/145)) — [@danieleongari](https://github.com/danieleongari)
 - `fracfact_by_res` returns, among the designs of the smallest run count, the one of the highest resolution the search finds. The run counts are unchanged; the resolution rises where the same runs allow it: `fracfact_by_res(6, 5)` is now the 2^(6-1)_VI design and `fracfact_by_res(7, 5)` the 2^(7-1)_VII, as in Montgomery (2012, p. 374), and `fracfact_by_res(4, 3)` is the 2^(4-1)_IV ([#194](https://github.com/pydoe/pydoe/issues/194)) — [@kgdunn](https://github.com/kgdunn)
 
+---
+
+## [**v1.6.0**](https://github.com/pydoe/pydoe/releases/tag/v1.6.0) <small>2026-10-21</small>
+
+### :material-plus-circle: Added
+- Fisher-information optimal design over Jacobians: `fisher_information` builds the Fisher information matrix of selected rows of a model Jacobian under a given noise covariance, and `jacobian_optimal_design` selects rows (with replicates) that optimize the D, A, E or S criterion by greedy selection and point exchange. A 3D Jacobian averages the information over several parameter-space points for robust designs ([#179](https://github.com/pydoe/pydoe/pull/179)) — [@saudzahirr](https://github.com/saudzahirr)
+
+### :material-wrench: Fixed
+- `regularized_inv` inverts with `assume_a="pos"` (Cholesky), so a numerically indefinite information matrix — a positive-semidefinite matrix with a tiny negative eigenvalue from roundoff — is regularized instead of yielding an inverse with a negative trace ([#180](https://github.com/pydoe/pydoe/pull/180)) — [@saudzahirr](https://github.com/saudzahirr)
+
+---
+
+## [**v1.5.0**](https://github.com/pydoe/pydoe/releases/tag/v1.5.0) <small>2026-08-20</small>
+
+### :material-wrench: Fixed
+- `fracfact_opt` no longer rejects saturated designs. The feasibility check compared the number of erased factors against $\binom{n_{\text{aliases}}}{p}$ instead of against the number of available interaction columns $2^m - m - 1$, so every resolution III design with $k = 2^m - 1$ factors in $2^m$ runs — such as $2^{7-4}_{III}$ and $2^{15-11}_{III}$ — raised *"Too many erased factors to create aliasing"*. `fracfact_opt(n, 0)` also raised `IndexError` instead of returning the full factorial ([#152](https://github.com/pydoe/pydoe/issues/152)) — [@saudzahirr](https://github.com/saudzahirr)
+- `fracfact_by_res` now returns the smallest design that actually reaches the requested resolution. It was driven by a hand-written table of base-factor counts and a generator rule that only bounded the length of each generator taken on its own, which had three consequences: `fracfact_by_res(7, 3)` used 16 runs instead of the 8 of the saturated $2^{7-4}_{III}$ design; resolution IV and V requests were over-provisioned by a factor of two throughout; and resolution V requests for 9 or more factors silently returned resolution **IV** designs, because products of generators can be shorter than the generators themselves. Columns are now selected directly against the $\mathrm{GF}(2)^k$ criterion — resolution $\ge R$ iff no $R-1$ or fewer columns sum to zero — so the guarantee covers the whole defining relation. Requests with fewer factors than base factors, such as `fracfact_by_res(4, 5)`, no longer raise from `itertools.islice` ([#153](https://github.com/pydoe/pydoe/issues/153)) — [@saudzahirr](https://github.com/saudzahirr)
+
 ### :material-speedometer: Performance
-- `fracfact_aliasing` reduces each contrast to the bit pattern of its negative rows, so the elementwise product of a subset of columns becomes a bitwise exclusive or. The alias structure of a 15-factor design is now found in well under a second instead of about a minute ([#152](https://github.com/pydoe/pydoe/issues/152))
+- `fracfact_aliasing` reduces each contrast to the bit pattern of its negative rows, so the elementwise product of a subset of columns becomes a bitwise exclusive or. The alias structure of a 15-factor design is now found in well under a second instead of about a minute ([#152](https://github.com/pydoe/pydoe/issues/152)) — [@saudzahirr](https://github.com/saudzahirr)
+
+---
+
+## [**v1.4.0**](https://github.com/pydoe/pydoe/releases/tag/v1.4.0) <small>2026-08-05</small>
+
+### :material-refresh: Changed
+- Generalize `definitive_screening_design` with arbitrary continuous-factor counts, two-level categorical factors, orthogonal and interaction-de-aliased methods, minimum-run augmentation, and fake factors while preserving historical one-argument results ([#145](https://github.com/pydoe/pydoe/pull/145)) — [@danieleongari](https://github.com/danieleongari)
 
 ---
 
