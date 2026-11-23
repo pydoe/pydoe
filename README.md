@@ -5,7 +5,7 @@ PyDOE: An Experimental Design Package for Python
 
 [![Tests](https://github.com/pydoe/pydoe/actions/workflows/code_test.yml/badge.svg)](https://github.com/pydoe/pydoe/actions/workflows/code_test.yml)
 [![Documentation](https://github.com/pydoe/pydoe/actions/workflows/docs_build.yml/badge.svg)](https://github.com/pydoe/pydoe/actions/workflows/docs_build.yml)
-[![DOI](https://zenodo.org/badge/709347557.svg)](https://doi.org/10.5281/zenodo.20039274)
+[![DOI](https://zenodo.org/badge/12413061.svg)](https://doi.org/10.5281/zenodo.18522889)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
 [![Stack Overflow](https://img.shields.io/badge/stackoverflow-Ask%20questions-blue.svg)](
