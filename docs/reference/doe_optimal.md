@@ -162,7 +162,9 @@ array([[1.25, 0.25],
 ### `jacobian_optimal_design`
 
 ```python
-jacobian_optimal_design(jacobian, n_points, covariance=None, criterion="D", max_iter=100)
+jacobian_optimal_design(
+    jacobian, n_points, covariance=None, criterion="D", max_iter=100
+)
 ```
 
 Selects `n_points` rows of the Jacobian (replicates allowed) that maximize
