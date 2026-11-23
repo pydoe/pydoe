@@ -67,16 +67,17 @@ The optimal design module is the most mathematically complex part. Key files:
 - **`algorithms.py`** — Five iterative algorithms: Sequential Dykstra (greedy), Wynn-Mitchell (simple exchange), Fedorov (all-pairs exchange), Modified Fedorov, DETMAX (exchange with excursions).
 - **`efficiency.py`** — D-efficiency and A-efficiency post-hoc measures.
 - **`optimal.py`** — Top-level `optimal_design()` that dispatches to the chosen algorithm.
+- **`fisher.py`** — `fisher_information()` (FIM `J^T Σ^{-1} J` from a model Jacobian, averaged over the third axis of a 3D Jacobian) and `jacobian_optimal_design()` (greedy + point-exchange row selection on the mean FIM for the D/A/E/S criteria). Independent of `model.py`; reuses the criteria in `criterion.py`.
 
 ### Numerical conditioning in optimal design
 
 During iterative search the algorithms evaluate criterion values for many intermediate candidate designs, some of which produce an ill-conditioned information matrix (e.g. too few points to span the model space). `regularized_inv()` in `criterion.py` handles this by:
 
-1. Attempting a plain `scipy.linalg.inv(M)` inside a `warnings.catch_warnings()` context that promotes `scipy.linalg.LinAlgWarning` to an exception.
-2. Catching both `LinAlgWarning` (ill-conditioned) and `np.linalg.LinAlgError` (exactly singular).
-3. Falling back to Tikhonov regularization: `M_reg = M + λI` where `λ = 1e-8`, which shifts all eigenvalues up by `λ` and guarantees positive-definiteness.
+1. Attempting `scipy.linalg.inv(M, assume_a="pos")` (Cholesky) inside a `warnings.catch_warnings()` context that promotes `scipy.linalg.LinAlgWarning` to an exception.
+2. Catching both `LinAlgWarning` (ill-conditioned) and `np.linalg.LinAlgError` (singular, or not positive-definite — e.g. a PSD matrix with a tiny negative eigenvalue from roundoff).
+3. Falling back to Tikhonov regularization: `M_reg = M + λI` where `λ = 1e-8`, which shifts all eigenvalues up by `λ`, and inverting that with `assume_a="pos"` again. If `M_reg` is still not positive-definite, `LinAlgError` propagates.
 
-**Important**: `scipy.linalg.inv` emits `LinAlgWarning` for ill-conditioned matrices but only raises `LinAlgError` for exactly singular ones. The original `except np.linalg.LinAlgError` pattern was therefore dead code for the ill-conditioned case.
+**Important**: `scipy.linalg.inv` emits `LinAlgWarning` for ill-conditioned matrices but only raises `LinAlgError` for singular ones, so the warning must be promoted to an exception. `assume_a="pos"` matters too: a plain `inv` of a numerically indefinite matrix succeeds and returns an inverse with a negative trace, which silently corrupts A-, I- and similar criteria.
 
 ## Sequential / Adaptive Design Module (`pydoe/sequential/`)
 

@@ -113,6 +113,83 @@ After an optimal design is selected and experiments are performed, we can model 
 $$ \hat{\beta} = (X^{T} X)^{-1} X^{T} y $$
 where X is the design matrix and y is the vector of observed responses.
 
+## Fisher-Information Designs over Jacobians
+
+The algorithms above build the model matrix from candidate points of a
+polynomial model. When the model is nonlinear in its parameters, or the
+sensitivities come from a simulator, the design is instead chosen from the
+**Jacobian** $J$ of the model response with respect to the parameters,
+evaluated at the candidate experiments.
+
+### `fisher_information`
+
+```python
+fisher_information(jacobian, rows=None, covariance=None)
+```
+
+For a Jacobian $J$ of shape `(N, p)` (rows are candidate experiments,
+columns are parameters) the Fisher information matrix of the rows in `rows`
+(all rows by default; repeats allowed) is
+
+$$M = J^T \Sigma^{-1} J$$
+
+where $\Sigma$ is the observation-noise covariance over the candidates:
+`covariance` is `None` for the identity, a float for a common variance, a
+vector of shape `(N,)` for independent variances, or a full `(N, N)` matrix.
+The sub-matrix belonging to `rows` is used.
+
+A 3D Jacobian of shape `(N, p, K)` holds the sensitivities at $K$ points of
+the parameter space. A FIM is computed for each point and the mean FIM is
+returned,
+
+$$\bar M = \frac{1}{K} \sum_{k=1}^K J_k^T \Sigma^{-1} J_k$$
+
+which is the robust (Bayesian-style) formulation of optimal experimental
+design for nonlinear models.
+
+```pycon
+>>> import numpy as np
+>>> from pydoe import fisher_information
+>>> J = np.array([[1.0, 0.0], [0.0, 1.0], [1.0, 1.0]])
+>>> fisher_information(J)
+array([[2., 1.],
+       [1., 2.]])
+>>> fisher_information(J, rows=[0, 2], covariance=[1.0, 1.0, 4.0])
+array([[1.25, 0.25],
+       [0.25, 0.25]])
+```
+
+### `jacobian_optimal_design`
+
+```python
+jacobian_optimal_design(jacobian, n_points, covariance=None, criterion="D", max_iter=100)
+```
+
+Selects `n_points` rows of the Jacobian (replicates allowed) that maximize
+the `criterion` — one of `"D"`, `"A"`, `"E"` or `"S"` — evaluated on the
+(mean) Fisher information matrix. Rows are first chosen greedily, then
+improved with up to `max_iter` point-exchange passes. It returns the
+selected row indices and a dictionary holding the `criterion`, its
+`score` and the final `fim`.
+
+For a straight line $y = a + b x$ on $x \in [0, 1]$, the D-optimal design
+puts half of the runs at each end of the interval:
+
+```pycon
+>>> import numpy as np
+>>> from pydoe import jacobian_optimal_design
+>>> x = np.linspace(0, 1, 11)
+>>> J = np.stack([np.ones_like(x), x], axis=1)  # columns: dy/da, dy/db
+>>> idx, info = jacobian_optimal_design(J, 4)
+>>> sorted(idx.tolist())
+[0, 0, 10, 10]
+>>> info["criterion"]
+'D'
+>>> info["fim"]
+array([[4., 2.],
+       [2., 2.]])
+```
+
 ## References
 
 - Atkinson, A. C., & Donev, A. N. (1992). *Optimum Experimental Designs*. Oxford University Press.
@@ -120,4 +197,5 @@ where X is the design matrix and y is the vector of observed responses.
 - Pukelsheim, F. (2006). *Optimal Design of Experiments*. SIAM.
 - NIST: https://www.itl.nist.gov/div898/handbook/pri/section5/pri521.htm
 - [Optimal experimental design](https://en.wikipedia.org/wiki/Optimal_experimental_design)
+- Ryan, E. G., Drovandi, C. C., McGree, J. M., & Pettitt, A. N. (2016). A review of modern computational algorithms for Bayesian optimal design. *International Statistical Review*, 84(1), 128-154. https://doi.org/10.1111/insr.12107
 
