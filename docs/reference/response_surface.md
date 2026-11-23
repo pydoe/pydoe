@@ -22,7 +22,7 @@ be described:
 
 ## Box-Behnken (`bbdesign`) {#box_behnken}
 
-![Box-Behnken design](../assets/images/pbdesign.png)
+![Box-Behnken design](../assets/images/bbdesign.png)
 
 Box-Behnken designs can be created using the following simple syntax:
 

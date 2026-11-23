@@ -100,6 +100,7 @@ It provides:
 - **Optimal Designs**
   - Advanced optimal design algorithms (``optimal_design``)
   - Optimality criteria (``a_optimality``, ``c_optimality``, ``d_optimality``, ``e_optimality``, ``g_optimality``, ``i_optimality``, ``s_optimality``, ``t_optimality``, ``v_optimality``)
+  - Fisher-information designs over model Jacobians (``fisher_information``, ``jacobian_optimal_design``)
   - Efficiency measures (``a_efficiency``, ``d_efficiency``)
   - Search algorithms (``sequential_dykstra``, ``simple_exchange_wynn_mitchell``, ``fedorov``, ``modified_fedorov``, ``detmax``)
   - Design utilities (``criterion_value``, ``information_matrix``, ``build_design_matrix``, ``build_uniform_moment_matrix``, ``generate_candidate_set``)
