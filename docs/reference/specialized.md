@@ -26,15 +26,15 @@ categorical factors.
     2022. The adapted source is distributed under the BSD 3-Clause
     License.
 
-```pycon
->>> definitive_screening_design(
-...     k,
-...     n_cat=0,
-...     *,
-...     method="dsd",
-...     min_13=False,
-...     n_fake_factors=0,
-... )
+```python
+definitive_screening_design(
+    k,
+    n_cat=0,
+    *,
+    method="dsd",
+    min_13=False,
+    n_fake_factors=0,
+)
 ```
 
 - `k` is the number of continuous factors. It may be zero when

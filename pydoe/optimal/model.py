@@ -154,6 +154,8 @@ def generate_candidate_set(
     bounds: tuple | list | None = None,
     n_levels: int = 3,
     grid_type: str = "full_factorial",
+    *,
+    seed: int | np.random.Generator | None = None,
 ) -> np.ndarray:
     """
     Generate candidate set for optimal design.
@@ -169,6 +171,9 @@ def generate_candidate_set(
         Number of levels per factor for grid (default is 3).
     grid_type : {'full_factorial', 'uniform_random'}, optional
         Type of grid to generate (default is 'full_factorial').
+    seed : int or numpy.random.Generator, optional
+        Seed of the 'uniform_random' grid, for a reproducible candidate
+        set. Not used by the 'full_factorial' grid.
 
     Returns
     -------
@@ -198,7 +203,8 @@ def generate_candidate_set(
     elif grid_type == "uniform_random":
         # Generate random uniform points
         n_candidates = n_levels**n_factors
-        candidates = np.random.uniform(size=(n_candidates, n_factors))
+        rng = np.random.default_rng(seed)
+        candidates = rng.uniform(size=(n_candidates, n_factors))
 
         # Scale to bounds
         for i, (low, high) in enumerate(bounds):

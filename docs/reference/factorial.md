@@ -35,12 +35,12 @@ This kind of design offers full flexibility as to the number of discrete levels 
 ```pycon
 >>> fullfact(levels)  # (1)!
 >>> fullfact([2, 3])
-array([[ 0.,  0.],
-       [ 1.,  0.],
-       [ 0.,  1.],
-       [ 1.,  1.],
-       [ 0.,  2.],
-       [ 1.,  2.]])
+array([[0., 0.],
+       [1., 0.],
+       [0., 1.],
+       [1., 1.],
+       [0., 2.],
+       [1., 2.]])
 ```
 
 1. `levels` is array of integers.
@@ -50,19 +50,24 @@ items in the input array.
 
 ## 2-Level Full Factorial (`ff2n`)
 
-This function is a convenience wrapper to `fullfact` that forces all the
-factors to have two levels each, you simple tell it how many factors to
+This function creates the full factorial design in which every factor has
+the two coded levels $-1$ and $+1$; you simply tell it how many factors to
 create a design for.
+
+The rows are in the order of `itertools.product`: the **last** column
+varies fastest. This differs from `fullfact`, where the **first** column
+varies fastest, so `ff2n(n)` is not a row-for-row recoding of
+`fullfact([2] * n)`; the two contain the same runs in a different order.
 
 ```pycon
 >>> ff2n(3)
 array([[-1., -1., -1.],
-       [ 1., -1., -1.],
-       [-1.,  1., -1.],
-       [ 1.,  1., -1.],
        [-1., -1.,  1.],
-       [ 1., -1.,  1.],
+       [-1.,  1., -1.],
        [-1.,  1.,  1.],
+       [ 1., -1., -1.],
+       [ 1., -1.,  1.],
+       [ 1.,  1., -1.],
        [ 1.,  1.,  1.]])
 ```
 
@@ -107,8 +112,8 @@ columns. The design ends up looking like this;
 ```pycon
 >>> fracfact("a b ab")
 array([[-1., -1.,  1.],
-       [ 1., -1., -1.],
        [-1.,  1., -1.],
+       [ 1., -1., -1.],
        [ 1.,  1.,  1.]])
 ```
 
@@ -125,12 +130,12 @@ generator.
 ```pycon
 >>> fracfact("a b ab c ac bc abc")
 array([[-1., -1.,  1., -1.,  1.,  1., -1.],
-       [ 1., -1., -1., -1., -1.,  1.,  1.],
-       [-1.,  1., -1., -1.,  1., -1.,  1.],
-       [ 1.,  1.,  1., -1., -1., -1., -1.],
        [-1., -1.,  1.,  1., -1., -1.,  1.],
-       [ 1., -1., -1.,  1.,  1., -1., -1.],
+       [-1.,  1., -1., -1.,  1., -1.,  1.],
        [-1.,  1., -1.,  1., -1.,  1., -1.],
+       [ 1., -1., -1., -1., -1.,  1.,  1.],
+       [ 1., -1., -1.,  1.,  1., -1., -1.],
+       [ 1.,  1.,  1., -1., -1., -1., -1.],
        [ 1.,  1.,  1.,  1.,  1.,  1.,  1.]])
 ```
 
@@ -141,8 +146,8 @@ this:
 ```pycon
 >>> fracfact("a b -ab")
 array([[-1., -1., -1.],
-       [ 1., -1.,  1.],
        [-1.,  1.,  1.],
+       [ 1., -1.,  1.],
        [ 1.,  1., -1.]])
 ```
 
@@ -152,12 +157,12 @@ In order to reduce confounding, we can utilize the `fold` function:
 >>> m = fracfact("a b ab")
 >>> fold(m)
 array([[-1., -1.,  1.],
-       [ 1., -1., -1.],
        [-1.,  1., -1.],
+       [ 1., -1., -1.],
        [ 1.,  1.,  1.],
        [ 1.,  1., -1.],
-       [-1.,  1.,  1.],
        [ 1., -1.,  1.],
+       [-1.,  1.,  1.],
        [-1., -1., -1.]])
 ```
 
@@ -174,12 +179,12 @@ to the keyword `columns`:
 ```pycon
 >>> fold(m, columns=[2])
 array([[-1., -1.,  1.],
-       [ 1., -1., -1.],
        [-1.,  1., -1.],
+       [ 1., -1., -1.],
        [ 1.,  1.,  1.],
        [-1., -1., -1.],
-       [ 1., -1.,  1.],
        [-1.,  1.,  1.],
+       [ 1., -1.,  1.],
        [ 1.,  1., -1.]])
 ```
 
@@ -192,7 +197,7 @@ the one that has confounding on interactions of order as high as possible:
 ```pycon
 >>> design, alias_map, alias_cost = fracfact_opt(6, 2)
 >>> design
-"a b c d bcd acd"
+'a b c d bcd acd'
 >>> print("\n".join(alias_map))
 a = bef = cdf = abcde
 b = aef = cde = abcdf
@@ -223,6 +228,42 @@ c = ab
 abc
 ```
 
+Both `fracfact_opt` and `fracfact_aliasing` also return an *alias cost
+vector*. It is the upper triangle of a square matrix whose entry
+$(i, j)$, $i \le j$ (0-based), counts the aliased pairs made of one term of
+order $i + 1$ and one term of order $j + 1$ (order 1 = main effect, order
+2 = two-factor interaction, ...). The function `alias_vector_indices`
+gives the positions of the vector entries in that matrix:
+
+```pycon
+>>> alias_vector_indices(n_factors)  # (1)!
+```
+
+1. `n_factors` is the number of factors (columns) of the design, at most
+   20. Returns the tuple `(rows, cols)` of index arrays.
+
+The indices are sorted by the larger of the two orders, so the most
+serious aliasings (those among low-order terms) come first; this is not
+the order of `numpy.triu_indices`. For the design above, the three
+aliasings are all between a main effect and a two-factor interaction:
+
+```pycon
+>>> rows, cols = alias_vector_indices(3)
+>>> rows
+array([0, 0, 1, 0, 1, 2])
+>>> cols
+array([0, 1, 1, 2, 2, 2])
+>>> _, alias_vector = fracfact_aliasing(fracfact("a b ab"))
+>>> alias_vector
+array([0., 3., 0., 0., 0., 0.])
+>>> alias_matrix = np.zeros((3, 3))
+>>> alias_matrix[rows, cols] = alias_vector
+>>> alias_matrix
+array([[0., 3., 0.],
+       [0., 0., 0.],
+       [0., 0., 0.]])
+```
+
 !!! note
     Care should be taken to decide the appropriate alias structure for
     your design and the effects that folding has on it.
@@ -241,12 +282,12 @@ is used like this;
 ```pycon
 >>> fracfact_by_res(6, 3)
 array([[-1., -1., -1.,  1.,  1.,  1.],
-       [ 1., -1., -1., -1., -1.,  1.],
-       [-1.,  1., -1., -1.,  1., -1.],
-       [ 1.,  1., -1.,  1., -1., -1.],
        [-1., -1.,  1.,  1., -1., -1.],
-       [ 1., -1.,  1., -1.,  1., -1.],
+       [-1.,  1., -1., -1.,  1., -1.],
        [-1.,  1.,  1., -1., -1.,  1.],
+       [ 1., -1., -1., -1., -1.,  1.],
+       [ 1., -1.,  1., -1.,  1., -1.],
+       [ 1.,  1., -1.,  1., -1., -1.],
        [ 1.,  1.,  1.,  1.,  1.,  1.]])
 ```
 
@@ -431,11 +472,17 @@ array([[-1., -1.,  1., -1.],
 
 Thus, an 8-run Plackett-Burman design can handle up to (8 - 1) = 7 factors.
 
-As a side note, It just so happens that the Plackett-Burman and $2^{(7-4)}$
-fractional factorial design are identical:
+As a side note, the 8-run Plackett-Burman design and the $2^{(7-4)}$
+fractional factorial design consist of the same eight runs. The two
+functions list them in a different row order, so the arrays are not equal
+element by element, but they are equal after sorting the rows:
 
 ```pycon
->>> np.all(pbdesign(7) == fracfact("a b ab c ac bc abc"))
+>>> pb = pbdesign(7)
+>>> ff = fracfact("a b ab c ac bc abc")
+>>> bool(np.all(pb == ff))
+False
+>>> sorted(map(tuple, pb)) == sorted(map(tuple, ff))
 True
 ```
 
@@ -510,16 +557,16 @@ A four-factor design uses 12 runs instead of the full $2^4 = 16$:
 ```pycon
 >>> john_three_quarter_design(4)
 array([[-1., -1., -1., -1.],
-       [ 1., -1., -1.,  1.],
-       [-1.,  1., -1.,  1.],
-       [ 1.,  1., -1., -1.],
        [-1., -1.,  1.,  1.],
-       [ 1., -1.,  1., -1.],
+       [-1.,  1., -1.,  1.],
        [-1.,  1.,  1., -1.],
+       [ 1., -1., -1.,  1.],
+       [ 1., -1.,  1., -1.],
+       [ 1.,  1., -1., -1.],
        [ 1.,  1.,  1.,  1.],
        [ 1., -1., -1., -1.],
-       [ 1.,  1., -1.,  1.],
        [ 1., -1.,  1.,  1.],
+       [ 1.,  1., -1.,  1.],
        [ 1.,  1.,  1., -1.]])
 ```
 

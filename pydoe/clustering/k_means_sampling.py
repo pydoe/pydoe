@@ -71,7 +71,8 @@ def random_k_means(  # ruff: ignore[too-many-arguments, too-many-positional-argu
     if initial_points is None:
         cluster_centers = rng.random((num_points, dimension))
     else:
-        cluster_centers = np.array(initial_points)
+        # float copy: integer input would truncate the mean updates
+        cluster_centers = np.array(initial_points, dtype=float)
         if cluster_centers.shape != (num_points, dimension):
             raise ValueError(
                 "initial_points must have shape (num_points, dimension)"

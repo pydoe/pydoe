@@ -26,9 +26,26 @@ worst-case prediction.
 - **C-optimality**: Minimizes variance of a chosen linear combination of
 parameters.
 - **S-optimality**: Maximizes orthogonality and determinant, ensuring balanced
-design.
-- **T-optimality**: Maximizes difference between competing models at design
-points.
+design (Shin and Xiu, 2016).
+- **T-optimality**: Maximizes the lack of fit of the model to the responses
+of a rival model at the design points (Atkinson and Fedorov, 1975).
+
+References
+----------
+Atkinson, A. C., & Fedorov, V. V. (1975). The design of experiments for
+discriminating between two rival models. *Biometrika*, 62(1), 57-70.
+https://doi.org/10.1093/biomet/62.1.57
+
+Dette, H., & Titoff, S. (2009). Optimal discrimination designs. *The
+Annals of Statistics*, 37(4), 2056-2082. https://doi.org/10.1214/08-AOS635
+
+Shin, Y., & Xiu, D. (2016). Nonadaptive quasi-optimal points selection
+for least squares linear regression. *SIAM Journal on Scientific
+Computing*, 38(1), A385-A411. https://doi.org/10.1137/15M1015868
+
+Welch, W. J. (1984). Computer-aided design of experiments for response
+estimation. *Technometrics*, 26(3), 217-224.
+https://doi.org/10.1080/00401706.1984.10487958
 """
 
 import warnings
@@ -293,13 +310,18 @@ def s_optimality(M: np.ndarray) -> float:
     r"""
     Compute S-optimality criterion for a given information matrix.
 
-    S-optimality is the determinant divided by the product of column RMS values.
-    Prefers orthogonal and high-determinant designs.
+    S-optimality (Shin and Xiu, 2016) measures the mutual orthogonality of
+    the columns of the design matrix $$X$$ together with the determinant
+    of the information matrix.
 
     The S-optimality criterion is:
 
-    $$\frac{\det(M)}{\prod_j \sqrt{M_{jj}}}$$
+    $$\frac{\sqrt{\det(M)}}{\prod_j \sqrt{M_{jj}}}
+    = \frac{\sqrt{\det(X^T X)}}{\prod_j \lVert X_j \rVert}$$
 
+    which is Shin and Xiu's $$S(X)$$ raised to the power $$p$$. It does not
+    depend on the scale of the columns, lies between 0 and 1 (Hadamard's
+    inequality), and is 1 exactly when the columns of $$X$$ are orthogonal.
 
     Parameters
     ----------
@@ -310,9 +332,16 @@ def s_optimality(M: np.ndarray) -> float:
     -------
     float
         S-optimality value.
+
+    References
+    ----------
+    Shin, Y., & Xiu, D. (2016). Nonadaptive quasi-optimal points selection
+    for least squares linear regression. *SIAM Journal on Scientific
+    Computing*, 38(1), A385-A411. https://doi.org/10.1137/15M1015868
     """
     col_rms = np.sqrt(np.clip(np.diag(M), 1e-15, None))
-    return float(np.linalg.det(M) / np.prod(col_rms))
+    det = max(float(np.linalg.det(M)), 0.0)
+    return float(np.sqrt(det) / np.prod(col_rms))
 
 
 def t_optimality(X: np.ndarray, model_diff_subset: np.ndarray) -> float:
@@ -320,13 +349,17 @@ def t_optimality(X: np.ndarray, model_diff_subset: np.ndarray) -> float:
     Compute T-optimality criterion for model discrimination at design points.
 
     T-optimality maximizes discrimination between two models at the chosen
-    design points.
+    design points (Atkinson and Fedorov, 1975): the lack of fit that
+    remains when the model with design matrix $$X$$ is fitted to the
+    responses of the rival model.
 
     The T-optimality criterion is:
 
-    $$d^T P_X d$$
+    $$d^T (I - P_X) d = \min_{\beta} \lVert d - X \beta \rVert^2$$
 
-    where $P_X = X (X^T X)^{-1} X^T$ and $d$ is the model difference vector.
+    where $$P_X = X (X^T X)^{-1} X^T$$ and $$d$$ is the model difference
+    vector: the responses of the rival model at the design points, or
+    their difference from any response of the fitted model.
 
     Parameters
     ----------
@@ -338,10 +371,19 @@ def t_optimality(X: np.ndarray, model_diff_subset: np.ndarray) -> float:
     Returns
     -------
     float
-        Discrimination value.
+        Discrimination value: the residual sum of squares, which is 0
+        when the design cannot tell the two models apart. A residual sum
+        of squares within round-off of 0, below
+        $$10^{-10} \lVert d \rVert^2$$, is returned as exactly 0, so that
+        designs that fit the rival model exactly tie, whatever the
+        floating-point library.
     """
-    H = X.T @ X
-    H_inv = regularized_inv(H)
-    P = X @ H_inv @ X.T
-    d = model_diff_subset.reshape(-1, 1)
-    return float((d.T @ P @ d).item())
+    d = np.asarray(model_diff_subset, dtype=float).reshape(-1)
+    beta = np.linalg.lstsq(X, d, rcond=None)[0]
+    residual = d - X @ beta
+    rss = float(residual @ residual)
+    # Exact fits leave round-off of order 1e-30 that differs between BLAS
+    # builds; a search comparing such values would follow that noise.
+    if rss <= 1e-10 * float(d @ d):
+        return 0.0
+    return rss

@@ -87,10 +87,13 @@ def sobol_sequence(  # ruff: ignore[too-many-arguments]
         # Ensure n is power of 2 for best balance properties
         if not (n > 0 and (n & (n - 1)) == 0):
             n = 2 ** int(np.ceil(np.log2(n)))
+    if use_pow_of_2 and skip == 0:
         m = int(np.log2(n))
         samples = sampler.random_base2(m)
     else:
-        # Generate exactly n samples. Suppress scipy's power-of-2 advisory:
+        # Generate exactly n samples. random_base2 refuses to draw after a
+        # fast-forward unless the total stays a power of 2, so skipped
+        # sequences are drawn here too. Suppress scipy's power-of-2 advisory:
         # callers that pass use_pow_of_2=False (e.g. saltelli_sampling) have
         # already validated n and issued their own user-facing warning.
         with warnings.catch_warnings():

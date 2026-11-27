@@ -22,25 +22,26 @@ __all__ = ["GaussianProcessRegressor"]
 
 
 class GaussianProcessRegressor:
-    """
+    r"""
     Gaussian process regressor with a squared-exponential kernel.
 
     The kernel is the radial basis function (RBF):
 
-    .. math::
+    $$k(x, x') = \sigma_f^2 \exp\left(-\frac{\lVert x - x' \rVert^2}
+    {2 \ell^2}\right)$$
 
-        k(x, x') = \\exp\\left(-\\frac{\\lVert x - x' \\rVert^2}
-        {2 \\ell^2}\\right)
-
-    where :math:`\\ell` is the ``length_scale``.
+    where $$\ell$$ is the ``length_scale`` and the signal variance
+    $$\sigma_f^2$$ is the variance of the training targets, so that the
+    posterior standard deviation is in the units of the targets.
 
     Attributes
     ----------
     length_scale : float
-        Length scale :math:`\\ell` of the RBF kernel.
+        Length scale $$\ell$$ of the RBF kernel.
     noise : float
         Variance added to the diagonal of the training kernel matrix
-        for numerical stability and to model observation noise.
+        for numerical stability and to model observation noise, relative
+        to the signal variance.
 
     Parameters
     ----------
@@ -84,6 +85,7 @@ class GaussianProcessRegressor:
         self._L: np.ndarray | None = None
         self._alpha: np.ndarray | None = None
         self._y_mean: float | None = None
+        self._y_scale: float = 1.0
 
     def _kernel(self, X1: np.ndarray, X2: np.ndarray) -> np.ndarray:
         """
@@ -146,8 +148,12 @@ class GaussianProcessRegressor:
         if X.shape[0] == 0:
             raise ValueError("X must contain at least one sample")
 
+        # Standardize the targets: the unit-variance kernel then stands
+        # for a signal variance equal to the variance of y.
         self._y_mean = float(np.mean(y))
-        y_centered = y - self._y_mean
+        scale = float(np.std(y))
+        self._y_scale = scale if scale > 0 else 1.0
+        y_centered = (y - self._y_mean) / self._y_scale
 
         K = self._kernel(X, X) + self.noise * np.eye(X.shape[0])
         L = cholesky(K, lower=True)
@@ -177,8 +183,8 @@ class GaussianProcessRegressor:
         mean : ndarray of shape (n,)
             Posterior mean predictions.
         std : ndarray of shape (n,)
-            Posterior standard deviations, only returned if
-            ``return_std`` is True.
+            Posterior standard deviations, in the units of the training
+            targets, only returned if ``return_std`` is True.
 
         Raises
         ------
@@ -200,7 +206,7 @@ class GaussianProcessRegressor:
 
         X = np.asarray(X, dtype=float)
         K_star = self._kernel(self._X_train, X)
-        mean = K_star.T @ self._alpha + self._y_mean
+        mean = self._y_scale * (K_star.T @ self._alpha) + self._y_mean
 
         if not return_std:
             return mean
@@ -208,5 +214,5 @@ class GaussianProcessRegressor:
         v = solve_triangular(self._L, K_star, lower=True)
         var = 1.0 - np.sum(v**2, axis=0)
         var = np.clip(var, 0.0, None)
-        std = np.sqrt(var)
+        std = self._y_scale * np.sqrt(var)
         return mean, std

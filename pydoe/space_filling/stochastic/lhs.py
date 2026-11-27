@@ -196,7 +196,7 @@ def lhs(  # ruff: ignore[too-many-branches, too-many-arguments, too-many-positio
             )
         elif criterion.lower() in {"correlation", "corr"}:
             H = _lhscorrelate(n, samples, iterations, random_state)
-        elif criterion.lower() in ("lhsmu"):
+        elif criterion.lower() == "lhsmu":
             # as specified by the paper. M is set to 5
             H = _lhsmu(n, samples, correlation_matrix, random_state, M=5)
 
@@ -363,12 +363,18 @@ def _lhsmu(
         norm_u = stats.norm().ppf(rdpoints)
         L = linalg.cholesky(corr, lower=True)
 
-        norm_u = np.matmul(norm_u, L)
+        # rows z with identity covariance become rows z L^T with
+        # covariance L L^T = corr
+        norm_u = np.matmul(norm_u, L.T)
 
         H = stats.norm().cdf(norm_u)
     else:
         H = np.zeros_like(rdpoints, dtype=float)
-        rank = np.argsort(rdpoints, axis=0)
+        # rank[i, j]: position of point i among the values of column j.
+        # (A single argsort gives the inverse permutation, which keeps
+        # the Latin property but scatters the points that the selection
+        # above spread out.)
+        rank = np.argsort(np.argsort(rdpoints, axis=0), axis=0)
 
         for l in range(samples):  # ruff: ignore[ambiguous-variable-name]
             low = float(l) / samples

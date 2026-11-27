@@ -32,7 +32,9 @@ def sukharev_grid(num_points: int, dimension: int) -> np.ndarray:
         If num_points is not a perfect nth power.
 
     """
-    points_per_axis = int(num_points ** (1.0 / dimension))
+    # The floating-point root of a perfect power can land just below the
+    # integer (125 ** (1 / 3) == 4.999...), so round it and check exactly.
+    points_per_axis = round(num_points ** (1.0 / dimension))
     if points_per_axis**dimension != num_points:
         raise ValueError(
             f"num_points ({num_points}) must be a perfect {dimension}th power"

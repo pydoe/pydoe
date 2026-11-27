@@ -151,5 +151,32 @@ class TestSequentialDesign(unittest.TestCase):
         self.assertEqual(y.shape, (7,))
 
 
+def test_gp_uncertainty_follows_the_scale_of_the_targets():
+    # The kernel had unit signal variance whatever the targets, so the
+    # posterior std stayed in [0, 1] while the mean was in y units.
+    X = np.linspace(0, 1, 6).reshape(-1, 1)
+    y = np.sin(4 * X[:, 0])
+    Xq = np.linspace(-0.3, 1.3, 9).reshape(-1, 1)
+    mean, std = (
+        GaussianProcessRegressor(0.2).fit(X, y).predict(Xq, return_std=True)
+    )
+    for scale in (1e-3, 250.0):
+        gp = GaussianProcessRegressor(0.2).fit(X, scale * y + 7.0)
+        mean_s, std_s = gp.predict(Xq, return_std=True)
+        np.testing.assert_allclose(
+            mean_s, scale * mean + 7.0, rtol=1e-6, atol=1e-9
+        )
+        np.testing.assert_allclose(std_s, scale * std, rtol=1e-6, atol=1e-12)
+    # far from the data the std tends to the std of the targets
+    far = GaussianProcessRegressor(0.2).fit(X, 250.0 * y)
+    _, std_far = far.predict(np.array([[50.0]]), return_std=True)
+    np.testing.assert_allclose(std_far, np.std(250.0 * y), rtol=1e-6)
+    # constant targets: no scale to learn, predictions stay finite
+    flat = GaussianProcessRegressor(0.2).fit(X, np.full(6, 3.0))
+    mean_f, std_f = flat.predict(Xq, return_std=True)
+    np.testing.assert_allclose(mean_f, 3.0)
+    assert np.all(np.isfinite(std_f))
+
+
 if __name__ == "__main__":
     unittest.main()

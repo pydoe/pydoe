@@ -15,101 +15,97 @@ Abraham Lee.
 
 from __future__ import annotations
 
-from collections.abc import Iterator
+import re
+from collections.abc import Sequence
 
 import numpy as np
 
 
-def grep(haystack: str, needle: str) -> Iterator[int]:
-    start = 0
-    while True:
-        start = haystack.find(needle, start)
-        if start == -1:
-            return
-        yield start
-        start += len(needle)
+_FACTOR = re.compile(r"^x(\d+)(?:(?:\^|\*\*)(\d+))?$")
 
 
-def build_regression_matrix(  # ruff: ignore[too-many-branches]
-    H: np.ndarray, model: str, build: np.ndarray[np.bool_] = None
+def _parse_monomial(token: str, n_vars: int) -> tuple[float, list[int]]:
+    """Split a monomial such as ``2*x1*x3^2`` into (coefficient, powers)."""
+    coefficient = 1.0
+    powers = [0] * n_vars
+    # Protect the power operator "**" before splitting on the product "*".
+    for factor in token.replace("**", "^").split("*"):
+        match = _FACTOR.match(factor)
+        if match is None:
+            try:
+                coefficient *= float(factor)
+            except ValueError:
+                msg = f"invalid term {factor!r} in monomial {token!r}"
+                raise ValueError(msg) from None
+            continue
+        index = int(match.group(1))
+        if not 1 <= index <= n_vars:
+            msg = (
+                f"monomial {token!r} uses x{index}, but the design has "
+                f"{n_vars} variable(s) (x1 to x{n_vars})"
+            )
+            raise ValueError(msg)
+        powers[index - 1] += int(match.group(2) or 1)
+    return coefficient, powers
+
+
+def build_regression_matrix(
+    design: np.ndarray, model: str, build: Sequence[bool] | None = None
 ) -> np.ndarray:
     """
     Build a regression matrix using a DOE matrix and a list of monomials.
 
     Parameters
     ----------
-    H : 2d-array
+    design : 2d-array
+        The design matrix, one run per row and one variable per column.
+        A 1d-array is read as a single run.
     model : str
-    build : bool-array
+        The monomials of the regression model, separated by spaces. The
+        variables are named ``x1``, ``x2``, ... in the order of the columns
+        of ``design``; a monomial is a product of numbers and variables, with
+        optional integer powers (e.g. ``'1 x1 x2 x1*x2 x1^2'``).
+    build : sequence of bool, optional
+        One flag per monomial; the monomials flagged ``False`` are left out
+        of the regression matrix. By default, all monomials are kept.
 
     Returns
     -------
     R : 2d-array
+        The regression matrix, one row per run of ``design`` and one column per
+        kept monomial.
+
+    Raises
+    ------
+    ValueError
+        If ``build`` does not have one flag per monomial, if a monomial is
+        malformed, or if it uses a variable that ``design`` does not have.
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> design = np.array([[-1.0, -1], [1, -1], [-1, 1], [1, 1]])
+    >>> build_regression_matrix(design, "1 x1 x2 x1*x2")
+    array([[ 1., -1., -1.,  1.],
+           [ 1.,  1., -1., -1.],
+           [ 1., -1.,  1., -1.],
+           [ 1.,  1.,  1.,  1.]])
 
     """
-    list_of_tokens = model.split(" ")
-    if H.shape[1] == 1:
-        size_index = len(str(H.shape[0]))
-    else:
-        size_index = len(str(H.shape[1]))
-
+    design = np.atleast_2d(np.asarray(design, dtype=float))
+    tokens = model.split()
     if build is None:
-        build = [True] * len(list_of_tokens)
+        build = [True] * len(tokens)
+    if len(build) != len(tokens):
+        msg = (
+            f"build has {len(build)} flag(s), but the model has "
+            f"{len(tokens)} monomial(s)"
+        )
+        raise ValueError(msg)
+    tokens = [token for token, keep in zip(tokens, build, strict=True) if keep]
 
-    # Test if the vector has the wrong direction (lines instead of columns)
-    if H.shape[0] == 1:
-        H = H.T
-
-    # FIXME: Unused variable 'monom_index'
-    # Collect the list of monomials
-    monom_index = []
-    for i in range(len(list_of_tokens)):
-        if build[i]:
-            # BUG: Argument haystack should be str, not list of str
-            monom_index += [
-                grep(
-                    list_of_tokens,
-                    "x" + str(0) * (size_index - len(str(i))) + str(i),
-                )
-            ]
-
-    monom_index = -np.sort(-monom_index)
-    monom_index = np.unique(monom_index)
-
-    if H.shape[1] == 1:
-        # vector "mode": the number of vars is equal
-        # to the number of lines of H
-        nb_var = H.shape[0]
-        vector_mode = True
-
-        for i in range(nb_var):
-            for j in range(list_of_tokens.shape[0]):
-                list_of_tokens[j] = list_of_tokens[j].replace(
-                    "x" + str(0) * (size_index - len(str(i))) + str(i),
-                    "H(" + str(i) + ")",
-                )
-    else:
-        # matrix "mode": the number of vars is equal
-        # to the number of columns of H
-        nb_var = H.shape[0]
-        vector_mode = False
-
-        for i in range(nb_var):
-            for j in range(list_of_tokens.shape[0]):
-                list_of_tokens[j] = list_of_tokens[j].replace(
-                    "x" + str(0) * (size_index - len(str(i))) + str(i),
-                    "H[i," + str(i) + ")",
-                )
-
-    # Now build the regression matrix
-    if vector_mode:
-        R = np.zeros((len(list_of_tokens), 1))
-        for j in range(len(list_of_tokens)):
-            R[j, 0] = eval(list_of_tokens[j])  # ruff: ignore[suspicious-eval-usage]
-    else:
-        R = np.zeros((H.shape[0], len(list_of_tokens)))
-        for i in range(H.shape[0]):
-            for j in range(len(list_of_tokens)):
-                R[i, j] = eval(list_of_tokens[j])  # ruff: ignore[suspicious-eval-usage]
-
+    R = np.empty((design.shape[0], len(tokens)))
+    for j, token in enumerate(tokens):
+        coefficient, powers = _parse_monomial(token, design.shape[1])
+        R[:, j] = coefficient * np.prod(design ** np.array(powers), axis=1)
     return R

@@ -20,3 +20,14 @@ class TestSobolSequence(unittest.TestCase):
         ])
 
         np.testing.assert_allclose(seq, expected, atol=1e-8)
+
+
+def test_sobol_skip_with_power_of_two_rounding():
+    # skip > 0 with the default use_pow_of_2=True raised a scipy error
+    # unless skip + n happened to be a power of 2.
+    full = sobol_sequence(16, 3)
+    for skip in (1, 3, 5, 8):
+        skipped = sobol_sequence(8, 3, skip=skip)
+        np.testing.assert_allclose(skipped, full[skip : skip + 8])
+    # n is still rounded up to a power of 2
+    assert sobol_sequence(5, 2, skip=3).shape == (8, 2)

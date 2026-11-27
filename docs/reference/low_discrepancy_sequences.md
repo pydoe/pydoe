@@ -39,8 +39,14 @@ minimizes the covering radius with respect to the max-norm.
 sukharev_grid(num_points, dimension)
 ```
 
-- `num_points`: total number of points to generate. Must be an integer power of `dimension`.
+- `num_points`: total number of points to generate. Must be a perfect
+  `dimension`-th power, i.e. `num_points = m ** dimension` for an integer
+  `m` (4, 9, 16, ... in two dimensions; 8, 27, 64, ... in three). Any other
+  value raises `ValueError`.
 - `dimension`: dimensionality of the space.
+
+The grid has `m` points per axis, at $(2j + 1) / (2m)$ for
+$j = 0, \ldots, m - 1$.
 
 **Example**:
 
@@ -78,19 +84,32 @@ sobol_sequence(n, d, *, scramble=False, seed=None, bounds=None,
 - `seed`: integer seed for reproducibility (only used when `scramble=True`).
 - `bounds`: array of shape `(d, 2)` with per-dimension `(min, max)` pairs.
 - `skip`: number of initial Sobol' points to skip via fast-forward (default: 0).
-- `use_pow_of_2`: if `True` (default), rounds `n` up to the nearest power of 2
-  and uses `random_base2` for ideal balance properties. If `False`, generates
-  exactly `n` samples using `random` — useful when an exact count is required
+  It can be combined with either value of `use_pow_of_2`.
+- `use_pow_of_2`: if `True` (default), rounds `n` up to the next power of 2,
+  which gives the best balance properties. If `False`, generates
+  exactly `n` samples — useful when an exact count is required
   (e.g. inside `saltelli_sampling`).
 
 **Example**:
 
 ```python
 >>> sobol_sequence(4, 2)
-array([[0.    , 0.    ],
-       [0.5   , 0.5   ],
-       [0.75  , 0.25  ],
-       [0.25  , 0.75  ]])
+array([[0.  , 0.  ],
+       [0.5 , 0.5 ],
+       [0.75, 0.25],
+       [0.25, 0.75]])
+```
+
+With `skip`, the sequence is fast-forwarded before the points are drawn.
+Skipping the first four points returns points five to eight of the
+sequence:
+
+```python
+>>> sobol_sequence(4, 2, skip=4)
+array([[0.375, 0.375],
+       [0.875, 0.875],
+       [0.625, 0.125],
+       [0.125, 0.625]])
 ```
 
 !!! note
@@ -107,12 +126,15 @@ prime number bases for each dimension.
 **Syntax**:
 
 ```python
->>> halton_sequence(num_points, dimension, primes=None)
+>>> halton_sequence(num_points, dimension, skip=0)
 ```
 
 - `num_points`: number of samples.
 - `dimension`: number of dimensions.
-- `primes`: optional list of prime bases; defaults to the first `dimension` primes.
+- `skip`: number of initial points of the sequence to skip (default: 0).
+
+Dimension $i$ uses the $i$-th prime number (2, 3, 5, ...) as its base; the
+bases cannot be chosen.
 
 **Example**:
 
@@ -121,6 +143,10 @@ prime number bases for each dimension.
 array([[0.        , 0.        ],
        [0.5       , 0.33333333],
        [0.25      , 0.66666667],
+       [0.75      , 0.11111111],
+       [0.125     , 0.44444444]])
+>>> halton_sequence(3, 2, skip=2)
+array([[0.25      , 0.66666667],
        [0.75      , 0.11111111],
        [0.125     , 0.44444444]])
 ```
@@ -166,22 +192,41 @@ fill the space uniformly using modular arithmetic.
 **Syntax**:
 
 ```python
-rank1_lattice(num_points, dimension, generator=None)
+rank1_lattice(num_points, dimension, generator_vector=None, *, seed=None)
 ```
 
 - `num_points`: number of points.
 - `dimension`: dimensionality of space.
-- `generator`: optional list of length `dimension` used as a multiplier.
+- `generator_vector`: optional integer vector $z$ of length `dimension`.
+  If it is not given, its entries are drawn at random from
+  $[2, \text{num\_points})$; this requires `num_points >= 3`.
+- `seed`: integer or `numpy.random.Generator` (keyword-only) used to draw
+  the random generator vector, for reproducible designs. Ignored when
+  `generator_vector` is given.
+
+Point $i$ of the design is $(i \cdot z) \bmod n$ with $n$ = `num_points`,
+for $i = 0, \ldots, n - 1$. The result is an integer array with entries in
+$[0, n)$; divide it by `num_points` to obtain points in $[0, 1)$.
 
 **Example**:
 
 ```python
->>> rank1_lattice(5, 2)
+>>> rank1_lattice(5, 2, generator_vector=[1, 2])
 array([[0, 0],
-       [2, 2],
-       [4, 4],
-       [1, 1],
-       [3, 3]])
+       [1, 2],
+       [2, 4],
+       [3, 1],
+       [4, 3]])
+```
+
+Without `generator_vector` the design is random; pass `seed` to reproduce
+it:
+
+```python
+>>> a = rank1_lattice(7, 3, seed=42)
+>>> b = rank1_lattice(7, 3, seed=42)
+>>> bool((a == b).all())
+True
 ```
 
 ## Korobov Sequence (`korobov_sequence`) {#korobov_sequence}
@@ -192,12 +237,22 @@ single integer base to construct all dimensions.
 **Syntax**:
 
 ```python
->>> korobov_sequence(num_points, dimension, a=None)
+korobov_sequence(num_points, dimension, generator_param=None, *, seed=None)
 ```
 
 - `num_points`: number of points.
 - `dimension`: number of dimensions.
-- `generator_param`: optional generator integer (default: None).
+- `generator_param`: optional generator integer $a > 1$. If it is not
+  given, it is drawn at random from $[2, \text{num\_points})$; this requires
+  `num_points >= 3`.
+- `seed`: integer or `numpy.random.Generator` (keyword-only) used to draw
+  the random generator parameter, for reproducible designs. Ignored when
+  `generator_param` is given.
+
+The generator vector is $z_j = a^j \bmod N$ for $j = 0, \ldots, d - 1$,
+with $N$ = `num_points`, and point $i$ is $(i \cdot z) \bmod N$. As for
+`rank1_lattice`, the result is an integer array with entries in $[0, N)$.
+For good coverage, $a$ and $N$ should be coprime.
 
 **Example**:
 
@@ -208,6 +263,14 @@ array([[0, 0, 0],
        [2, 1, 3],
        [3, 4, 2],
        [4, 2, 1]])
+>>> korobov_sequence(7, 3, seed=1)
+array([[0, 0, 0],
+       [1, 4, 2],
+       [2, 1, 4],
+       [3, 5, 6],
+       [4, 2, 1],
+       [5, 6, 3],
+       [6, 3, 5]])
 ```
 
 ## Faure Sequence (`faure_sequence`) {#faure_sequence}
@@ -246,11 +309,33 @@ array([[0.   , 0.   ],
 
 ## Niederreiter Sequence (`niederreiter_sequence`) {#niederreiter_sequence}
 
-The **Niederreiter sequence** is a digital $(t, m, s)$-net constructed in
-base 2. Each dimension's generating matrix is built from the
-linear-feedback-shift-register (LFSR) sequence of a primitive polynomial
-over $\mathrm{GF}(2)$, achieving optimal theoretical discrepancy bounds for
-high-dimensional integration.
+The **Niederreiter sequence** in base 2 is a digital $(t, s)$-sequence
+over $\mathrm{GF}(2)$ (Niederreiter, 1988). Dimension $i$ is tied to the
+$i$-th irreducible polynomial $p_i$ over $\mathrm{GF}(2)$, taken in order
+of increasing degree ($x$, $x + 1$, $x^2 + x + 1$, ...), with degree
+$e_i$. Row $j$ of the generating matrix of that dimension (the row that
+produces the $j$-th binary digit of the coordinate) holds the coefficients
+$a(q, k, r)$ of the formal Laurent series
+
+$$
+\frac{x^k}{p_i(x)^q} = \sum_{r} a(q, k, r) \, x^{-r-1},
+\qquad j - 1 = (q - 1) e_i + k, \quad 0 \le k < e_i .
+$$
+
+Multiplying the binary expansion of the point index (mod 2) by the
+generating matrix of a dimension gives the binary digits of the
+coordinate in that dimension.
+
+The quality parameter of the sequence is
+
+$$
+t = \sum_{i=1}^{s} (e_i - 1) .
+$$
+
+The first $2^m$ points form a $(t, m, s)$-net: every elementary interval
+of volume $2^{t-m}$ holds exactly $2^t$ of them. The first dimension is
+the van der Corput sequence in base 2, and the first two dimensions
+($e_1 = e_2 = 1$) form a $(0, 2)$-sequence.
 
 **Syntax**:
 
@@ -258,24 +343,44 @@ high-dimensional integration.
 niederreiter_sequence(num_points, dimension, n_bits=30)
 ```
 
-- `num_points`: number of points to generate, must be at least 1.
+- `num_points`: number of points to generate, must be at least 1. The
+  first $2^m$ points are the best balanced. The points repeat after
+  `2 ** n_bits` of them.
 - `dimension`: number of dimensions, must be between 1 and 20 (inclusive).
-- `n_bits`: number of bits of precision used to build the generating
-  matrices (default: 30, must be at least 2).
+- `n_bits`: number of bits of precision used for the generating
+  matrices and the binary expansion of each coordinate (default: 30, must
+  be at least 2).
+
+The points lie in $[0, 1)$; the first point is the origin.
 
 **Example**:
 
 ```python
 >>> niederreiter_sequence(4, 2)
-array([[0.        , 0.        ],
-       [0.42857143, 0.18110236],
-       [0.85714286, 0.36220472],
-       [0.71428571, 0.4488189 ]])
+array([[0.  , 0.  ],
+       [0.5 , 0.5 ],
+       [0.25, 0.75],
+       [0.75, 0.25]])
+```
+
+In three dimensions the third coordinate uses $x^2 + x + 1$
+($e_3 = 2$), so $t = 1$:
+
+```python
+>>> niederreiter_sequence(8, 3)
+array([[0.    , 0.    , 0.    ],
+       [0.5   , 0.5   , 0.25  ],
+       [0.25  , 0.75  , 0.75  ],
+       [0.75  , 0.25  , 0.5   ],
+       [0.125 , 0.625 , 0.5625],
+       [0.625 , 0.125 , 0.8125],
+       [0.375 , 0.375 , 0.3125],
+       [0.875 , 0.875 , 0.0625]])
 ```
 
 !!! note
-    `dimension` is limited to 20 by the table of pre-verified primitive
-    polynomials over $\mathrm{GF}(2)$ used to build the generating matrices.
+    `dimension` is limited to 20: the implementation uses the first 20
+    irreducible polynomials over $\mathrm{GF}(2)$.
 
 ## Cranley-Patterson Randomization (`cranley_patterson_shift`) {#cranley_patterson}
 
@@ -285,11 +390,15 @@ quasi-random sequence and wraps the result within the unit hypercube.
 **Syntax**:
 
 ```python
->>> cranley_patterson_shift(samples, seed=None)
+>>> cranley_patterson_shift(points, seed=None)
 ```
 
-- `samples`: input samples to randomize.
-- `seed`: optional random seed for reproducibility.
+- `points`: 2D array of shape `(n_samples, n_dimensions)` with the points
+  in $[0, 1)^d$ to randomize. Anything that is not 2D raises `ValueError`.
+- `seed`: optional integer seed for reproducibility.
+
+One shift vector, uniform in $[0, 1)^d$, is added to every point and the
+result is taken modulo 1.
 
 **Example**:
 
@@ -317,8 +426,9 @@ array([[0.77395605, 0.43887844],
 - [Sukharev, A. G. (1971). "Optimal strategies of the search for an extremum." *USSR Computational Mathematics and Mathematical Physics*, 11(4), 119-137.](https://doi.org/10.1016/0041-5553(71)90008-5)
 - [Cranley, R., and Patterson, T. N. L. (1976). "Randomization of Number Theoretic Methods for Multiple Integration." *SIAM Journal on Numerical Analysis*, 13(6), 904-914.](https://doi.org/10.1137/0713071)
 - [Halton, J. H. (1964). "Algorithm 247: Radical-inverse quasi-random point sequence." *Communications of the ACM*, 7(12), 701.](https://doi.org/10.1145/355588.365104)
-- [Sobol', I. M. (1967). "Distribution of points in a cube and approximate evaluation of integrals." *Zh. Vych. Mat. Mat. Fiz.*, 7: 784-802 (in Russian); *U.S.S.R. Comput. Maths. Math. Phys.*, 7: 86-112.](https://doi.org/10.1016/0041-5553(71)90008-5)
+- [Sobol', I. M. (1967). "Distribution of points in a cube and approximate evaluation of integrals." *Zh. Vych. Mat. Mat. Fiz.*, 7: 784-802 (in Russian); *U.S.S.R. Comput. Maths. Math. Phys.*, 7: 86-112.](https://doi.org/10.1016/0041-5553(67)90144-9)
 - [Hammersley, J. M. (1960). "Monte Carlo methods for solving multivariate problems." *Annals of the New York Academy of Sciences*, 86(1), 844-874.](https://doi.org/10.1111/j.1749-6632.1960.tb42846.x)
 - Faure, H. (1982). "Discrépance de suites associées à un système de numération (en dimension s)." *Acta Arithmetica*, 41(4), 337-351.
-- Niederreiter, H. (1988). "Low-discrepancy and low-dispersion sequences." *Journal of Number Theory*, 30(1), 51-70.
+- [Niederreiter, H. (1988). "Low-discrepancy and low-dispersion sequences." *Journal of Number Theory*, 30(1), 51-70.](https://doi.org/10.1016/0022-314X(88)90025-X)
+- [Bratley, P., Fox, B. L., & Niederreiter, H. (1994). "Algorithm 738: Programs to generate Niederreiter's low-discrepancy sequences." *ACM Transactions on Mathematical Software*, 20(4), 494-495.](https://doi.org/10.1145/198429.198436)
 - [Bratley, P., & Fox, B. L. (1988). "Algorithm 659: Implementing Sobol's quasirandom sequence generator." *ACM Transactions on Mathematical Software*, 14(1), 88-100.](https://doi.org/10.1145/42288.214372)

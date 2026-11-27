@@ -1,6 +1,8 @@
 import unittest
 
 import numpy as np
+from scipy.spatial.distance import pdist
+from scipy.stats import norm
 
 from pydoe import lhs
 
@@ -66,11 +68,11 @@ class TestLhs(unittest.TestCase):
 
     def test_lhs_lhsmu_deprecated(self):
         expected = [
-            [0.78593953, 0.00628584, 0.12728208, 0.96073442],
-            [0.0628712, 0.38151329, 0.83731401, 0.76162408],
-            [0.24985845, 0.9785118, 0.44575963, 0.28207658],
-            [0.90786845, 0.41539598, 0.72668075, 0.10171414],
-            [0.45795029, 0.77429212, 0.35111023, 0.43224426],
+            [0.38151329, 0.00628584, 0.12728208, 0.78593953],
+            [0.44575963, 0.24985845, 0.96073442, 0.41539598],
+            [0.83731401, 0.76162408, 0.45795029, 0.9785118],
+            [0.0628712, 0.90786845, 0.72668075, 0.28207658],
+            [0.77429212, 0.43224426, 0.35111023, 0.10171414],
         ]
         with self.assertWarns(DeprecationWarning):
             actual = lhs(4, samples=5, criterion="lhsmu", random_state=42)
@@ -127,11 +129,53 @@ class TestLhs(unittest.TestCase):
 
     def test_lhs_lhsmu(self):
         expected = [
-            [0.66119132, 0.95170391, 0.35575018, 0.41927819],
-            [0.18171614, 0.71584391, 0.94389259, 0.34337804],
-            [0.88641861, 0.2898723, 0.63535456, 0.77132286],
-            [0.58052048, 0.49115526, 0.13994143, 0.05317399],
-            [0.25444831, 0.19383528, 0.44047267, 0.92546177],
+            [0.35575018, 0.95170391, 0.66119132, 0.71584391],
+            [0.94389259, 0.41927819, 0.18171614, 0.34337804],
+            [0.63535456, 0.77132286, 0.88641861, 0.13994143],
+            [0.05317399, 0.2898723, 0.58052048, 0.49115526],
+            [0.44047267, 0.19383528, 0.25444831, 0.92546177],
         ]
         actual = lhs(4, samples=5, criterion="lhsmu", seed=42)
         np.testing.assert_allclose(actual, expected)
+
+
+class TestLhsMu(unittest.TestCase):
+    def test_is_a_latin_hypercube(self):
+        n = 25
+        design = lhs(3, samples=n, criterion="lhsmu", seed=7)
+        self.assertEqual(design.shape, (n, 3))
+        for j in range(3):
+            strata = np.sort(np.floor(design[:, j] * n).astype(int))
+            np.testing.assert_array_equal(strata, np.arange(n))
+
+    def test_keeps_the_spread_of_the_selected_points(self):
+        # LHSMU picks well-spread points and then moves each one into the
+        # stratum of its rank. Assigning the strata through a single
+        # argsort (the inverse permutation) threw that spread away: the
+        # minimum distance was no better than for a plain LHS.
+        def mean_min_distance(criterion):
+            return np.mean([
+                pdist(lhs(2, samples=20, criterion=criterion, seed=s)).min()
+                for s in range(40)
+            ])
+
+        self.assertGreater(
+            mean_min_distance("lhsmu"), 1.4 * mean_min_distance(None)
+        )
+
+    def test_correlation_matrix_is_reproduced(self):
+        corr = np.array([[1.0, 0.8, 0.0], [0.8, 1.0, 0.3], [0.0, 0.3, 1.0]])
+        scores = [
+            norm.ppf(
+                lhs(
+                    3,
+                    samples=60,
+                    criterion="lhsmu",
+                    correlation_matrix=corr,
+                    seed=s,
+                )
+            )
+            for s in range(12)
+        ]
+        mean_corr = np.mean([np.corrcoef(x.T) for x in scores], axis=0)
+        np.testing.assert_allclose(mean_corr, corr, atol=0.08)

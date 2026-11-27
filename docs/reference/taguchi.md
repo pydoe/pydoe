@@ -86,8 +86,9 @@ Compute SNR for repeated measurements from one trial:
 
 ```python
 >>> responses = np.array([90, 95, 93])
->>> compute_snr(responses, objective=TaguchiObjective.LARGER_IS_BETTER)
-39.133...
+>>> snr = compute_snr(responses, objective=TaguchiObjective.LARGER_IS_BETTER)
+>>> round(float(snr), 3)
+39.332
 ```
 
 SNR values are returned in decibels (dB).

@@ -178,3 +178,22 @@ class TestRandomKMeans(unittest.TestCase):
         )
 
         np.testing.assert_allclose(result_random_state, result_seed)
+
+
+def test_random_k_means_integer_initial_points():
+    # Integer initial points kept an integer dtype, so every incremental
+    # mean was truncated and the centers never left the corners.
+    corners = [[0, 0], [0, 1], [1, 0], [1, 1]]
+    from_ints = random_k_means(
+        4, 2, num_steps=400, initial_points=corners, seed=3
+    )
+    from_floats = random_k_means(
+        4,
+        2,
+        num_steps=400,
+        initial_points=np.array(corners, dtype=float),
+        seed=3,
+    )
+    assert from_ints.dtype == np.float64
+    np.testing.assert_allclose(from_ints, from_floats)
+    assert np.all((from_ints > 0.05) & (from_ints < 0.95))

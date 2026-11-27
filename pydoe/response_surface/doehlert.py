@@ -28,12 +28,33 @@ import numpy as np
 __all__ = ["doehlert_shell_design", "doehlert_simplex_design"]
 
 
+def _regular_simplex(num_factors: int) -> np.ndarray:
+    r"""
+    Vertices of Doehlert's regular simplex: the origin and ``num_factors``
+    points at distance 1 from the origin and from each other.
+
+    Vertex $$i$$ (1-based) has, on axis $$j$$, the coordinate
+
+    $$x_{ij} = \frac{1}{\sqrt{2 j (j + 1)}} \quad (j < i), \qquad
+    x_{ii} = \sqrt{\frac{i + 1}{2 i}}, \qquad
+    x_{ij} = 0 \quad (j > i)$$
+    """
+    if num_factors < 1:
+        raise ValueError("Number of factors must be at least 1.")
+    simplex = np.zeros((num_factors + 1, num_factors))
+    for i in range(1, num_factors + 1):
+        for j in range(1, i):
+            simplex[i, j - 1] = 1 / np.sqrt(2 * j * (j + 1))
+        simplex[i, i - 1] = np.sqrt((i + 1) / (2 * i))
+    return simplex
+
+
 def doehlert_shell_design(
     num_factors: int, num_center_points: int = 1
 ) -> np.ndarray:
     """
-    Generate a Doehlert design matrix for a given number of factors
-    using a shell approach.
+    Generate a Doehlert design matrix for a given number of factors:
+    the center followed by the points of the first uniform shell.
 
     Parameters
     ----------
@@ -53,39 +74,44 @@ def doehlert_shell_design(
         - $$k$$ the number of factors,
         - $$C$$ the number of center points.
 
+        The center points come first. The $$k^2 + k$$ shell points all lie
+        at distance 1 from the center, and each is at distance 1 from its
+        nearest neighbors.
+
     Raises
     ------
     ValueError
-        If num_factors is less than 1.
+        If num_factors is less than 1 or num_center_points is negative.
 
     Notes
     -----
-    This function implements the "uniform shell" approach originally proposed by
-    Doehlert (1970), which allows for adding shells of points around the center.
+    This function implements the uniform shell design of Doehlert (1970):
+    the shell points are the differences between every two vertices of a
+    regular simplex with unit edges. For two factors they form a regular
+    hexagon, for three factors a cuboctahedron. The shell points are those
+    of ``doehlert_simplex_design``, in the same order.
 
     References
     ----------
     Doehlert, David H. 1970. “Uniform Shell Designs.” *Applied Statistics*
     19 (3): 231. https://doi.org/10.2307/2346327
+
+    Examples
+    --------
+    >>> doehlert_shell_design(2).round(3) + 0.0
+    array([[ 0.   ,  0.   ],
+           [ 1.   ,  0.   ],
+           [ 0.5  ,  0.866],
+           [-1.   ,  0.   ],
+           [-0.5  , -0.866],
+           [ 0.5  , -0.866],
+           [-0.5  ,  0.866]])
     """
-    if num_factors < 1:
-        raise ValueError("Number of factors must be at least 1.")
-
-    # Start with center points
-    design_points = [np.zeros(num_factors) for _ in range(num_center_points)]
-
-    # Add shells progressively
-    for shell_index in range(1, num_factors + 1):
-        num_shell_points = shell_index + 1
-        angles = np.linspace(0, 2 * np.pi, num_shell_points, endpoint=False)
-        for angle in angles:
-            point = np.zeros(num_factors)
-            radius = np.sqrt(shell_index / num_factors)
-            point[0] = radius * np.cos(angle)
-            point[1] = radius * np.sin(angle)
-            design_points.append(point)
-
-    return np.array(design_points)
+    if num_center_points < 0:
+        raise ValueError("Number of center points must not be negative.")
+    shell = doehlert_simplex_design(num_factors)[1:]
+    center = np.zeros((num_center_points, num_factors))
+    return np.vstack([center, shell])
 
 
 def doehlert_simplex_design(num_factors: int) -> np.ndarray:
@@ -105,11 +131,19 @@ def doehlert_simplex_design(num_factors: int) -> np.ndarray:
 
         $$ (k+1) + k \times (k+1 - 1) = k^2 + k + 1 $$
 
-        points, where $$k$$ is the number of factors.
+        points, where $$k$$ is the number of factors: the center, then
+        $$k^2 + k$$ points at distance 1 from it.
+
+    Raises
+    ------
+    ValueError
+        If num_factors is less than 1.
 
     Notes
     -----
-    The simplex approach allows for uniform exploration of the design space.
+    The design starts from a regular simplex with unit edges and one vertex
+    at the origin, and adds the differences between every two of its
+    vertices. The first $$k + 1$$ rows are the simplex itself.
     It is inspired by the implementation by Moritz von Stosch (2015).
 
     References
@@ -117,16 +151,7 @@ def doehlert_simplex_design(num_factors: int) -> np.ndarray:
     Implementation of simplex design (`version 1.0.0`, 11 July 2015) by Moritz
     von Stosch https://www.mathworks.com/matlabcentral/fileexchange/54048-doehlert-design
     """
-    simplex_matrix = np.zeros((num_factors + 1, num_factors))
-
-    for i in range(1, num_factors + 1):
-        for j in range(1, i + 1):
-            if j == i:
-                simplex_matrix[i, j - 1] = np.sqrt(i + 1) / np.sqrt(2 * i)
-            else:
-                simplex_matrix[i, i - j] = 1 / np.sqrt(
-                    2 * (i - (j - 1)) * (i - j)
-                )
+    simplex_matrix = _regular_simplex(num_factors)
 
     extra_points = []
     for i in range(num_factors + 1):
@@ -134,5 +159,6 @@ def doehlert_simplex_design(num_factors: int) -> np.ndarray:
             point = simplex_matrix[i, :] - simplex_matrix[j, :]
             extra_points.append(point)
 
+    # num_factors >= 1, so there are always k^2 + k >= 2 extra points
     full_matrix = np.vstack([simplex_matrix, extra_points])
     return full_matrix

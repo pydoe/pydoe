@@ -53,8 +53,9 @@ def scale_samples(
     array([[-0.8,  2. ],
            [ 0.6,  9. ]])
     """
-    samples = np.asarray(samples)
-    bounds = np.asarray(bounds)
+    # float arrays: integer samples would truncate the scaled values
+    samples = np.asarray(samples, dtype=float)
+    bounds = np.asarray(bounds, dtype=float)
 
     if bounds.shape[0] != samples.shape[1]:
         raise ValueError(

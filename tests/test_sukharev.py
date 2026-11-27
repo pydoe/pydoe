@@ -34,6 +34,22 @@ class TestSukharevGrid(unittest.TestCase):
         with self.assertRaises(ValueError):
             sukharev_grid(3, 2)  # 3 ** (1/2) is not integer
 
+    def test_perfect_powers_with_inexact_float_root(self):
+        # 125 ** (1 / 3) evaluates to 4.999..., which int() truncated to 4.
+        for per_axis, dimension in [(5, 3), (10, 3), (6, 3), (7, 5), (3, 13)]:
+            num_points = per_axis**dimension
+            actual = sukharev_grid(num_points, dimension)
+            self.assertEqual(actual.shape, (num_points, dimension))
+            expected_axis = (np.arange(per_axis) + 0.5) / per_axis
+            np.testing.assert_allclose(
+                np.unique(actual[:, 0]), expected_axis, atol=1e-12
+            )
+
+    def test_near_perfect_powers_are_rejected(self):
+        for num_points, dimension in [(124, 3), (126, 3), (999, 3)]:
+            with self.assertRaises(ValueError):
+                sukharev_grid(num_points, dimension)
+
 
 if __name__ == "__main__":
     unittest.main()
