@@ -50,20 +50,20 @@ def _parse_monomial(token: str, n_vars: int) -> tuple[float, list[int]]:
 
 
 def build_regression_matrix(
-    H: np.ndarray, model: str, build: Sequence[bool] | None = None
+    design: np.ndarray, model: str, build: Sequence[bool] | None = None
 ) -> np.ndarray:
     """
     Build a regression matrix using a DOE matrix and a list of monomials.
 
     Parameters
     ----------
-    H : 2d-array
+    design : 2d-array
         The design matrix, one run per row and one variable per column.
         A 1d-array is read as a single run.
     model : str
         The monomials of the regression model, separated by spaces. The
         variables are named ``x1``, ``x2``, ... in the order of the columns
-        of ``H``; a monomial is a product of numbers and variables, with
+        of ``design``; a monomial is a product of numbers and variables, with
         optional integer powers (e.g. ``'1 x1 x2 x1*x2 x1^2'``).
     build : sequence of bool, optional
         One flag per monomial; the monomials flagged ``False`` are left out
@@ -72,27 +72,27 @@ def build_regression_matrix(
     Returns
     -------
     R : 2d-array
-        The regression matrix, one row per run of ``H`` and one column per
+        The regression matrix, one row per run of ``design`` and one column per
         kept monomial.
 
     Raises
     ------
     ValueError
         If ``build`` does not have one flag per monomial, if a monomial is
-        malformed, or if it uses a variable that ``H`` does not have.
+        malformed, or if it uses a variable that ``design`` does not have.
 
     Examples
     --------
     >>> import numpy as np
-    >>> H = np.array([[-1.0, -1.0], [1.0, -1.0], [-1.0, 1.0], [1.0, 1.0]])
-    >>> build_regression_matrix(H, "1 x1 x2 x1*x2")
+    >>> design = np.array([[-1.0, -1], [1, -1], [-1, 1], [1, 1]])
+    >>> build_regression_matrix(design, "1 x1 x2 x1*x2")
     array([[ 1., -1., -1.,  1.],
            [ 1.,  1., -1., -1.],
            [ 1., -1.,  1., -1.],
            [ 1.,  1.,  1.,  1.]])
 
     """
-    H = np.atleast_2d(np.asarray(H, dtype=float))
+    design = np.atleast_2d(np.asarray(design, dtype=float))
     tokens = model.split()
     if build is None:
         build = [True] * len(tokens)
@@ -104,8 +104,8 @@ def build_regression_matrix(
         raise ValueError(msg)
     tokens = [token for token, keep in zip(tokens, build, strict=True) if keep]
 
-    R = np.empty((H.shape[0], len(tokens)))
+    R = np.empty((design.shape[0], len(tokens)))
     for j, token in enumerate(tokens):
-        coefficient, powers = _parse_monomial(token, H.shape[1])
-        R[:, j] = coefficient * np.prod(H ** np.array(powers), axis=1)
+        coefficient, powers = _parse_monomial(token, design.shape[1])
+        R[:, j] = coefficient * np.prod(design ** np.array(powers), axis=1)
     return R

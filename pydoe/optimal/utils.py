@@ -83,7 +83,47 @@ def information_matrix(
     return H_aug / n if normalized else H_aug
 
 
-def criterion_value(  # ruff: ignore[too-many-return-statements, too-many-branches]
+def _c_value(info: np.ndarray, p: int, c_vector: np.ndarray | None) -> float:
+    if c_vector is None:
+        c_vector = np.ones(p)
+    return c_optimality(info, np.asarray(c_vector, dtype=float))
+
+
+def _i_value(
+    info: np.ndarray,
+    candidate_rows: np.ndarray | None,
+    moment_matrix: np.ndarray | None,
+) -> float:
+    if moment_matrix is None and candidate_rows is not None:
+        moment_matrix = build_uniform_moment_matrix(candidate_rows)
+    return i_optimality(info, moment_matrix)
+
+
+def _v_value(
+    info: np.ndarray,
+    design_rows: np.ndarray,
+    candidate_rows: np.ndarray | None,
+    test_points: np.ndarray | None,
+) -> float:
+    # Averaging over the design's own rows gives tr(M^-1 M) = p for every
+    # design, so the default is the candidate set.
+    if test_points is None:
+        test_points = (
+            candidate_rows if candidate_rows is not None else design_rows
+        )
+    return v_optimality(info, test_points)
+
+
+def _t_value(design_rows: np.ndarray, model_diff: np.ndarray | None) -> float:
+    if model_diff is None:
+        raise ValueError(
+            "T-optimality needs the model differences at the design "
+            "points (model_diff_subset)"
+        )
+    return t_optimality(design_rows, model_diff)
+
+
+def criterion_value(  # ruff: ignore[too-many-return-statements]
     X: np.ndarray,
     criterion: Literal["D", "A", "I", "C", "E", "G", "V", "S", "T"],
     X0: np.ndarray = None,
@@ -126,49 +166,31 @@ def criterion_value(  # ruff: ignore[too-many-return-statements, too-many-branch
         If an unknown criterion is specified, or if ``model_diff_subset``
         is missing for T-optimality.
     """
+    name = criterion.upper()
     M = information_matrix(X, normalized=True, alpha=alpha, X0=X0)
-    p = X.shape[1]
-
-    if criterion.upper() == "D":
+    if name == "D":
         return d_optimality(M)
-    elif criterion.upper() == "A":
+    if name == "A":
         return a_optimality(M)
-    elif criterion.upper() == "I":
-        if M_moment is None and X0 is not None:
-            M_moment = build_uniform_moment_matrix(X0)
-        return i_optimality(M, M_moment)
-    elif criterion.upper() == "C":
-        c_vector = kwargs.get("c_vector")
-        if c_vector is None:
-            c_vector = np.ones(p)
-        return c_optimality(M, np.asarray(c_vector, dtype=float))
-    elif criterion.upper() == "E":
+    if name == "E":
         return e_optimality(M)
-    elif criterion.upper() == "G":
-        candidates = kwargs.get("candidates", X0 if X0 is not None else X)
-        return g_optimality(M, candidates)
-    elif criterion.upper() == "V":
-        # Averaging over the rows of X itself gives tr(M^-1 M) = p for
-        # every design, so the default is the candidate set.
-        test_points = kwargs.get("test_points")
-        if test_points is None:
-            test_points = X0 if X0 is not None else X
-        return v_optimality(M, test_points)
-    elif criterion.upper() == "S":
+    if name == "I":
+        return _i_value(M, X0, M_moment)
+    if name == "C":
+        return _c_value(M, X.shape[1], kwargs.get("c_vector"))
+    if name == "G":
+        default = X0 if X0 is not None else X
+        return g_optimality(M, kwargs.get("candidates", default))
+    if name == "V":
+        return _v_value(M, X, X0, kwargs.get("test_points"))
+    if name == "S":
         # S compares the columns after scaling each to unit length, so an
         # augmentation term would make a column that the design does not
         # span look orthogonal. It needs no inverse: alpha is not applied.
         return s_optimality(information_matrix(X, normalized=True))
-    elif criterion.upper() == "T":
-        model_diff = kwargs.get("model_diff_subset")
-        if model_diff is None:
-            raise ValueError(
-                "T-optimality needs the model differences at the design "
-                "points (model_diff_subset)"
-            )
-        return t_optimality(X, model_diff)
-    else:
-        raise ValueError(f"Unknown criterion: {criterion}")
+    if name == "T":
+        return _t_value(X, kwargs.get("model_diff_subset"))
+    raise ValueError(f"Unknown criterion: {criterion}")
 
 
 def _make_scorer(  # ruff: ignore[too-many-arguments]
@@ -224,53 +246,18 @@ def _make_scorer(  # ruff: ignore[too-many-arguments]
     if criterion not in {"D", "A", "I", "C", "E", "G", "V", "S", "T"}:
         raise ValueError(f"Unknown criterion: {criterion}")
 
-    X0 = build_design_matrix(candidates, degree)
-    M_moment = build_uniform_moment_matrix(X0)
-    p = X0.shape[1]
-    kwargs = {}
-    diff = None
-
-    if criterion == "C" and c_vector is not None:
-        c_vector = np.asarray(c_vector, dtype=float).reshape(-1)
-        if c_vector.shape[0] != p:
-            msg = f"c_vector must have {p} entries (one per model term)"
-            raise ValueError(msg)
-        kwargs["c_vector"] = c_vector
-    elif criterion == "V" and test_points is not None:
-        test_points = np.atleast_2d(np.asarray(test_points, dtype=float))
-        if test_points.shape[1] != candidates.shape[1]:
-            msg = (
-                f"test_points must have {candidates.shape[1]} column(s), "
-                "like the candidates"
-            )
-            raise ValueError(msg)
-        kwargs["test_points"] = build_design_matrix(test_points, degree)
-    elif criterion == "T":
-        if model_diff is None:
-            raise ValueError(
-                "T-optimality needs model_diff: the difference between "
-                "the responses of the two models, at each candidate or "
-                "as a function of the points"
-            )
-        if callable(model_diff):
-            diff = model_diff
-        else:
-            values = np.asarray(model_diff, dtype=float).reshape(-1)
-            if values.shape[0] != candidates.shape[0]:
-                msg = (
-                    f"model_diff must have {candidates.shape[0]} entries "
-                    "(one per candidate)"
-                )
-                raise ValueError(msg)
-            lookup = {
-                tuple(np.round(row, 12)): value
-                for row, value in zip(candidates, values, strict=True)
-            }
-
-            def diff(points: np.ndarray) -> np.ndarray:
-                return np.array([
-                    lookup[tuple(np.round(row, 12))] for row in points
-                ])
+    model_candidates = build_design_matrix(candidates, degree)
+    moment_matrix = build_uniform_moment_matrix(model_candidates)
+    p = model_candidates.shape[1]
+    inputs = _criterion_inputs(
+        criterion,
+        candidates,
+        degree,
+        p,
+        c_vector=c_vector,
+        test_points=test_points,
+        model_diff=model_diff,
+    )
 
     # D, E and S are 0 for every design that cannot estimate the model
     # (S always, D and E when alpha is 0). Ranking those designs by their
@@ -278,19 +265,115 @@ def _make_scorer(  # ruff: ignore[too-many-arguments]
     rank_graded = criterion == "S" or (criterion in {"D", "E"} and not alpha)
 
     def score(design: np.ndarray) -> float:
-        X = build_design_matrix(design, degree)
-        if rank_graded:
-            rank = int(np.linalg.matrix_rank(X)) if X.shape[0] else 0
-            if rank < p:
-                return float(rank - p)
-        if diff is not None:
-            d = np.asarray(diff(design), dtype=float).reshape(-1)
-            return criterion_value(
-                X, criterion, X0, alpha, M_moment, model_diff_subset=d
-            )
-        return criterion_value(X, criterion, X0, alpha, M_moment, **kwargs)
+        rows = build_design_matrix(design, degree)
+        deficit = _rank_deficit(rows, p) if rank_graded else 0
+        if deficit:
+            return float(-deficit)
+        return criterion_value(
+            rows,
+            criterion,
+            model_candidates,
+            alpha,
+            moment_matrix,
+            **inputs(design),
+        )
 
     return score
+
+
+def _rank_deficit(design_rows: np.ndarray, p: int) -> int:
+    """How many of the ``p`` model terms the design matrix cannot span."""
+    rank = (
+        int(np.linalg.matrix_rank(design_rows)) if design_rows.shape[0] else 0
+    )
+    return max(p - rank, 0)
+
+
+def _criterion_inputs(  # ruff: ignore[too-many-arguments]
+    criterion: str,
+    candidates: np.ndarray,
+    degree: int,
+    p: int,
+    *,
+    c_vector: np.ndarray | None,
+    test_points: np.ndarray | None,
+    model_diff: np.ndarray | Callable[[np.ndarray], np.ndarray] | None,
+) -> Callable[[np.ndarray], dict]:
+    """
+    Check the extra inputs of a criterion and return the function that
+    gives the keyword arguments of ``criterion_value`` for a design.
+    """
+    if criterion == "T":
+        diff = _model_diff_function(model_diff, candidates)
+        return lambda design: {
+            "model_diff_subset": np.asarray(diff(design), dtype=float).reshape(
+                -1
+            )
+        }
+    fixed = {}
+    if criterion == "C" and c_vector is not None:
+        fixed["c_vector"] = _checked_c_vector(c_vector, p)
+    if criterion == "V" and test_points is not None:
+        fixed["test_points"] = _test_point_rows(test_points, candidates, degree)
+    return lambda _design: fixed
+
+
+def _checked_c_vector(c_vector: np.ndarray, p: int) -> np.ndarray:
+    """C-optimality vector as a float array of length ``p``."""
+    c_vector = np.asarray(c_vector, dtype=float).reshape(-1)
+    if c_vector.shape[0] != p:
+        msg = f"c_vector must have {p} entries (one per model term)"
+        raise ValueError(msg)
+    return c_vector
+
+
+def _test_point_rows(
+    test_points: np.ndarray, candidates: np.ndarray, degree: int
+) -> np.ndarray:
+    """Model-matrix rows of the V-optimality test points."""
+    test_points = np.atleast_2d(np.asarray(test_points, dtype=float))
+    if test_points.shape[1] != candidates.shape[1]:
+        msg = (
+            f"test_points must have {candidates.shape[1]} column(s), "
+            "like the candidates"
+        )
+        raise ValueError(msg)
+    return build_design_matrix(test_points, degree)
+
+
+def _model_diff_function(
+    model_diff: np.ndarray | Callable[[np.ndarray], np.ndarray] | None,
+    candidates: np.ndarray,
+) -> Callable[[np.ndarray], np.ndarray]:
+    """
+    T-optimality model difference as a function of an array of points,
+    from a function or from one value per candidate.
+    """
+    if model_diff is None:
+        raise ValueError(
+            "T-optimality needs model_diff: the difference between "
+            "the responses of the two models, at each candidate or "
+            "as a function of the points"
+        )
+    if callable(model_diff):
+        return model_diff
+
+    values = np.asarray(model_diff, dtype=float).reshape(-1)
+    if values.shape[0] != candidates.shape[0]:
+        msg = (
+            f"model_diff must have {candidates.shape[0]} entries "
+            "(one per candidate)"
+        )
+        raise ValueError(msg)
+    lookup = {
+        tuple(np.round(row, 12)): value
+        for row, value in zip(candidates, values, strict=True)
+    }
+
+    def diff(points: np.ndarray) -> np.ndarray:
+        return np.array([lookup[tuple(np.round(row, 12))] for row in points])
+
+    return diff
 
 
 def _best_single_add(

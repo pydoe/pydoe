@@ -159,7 +159,6 @@ def doehlert_simplex_design(num_factors: int) -> np.ndarray:
             point = simplex_matrix[i, :] - simplex_matrix[j, :]
             extra_points.append(point)
 
-    if not extra_points:
-        return simplex_matrix
+    # num_factors >= 1, so there are always k^2 + k >= 2 extra points
     full_matrix = np.vstack([simplex_matrix, extra_points])
     return full_matrix
