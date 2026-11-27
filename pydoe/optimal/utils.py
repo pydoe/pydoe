@@ -287,7 +287,8 @@ def _make_scorer(  # ruff: ignore[too-many-arguments]
             moment_matrix,
             **inputs(design),
         )
-        if graded and criterion == "T" and value == 0.0:
+        # T is a sum of squares, never negative: <= 0 means an exact fit
+        if graded and criterion == "T" and value <= 0.0:
             return _t_plateau_score(design, p)
         return value
 
