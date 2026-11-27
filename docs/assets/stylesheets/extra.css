@@ -28,6 +28,30 @@ mark {
     border-radius: 2px;
 }
 
+/* ---------- Users page logos ---------- */
+/* Logos are balanced by visual weight, not by one height: each logo carries
+   a size class (.logo-h35 ... .logo-h84). Wide wordmarks get a smaller
+   height than square emblems (height ~ aspect^-0.4), dense solid tiles are
+   nudged down and airy line art up, then a few are corrected by eye.
+   The logo files are trimmed to their content, so the height is the logo's
+   own height; width follows its aspect ratio. */
+.md-typeset img.user-logo {
+  height: 63px;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  vertical-align: middle;
+  margin: 0 1.5rem 0.75rem 0;
+}
+.md-typeset img.user-logo.logo-h35 { height: 35px; }
+.md-typeset img.user-logo.logo-h42 { height: 42px; }
+.md-typeset img.user-logo.logo-h49 { height: 49px; }
+.md-typeset img.user-logo.logo-h56 { height: 56px; }
+.md-typeset img.user-logo.logo-h63 { height: 63px; }
+.md-typeset img.user-logo.logo-h70 { height: 70px; }
+.md-typeset img.user-logo.logo-h77 { height: 77px; }
+.md-typeset img.user-logo.logo-h84 { height: 84px; }
+
 /* ---------- Factorial table ---------- */
 .doe-table-wrapper {
   overflow-x: auto;

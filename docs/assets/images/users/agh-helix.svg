@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="3.606 3.606 40.788 40.788" role="img" aria-label="HELIX">
+  <style>
+    .ink { fill: #161614; } .acc { fill: #2f5bd3; }
+    @media (prefers-color-scheme: dark) { .ink { fill: #ecebe6; } .acc { fill: #6f8ff0; } }
+  </style>
+  <g class="ink">
+    <rect x="4.9" y="4.9" width="6.2" height="6.2"/>
+    <rect x="15.57" y="4.9" width="6.2" height="6.2" transform="rotate(15 18.67 8)"/>
+    <rect x="26.23" y="4.9" width="6.2" height="6.2" transform="rotate(30 29.33 8)"/>
+    <rect x="36.9" y="4.9" width="6.2" height="6.2" transform="rotate(45 40 8)"/>
+    <rect x="4.9" y="15.57" width="6.2" height="6.2" transform="rotate(15 8 18.67)"/>
+    <rect x="15.57" y="15.57" width="6.2" height="6.2" transform="rotate(30 18.67 18.67)"/>
+    <rect x="26.23" y="15.57" width="6.2" height="6.2" transform="rotate(45 29.33 18.67)"/>
+    <rect x="36.9" y="15.57" width="6.2" height="6.2" transform="rotate(60 40 18.67)"/>
+    <rect x="4.9" y="26.23" width="6.2" height="6.2" transform="rotate(30 8 29.33)"/>
+    <rect x="15.57" y="26.23" width="6.2" height="6.2" transform="rotate(45 18.67 29.33)"/>
+    <rect x="26.23" y="26.23" width="6.2" height="6.2" transform="rotate(60 29.33 29.33)"/>
+    <rect x="36.9" y="26.23" width="6.2" height="6.2" transform="rotate(75 40 29.33)"/>
+    <rect x="4.9" y="36.9" width="6.2" height="6.2" transform="rotate(45 8 40)"/>
+    <rect x="15.57" y="36.9" width="6.2" height="6.2" transform="rotate(60 18.67 40)"/>
+    <rect x="26.23" y="36.9" width="6.2" height="6.2" transform="rotate(75 29.33 40)"/>
+  </g>
+  <rect class="acc" x="36.9" y="36.9" width="6.2" height="6.2"/>
+</svg>

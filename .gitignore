@@ -122,6 +122,9 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 
+# Claude
+.claude/
+
 # Others
 *.log
 
