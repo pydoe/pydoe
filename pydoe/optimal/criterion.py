@@ -372,9 +372,18 @@ def t_optimality(X: np.ndarray, model_diff_subset: np.ndarray) -> float:
     -------
     float
         Discrimination value: the residual sum of squares, which is 0
-        when the design cannot tell the two models apart.
+        when the design cannot tell the two models apart. A residual sum
+        of squares within round-off of 0, below
+        $$10^{-10} \lVert d \rVert^2$$, is returned as exactly 0, so that
+        designs that fit the rival model exactly tie, whatever the
+        floating-point library.
     """
     d = np.asarray(model_diff_subset, dtype=float).reshape(-1)
     beta = np.linalg.lstsq(X, d, rcond=None)[0]
     residual = d - X @ beta
-    return float(residual @ residual)
+    rss = float(residual @ residual)
+    # Exact fits leave round-off of order 1e-30 that differs between BLAS
+    # builds; a search comparing such values would follow that noise.
+    if rss <= 1e-10 * float(d @ d):
+        return 0.0
+    return rss

@@ -202,8 +202,9 @@ def _make_scorer(  # ruff: ignore[too-many-arguments]
     c_vector: np.ndarray | None = None,
     test_points: np.ndarray | None = None,
     model_diff: np.ndarray | Callable[[np.ndarray], np.ndarray] | None = None,
+    graded: bool = True,
 ) -> Callable[[np.ndarray], float]:
-    """
+    r"""
     Build the function that scores a design (an array of points) with a
     criterion, with the inputs that the criterion needs.
 
@@ -227,13 +228,20 @@ def _make_scorer(  # ruff: ignore[too-many-arguments]
         T-optimality: difference between the responses of the two models,
         either at each candidate or as a function of an array of points.
         Required for the T criterion.
+    graded : bool, optional
+        If True (default), the search scores below are used; if False,
+        the plain criterion value is returned, as reported to users.
 
     Returns
     -------
     callable
-        ``score(design) -> float``, larger is better. For the D, E and S
-        criteria (D and E only when ``alpha`` is 0), a design whose model
-        matrix has rank $$r < p$$ scores $$r - p$$ instead of 0.
+        ``score(design) -> float``, larger is better. With ``graded``, for
+        the D, E and S criteria (D and E only when ``alpha`` is 0), a
+        design whose model
+        matrix has rank $$r < p$$ scores $$r - p$$ instead of 0. For the
+        T criterion, a design that fits the rival model exactly scores
+        $$\min(m, p + 1) - p - 2$$ instead of 0, where $$m$$ is its
+        number of distinct points.
 
     Raises
     ------
@@ -262,14 +270,16 @@ def _make_scorer(  # ruff: ignore[too-many-arguments]
     # D, E and S are 0 for every design that cannot estimate the model
     # (S always, D and E when alpha is 0). Ranking those designs by their
     # rank deficiency lets a search that starts from few points progress.
-    rank_graded = criterion == "S" or (criterion in {"D", "E"} and not alpha)
+    rank_graded = graded and (
+        criterion == "S" or (criterion in {"D", "E"} and not alpha)
+    )
 
     def score(design: np.ndarray) -> float:
         rows = build_design_matrix(design, degree)
         deficit = _rank_deficit(rows, p) if rank_graded else 0
         if deficit:
             return float(-deficit)
-        return criterion_value(
+        value = criterion_value(
             rows,
             criterion,
             model_candidates,
@@ -277,8 +287,23 @@ def _make_scorer(  # ruff: ignore[too-many-arguments]
             moment_matrix,
             **inputs(design),
         )
+        if graded and criterion == "T" and value == 0.0:
+            return _t_plateau_score(design, p)
+        return value
 
     return score
+
+
+def _t_plateau_score(design: np.ndarray, p: int) -> float:
+    r"""
+    Score of a design whose T criterion is 0: it fits the rival model
+    exactly, as every design with at most $$p$$ distinct points does.
+    Designs with more distinct points come closer to showing a lack of
+    fit, so they score higher, from $$-p - 1$$ for one point up to $$-1$$,
+    all below the positive score of any design that discriminates.
+    """
+    support = len(np.unique(np.round(design, 12), axis=0))
+    return float(min(support, p + 1) - p - 2)
 
 
 def _rank_deficit(design_rows: np.ndarray, p: int) -> int:
@@ -376,6 +401,17 @@ def _model_diff_function(
     return diff
 
 
+def _clearly_better(value: float, best: float) -> bool:
+    """
+    Whether ``value`` beats ``best`` by more than round-off. Values that
+    differ only in the last bits (which vary between floating-point
+    libraries) count as a tie, which the earlier candidate wins.
+    """
+    if best == -np.inf:
+        return value > best
+    return value > best + 1e-9 * max(1.0, abs(best))
+
+
 def _best_single_add(
     current: np.ndarray, pool: np.ndarray, score: Callable[[np.ndarray], float]
 ) -> tuple[int, float]:
@@ -405,7 +441,7 @@ def _best_single_add(
     best_idx, best_val = -1, -np.inf
     for j in range(pool.shape[0]):
         val = score(np.vstack([current, pool[j]]))
-        if val > best_val:
+        if _clearly_better(val, best_val):
             best_val = val
             best_idx = j
     return best_idx, best_val
@@ -437,7 +473,7 @@ def _best_single_drop(
     best_idx, best_val = 0, -np.inf
     for i in range(current.shape[0]):
         val = score(np.delete(current, i, axis=0))
-        if val > best_val:
+        if _clearly_better(val, best_val):
             best_val = val
             best_idx = i
     return best_idx, best_val

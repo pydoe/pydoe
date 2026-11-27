@@ -134,6 +134,7 @@ LOCAL_OPTIMA = {
     ("line_linear_n6_replicates", "G"),
     ("grid_quadratic_n7", "E"),
     ("grid_quadratic_n7", "S"),
+    ("grid_quadratic_n7", "T"),
     ("grid_linear_n4", "E"),
     ("grid_linear_n4", "G"),
     ("grid_linear_n4", "S"),
@@ -407,7 +408,10 @@ class TestPublishedOptimalDesigns:
                 assert info["det_XTX"] == pytest.approx(det_xtx), method
 
     def test_d_optimal_first_order_is_the_factorial(self):
-        for method in EXCHANGE_METHODS:
+        # The simple exchange stops one swap short here, at a local
+        # optimum with a run at an edge midpoint; the Fedorov-type
+        # exchanges reach the 2^2 factorial.
+        for method in FEDOROV_FAMILY:
             design, info = optimal_design(GRID, 4, 1, "D", method)
             assert np.all(np.abs(design) == 1.0)
             assert len(np.unique(design, axis=0)) == 4

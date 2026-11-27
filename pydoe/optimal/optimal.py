@@ -132,7 +132,9 @@ def optimal_design(  # ruff: ignore[too-many-arguments, too-many-positional-argu
 
     # Scores & efficiencies
     X = build_design_matrix(design, degree)
-    score = _make_scorer(candidates, degree, criterion, alpha, **inputs)(design)
+    score = _make_scorer(
+        candidates, degree, criterion, alpha, graded=False, **inputs
+    )(design)
     info = {
         "criterion": criterion,
         "method": method,

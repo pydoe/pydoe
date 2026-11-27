@@ -305,10 +305,11 @@ only, the design moves runs towards $x = 1$:
 
 To discriminate between a straight line and the cubic
 $1 + x + x^3$ on $[-1, 1]$, the fitted model is the line (`degree=1`) and
-`model_diff` gives the responses of the rival model. The T-optimal design
-puts weights $1/6$, $1/3$, $1/3$, $1/6$ on $-1$, $-1/2$, $1/2$, $1$
-(Dette & Titoff, 2009); with 6 runs the lack-of-fit sum of squares is
-$6/16$:
+`model_diff` gives the responses of the rival model. The T-optimal designs
+are not unique: they put weights $p - 1/6$, $p$, $2/3 - p$, $1/2 - p$ on
+$-1$, $-1/2$, $1/2$, $1$ for any $1/6 \le p \le 1/2$ (Dette & Titoff,
+2009), and with 6 runs the lack-of-fit sum of squares is $6/16$. The
+search below finds the member with $p = 1/2$:
 
 ```python
 >>> def cubic(points):
@@ -319,7 +320,7 @@ $6/16$:
 ...     model_diff=cubic, replicates=True
 ... )
 >>> sorted(design.ravel().round(2).tolist())
-[-1.0, -0.5, -0.5, 0.5, 0.5, 1.0]
+[-1.0, -1.0, -0.5, -0.5, -0.5, 0.5]
 >>> round(info["score"], 6)
 0.375
 ```
