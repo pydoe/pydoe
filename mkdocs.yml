@@ -37,18 +37,9 @@ theme:
 
   # Palette configuration
   palette:
-    - scheme: default
-      primary: blue grey
-      accent: black
-      toggle:
-        icon: material/brightness-7
-        name: Switch to dark mode
-    - scheme: slate
-      primary: blue grey
-      accent: white
-      toggle:
-        icon: material/brightness-4
-        name: Switch to light mode
+    scheme: default
+    primary: blue grey
+    accent: black
 
   # Logo and favicon
   favicon: assets/images/pydoe-icon.svg

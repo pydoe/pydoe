@@ -12,8 +12,7 @@ It is common to begin with a process model of the black box type, with several d
 
 Often the experiment has to account for a number of uncontrolled factors that may be discrete, such as different machines or operators, and/or continuous such as ambient temperature or humidity. Figure 1 illustrates this situation.
 
-![A Black Box Process Model Schematic](../../assets/images/light-theme/A Black Box Process Model Schematic.png#only-light){ loading=lazy }
-![A Black Box Process Model Schematic](../../assets/images/dark-theme/A Black Box Process Model Schematic.png#only-dark){ loading=lazy }
+![A Black Box Process Model Schematic](../../assets/images/A Black Box Process Model Schematic.png){ loading=lazy }
 /// caption
 Figure 1:  A Black Box Process Model Schematic
 ///

@@ -16,8 +16,7 @@ The code that eventually became PyDOE was originally developed for Scilab by:
 <a href="https://atoms.scilab.org/toolboxes/scidoe" style="color: #484848;">atoms.scilab.org/toolboxes/scidoe</a>
 
 ## PyDOE
-![PyDOE](./assets/images/light-theme/pydoe-banner.svg#only-light)
-![PyDOE](./assets/images/dark-theme/pydoe-banner.svg#only-dark)
+![PyDOE](./assets/images/pydoe-banner.svg)
 
 The original Scilab code was converted to Python and packaged as PyDOE by:
 
