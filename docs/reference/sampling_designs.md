@@ -73,9 +73,11 @@ High-dimensional example:
 ```python
 >>> # 10-dimensional problem
 >>> samples_10d = morris_sampling(num_vars=10, N=20, num_levels=4)
->>> samples_10d.shape
-(220, 10)  # 20 trajectories * 11 points per trajectory
+>>> samples_10d.shape  # (1)!
+(220, 10)
 ```
+
+1. 20 trajectories * 11 points per trajectory
 
 ### Morris Method Theory
 
@@ -118,7 +120,7 @@ Saltelli samples can be created using the following simple syntax:
 
 ```python
 >>> saltelli_samples = saltelli_sampling(num_vars=3, N=1024,
-                                         calc_second_order=True, seed=128)
+...                                      calc_second_order=True, seed=128)
 ```
 
 This creates Saltelli samples for 3 variables with 1024 base samples, including
@@ -142,8 +144,8 @@ Basic usage with first and total-order indices:
 >>> import numpy as np
 >>> from pydoe import saltelli_sampling
 >>> samples = saltelli_sampling(num_vars=3, N=1024, seed=128)
->>> samples.shape
-(8192, 3)  # (1)!
+>>> samples.shape  # (1)!
+(8192, 3)
 ```
 
 1. N * (2 * D + 2) = 1024 * 8
@@ -153,8 +155,8 @@ First-order indices only (excluding second-order interactions):
 ```python
 >>> samples_first = saltelli_sampling(num_vars=3, N=1024, 
 ...                                   calc_second_order=False, seed=128)
->>> samples_first.shape
-(5120, 3)  # (1)!
+>>> samples_first.shape  # (1)!
+(5120, 3)
 ```
 
 1. N * (D + 2) = 1024 * 5
@@ -171,8 +173,8 @@ High-dimensional example:
 ```python
 >>> # 8-dimensional problem
 >>> samples_8d = saltelli_sampling(num_vars=8, N=2048)
->>> samples_8d.shape
-(36864, 8)  # (1)!
+>>> samples_8d.shape  # (1)!
+(36864, 8)
 ```
 
 1. 2048 * (2*8 + 2) = 2048 * 18

@@ -20,3 +20,14 @@ class TestKorobovSequence(unittest.TestCase):
         actual = korobov_sequence(n, d, generator_param=a)
 
         np.testing.assert_array_equal(actual, expected)
+
+
+def test_korobov_sequence_seed_is_reproducible():
+    a = korobov_sequence(31, 4, seed=5)
+    b = korobov_sequence(31, 4, seed=5)
+    np.testing.assert_array_equal(a, b)
+    different = [korobov_sequence(31, 4, seed=s) for s in range(6)]
+    assert any(not np.array_equal(a, d) for d in different)
+    np.testing.assert_array_equal(
+        korobov_sequence(11, 3, 2, seed=0), korobov_sequence(11, 3, 2)
+    )

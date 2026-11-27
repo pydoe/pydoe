@@ -17,8 +17,6 @@ uses a linear-time algorithm.
 
 from __future__ import annotations
 
-import random
-
 import numpy as np
 
 from pydoe.space_filling.quasi_random.rank1 import rank1_lattice
@@ -28,7 +26,11 @@ __all__ = ["korobov_sequence"]
 
 
 def korobov_sequence(
-    num_points: int, dimension: int, generator_param: int | None = None
+    num_points: int,
+    dimension: int,
+    generator_param: int | None = None,
+    *,
+    seed: int | np.random.Generator | None = None,
 ) -> np.ndarray:
     r"""
     Generate a Korobov lattice design matrix.
@@ -47,6 +49,9 @@ def korobov_sequence(
     generator_param : int, optional
         Generator parameter used in modular construction. If None, a random
         value in [2, `num_points`) is selected.
+    seed : int or numpy.random.Generator, optional
+        Seed of the random generator parameter, for reproducible designs.
+        Only used when `generator_param` is None.
 
     Returns
     -------
@@ -70,10 +75,30 @@ def korobov_sequence(
     Raises
     ------
     ValueError
-        If generator_param is not greater than 1.
+        If generator_param is not greater than 1, or if no
+        generator_param is given and num_points is less than 3.
+
+    Examples
+    --------
+    >>> korobov_sequence(5, 2, generator_param=2)
+    array([[0, 0],
+           [1, 2],
+           [2, 4],
+           [3, 1],
+           [4, 3]])
+    >>> a = korobov_sequence(11, 3, seed=1)
+    >>> b = korobov_sequence(11, 3, seed=1)
+    >>> bool((a == b).all())
+    True
     """
     if generator_param is None:
-        generator_param = random.randrange(2, num_points)
+        if num_points < 3:
+            raise ValueError(
+                "num_points must be at least 3 to draw a random "
+                "generator_param; pass generator_param instead"
+            )
+        rng = np.random.default_rng(seed)
+        generator_param = int(rng.integers(2, num_points))
     generator_param %= num_points
     if generator_param <= 1:
         raise ValueError("generator_param must be greater than 1.")

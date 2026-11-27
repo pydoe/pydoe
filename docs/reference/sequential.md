@@ -38,11 +38,46 @@ with a squared-exponential (RBF) kernel, used internally by
 - `length_scale`: positive float controlling the smoothness of the RBF
   kernel (default: 1.0).
 - `noise`: non-negative float added to the diagonal of the kernel matrix
-  for numerical stability (default: 1e-8).
+  for numerical stability and to model observation noise, relative to the
+  signal variance (default: 1e-8).
 - `fit(X, y)`: fit the model to training inputs `X` of shape `(n, d)` and
   targets `y` of shape `(n,)`. Returns `self`.
 - `predict(X, *, return_std=False)`: predict the mean (and optionally the
   standard deviation) at query points `X` of shape `(m, d)`.
+
+The kernel is
+
+$$
+k(x, x') = \sigma_f^2 \exp\left(-\frac{\lVert x - x' \rVert^2}{2 \ell^2}\right)
+$$
+
+where $\ell$ is the `length_scale`. The signal variance $\sigma_f^2$ is
+not a parameter: it is set to the variance of the training targets `y`
+(the targets are centered and scaled before the fit; if they are all
+equal, no scaling is applied). The posterior standard deviation returned
+by `predict` is therefore **in the units of the targets**: it is close to
+zero at the training points and tends to the standard deviation of `y`
+far away from them.
+
+`GaussianProcessRegressor` does not scale its inputs, so `length_scale`
+is in the units of `X`. (`sequential_design` normalizes the inputs to
+$[0, 1]^d$ before fitting.)
+
+```pycon
+>>> X = np.array([[0.0], [0.5], [1.0]])
+>>> y = np.array([0.0, 100.0, 0.0])
+>>> gp = GaussianProcessRegressor(length_scale=0.2).fit(X, y)
+>>> mean, std = gp.predict(np.array([[0.5], [10.0]]), return_std=True)
+>>> mean.round(1)
+array([100. ,  33.3])
+>>> std.round(1)
+array([ 0. , 47.1])
+>>> float(np.std(y).round(1))
+47.1
+```
+
+Far away from the data (here at $x = 10$) the prediction returns to the
+mean of the targets, with their standard deviation.
 
 ## Acquisition Functions {#acquisition-functions}
 
@@ -52,10 +87,10 @@ and the best objective value `best_f` observed so far. For all three
 functions, **higher scores indicate more promising points**, regardless
 of `maximize`.
 
-```pycon
->>> expected_improvement(mean, std, best_f, *, maximize=True)
->>> probability_of_improvement(mean, std, best_f, *, maximize=True)
->>> upper_confidence_bound(mean, std, *, kappa=1.96, maximize=True)
+```python
+expected_improvement(mean, std, best_f, *, maximize=True)
+probability_of_improvement(mean, std, best_f, *, maximize=True)
+upper_confidence_bound(mean, std, *, kappa=1.96, maximize=True)
 ```
 
 ### Examples
@@ -87,10 +122,10 @@ iterations selects the candidate point (from `n_candidates` random
 candidates) maximizing the chosen acquisition function, evaluates
 `objective` there, and refits the model.
 
-```pycon
->>> sequential_design(objective, bounds, n_initial, n_iter, *,
-...     acquisition="ei", maximize=True, n_candidates=1000,
-...     length_scale=1.0, seed=None)
+```python
+sequential_design(objective, bounds, n_initial, n_iter, *,
+    acquisition="ei", maximize=True, n_candidates=1000,
+    length_scale=1.0, seed=None)
 ```
 
 - `objective`: callable taking a 1D array of shape `(d,)` and returning a

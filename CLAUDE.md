@@ -63,11 +63,13 @@ The optimal design module is the most mathematically complex part. Key files:
 
 - **`model.py`** — Builds the design matrix `X` from candidate points for polynomial models (linear, quadratic, higher-order). The information matrix is `M = X^T X / n`.
 - **`criterion.py`** — All optimality criteria (D, A, I, C, E, G, V, S, T). All criteria that require `M^{-1}` go through `regularized_inv()`.
-- **`utils.py`** — `criterion_value()` dispatcher; `_best_single_add/_drop` helpers used by all algorithms; `information_matrix()`.
-- **`algorithms.py`** — Five iterative algorithms: Sequential Dykstra (greedy), Wynn-Mitchell (simple exchange), Fedorov (all-pairs exchange), Modified Fedorov, DETMAX (exchange with excursions).
+- **`utils.py`** — `criterion_value()` dispatcher; `_make_scorer()` builds the `score(design)` function that every algorithm uses (it carries the criterion inputs `c_vector`, `test_points`, `model_diff`); `_best_single_add/_drop` helpers; `information_matrix()`.
+- **`algorithms.py`** — Five iterative algorithms: Sequential Dykstra (greedy), Wynn-Mitchell (simple exchange), Fedorov (all-pairs exchange), Modified Fedorov, DETMAX (exchange with one-point excursions). All take keyword-only `c_vector`, `test_points`, `model_diff` and `replicates` (default `False`: a candidate is used at most once).
 - **`efficiency.py`** — D-efficiency and A-efficiency post-hoc measures.
 - **`optimal.py`** — Top-level `optimal_design()` that dispatches to the chosen algorithm.
 - **`fisher.py`** — `fisher_information()` (FIM `J^T Σ^{-1} J` from a model Jacobian, averaged over the third axis of a 3D Jacobian) and `jacobian_optimal_design()` (greedy + point-exchange row selection on the mean FIM for the D/A/E/S criteria). Independent of `model.py`; reuses the criteria in `criterion.py`.
+
+Criteria follow their sources: T is the lack-of-fit sum of squares `d^T (I - P_X) d` (Atkinson & Fedorov 1975) and needs `model_diff`; S is `sqrt(det M) / prod sqrt(M_jj)` (Shin & Xiu 2016) and is computed without `alpha`; V averages over `test_points` (default: the candidates). In `_make_scorer`, D, E and S score a rank-deficient design `rank - p` instead of 0 so a search from few points can progress. `tests/test_optimal_methods.py` runs every algorithm with every criterion against brute-force optima and published designs.
 
 ### Numerical conditioning in optimal design
 

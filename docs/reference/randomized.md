@@ -11,6 +11,7 @@ be described:
 - Nearly Orthogonal Latin Hypercube
 - Random K-Means
 - Random Uniform
+- Scaling Samples to Bounds
 
 !!! hint
     All available designs can be accessed after a simple import statement:
@@ -27,6 +28,7 @@ be described:
     ...     minimax_design,
     ...     maxpro_design,
     ...     nearly_orthogonal_lhs,
+    ...     scale_samples,
     ... )
     ```
 
@@ -37,7 +39,7 @@ be described:
 Latin-hypercube designs can be created using the following simple syntax:
 
 ```python
-lhs(n, [samples, criterion, iterations])
+lhs(n, [samples, criterion, iterations, random_state, correlation_matrix, seed])
 ```
 
 where
@@ -58,12 +60,21 @@ where
      variable can be enforced by setting a valid correlation matrix. Description of the
      algorithm can be found in [*Latin hypercube sampling with multidimensional uniformity*](https://doi.org/10.1016/j.jspi.2011.09.016).
 
+* **iterations**: an integer giving the number of iterations of the
+  "maximin", "centermaximin" and "correlation" algorithms (default: 5)
+* **correlation_matrix**: a square array with the correlation to enforce
+  between the factors; only used by the "lhsmu" criterion (default: None)
+* **seed**: an integer or `np.random.Generator` that controls the random
+  draws, for reproducible designs (default: None)
+* **random_state**: deprecated; an integer or `np.random.RandomState`.
+  Passing it emits a `DeprecationWarning`. Use `seed` instead.
+
 The output design scales all the variable ranges from zero to one which
 can then be transformed as the user wishes (like to a specific statistical
 distribution using the [`scipy.stats.distributions`](http://docs.scipy.org/doc/scipy/reference/stats.html) `ppf` (inverse
 cumulative distribution) function. An example of this is [shown below](#statistical_distribution_usage).
 
-For example, if I wanted to transform the uniform distribution of 8 samples
+For example, if I wanted to transform the uniform distribution of 5 samples
 to a normal distribution (mean=0, standard deviation=1), I would do
 something like:
 
@@ -86,27 +97,27 @@ sampled points that are normally distributed:
 A basic 4-factor latin-hypercube design:
 
 ```pycon
->>> lhs(4, criterion="center")
-array([[ 0.875,  0.625,  0.875,  0.125],
-       [ 0.375,  0.125,  0.375,  0.375],
-       [ 0.625,  0.375,  0.125,  0.625],
-       [ 0.125,  0.875,  0.625,  0.875]])
+>>> lhs(4, criterion="center", seed=42)
+array([[0.375, 0.625, 0.125, 0.625],
+       [0.125, 0.375, 0.375, 0.875],
+       [0.875, 0.875, 0.625, 0.125],
+       [0.625, 0.125, 0.875, 0.375]])
 ```
 
 Let's say we want more samples, like 10:
 
 ```pycon
->>> lhs(4, samples=10, criterion="center")
-array([[ 0.05,  0.05,  0.15,  0.15],
-       [ 0.55,  0.85,  0.95,  0.75],
-       [ 0.25,  0.25,  0.45,  0.25],
-       [ 0.45,  0.35,  0.75,  0.45],
-       [ 0.75,  0.55,  0.25,  0.55],
-       [ 0.95,  0.45,  0.35,  0.05],
-       [ 0.35,  0.95,  0.05,  0.65],
-       [ 0.15,  0.65,  0.55,  0.35],
-       [ 0.85,  0.75,  0.85,  0.85],
-       [ 0.65,  0.15,  0.65,  0.95]])
+>>> lhs(4, samples=10, criterion="center", seed=42)
+array([[0.95, 0.75, 0.45, 0.05],
+       [0.35, 0.35, 0.55, 0.15],
+       [0.05, 0.45, 0.25, 0.85],
+       [0.25, 0.25, 0.05, 0.55],
+       [0.85, 0.85, 0.65, 0.25],
+       [0.65, 0.95, 0.85, 0.35],
+       [0.55, 0.15, 0.95, 0.45],
+       [0.75, 0.05, 0.15, 0.95],
+       [0.45, 0.65, 0.35, 0.75],
+       [0.15, 0.55, 0.75, 0.65]])
 ```
 
 ### Customizing with Statistical Distributions {#statistical_distribution_usage}
@@ -115,24 +126,24 @@ Now, let's say we want to transform these designs to be normally
 distributed with means = `[1, 2, 3, 4]` and standard deviations = `[0.1, 0.5, 1, 0.25]`:
 
 ```python
->>> design = lhs(4, samples=10)
+>>> design = lhs(4, samples=10, seed=42)
 >>> from scipy.stats.distributions import norm
 >>> means = [1, 2, 3, 4]
 >>> stdvs = [0.1, 0.5, 1, 0.25]
->>> for i in xrange(4):
+>>> for i in range(4):
 ...     design[:, i] = norm(loc=means[i], scale=stdvs[i]).ppf(design[:, i])
 ...
 >>> design
-array([[ 0.84947986,  2.16716215,  2.81669487,  3.96369414],
-       [ 1.15820413,  1.62692745,  2.28145071,  4.25062028],
-       [ 0.99159933,  2.6444164 ,  2.14908071,  3.45706066],
-       [ 1.02627463,  1.8568382 ,  3.8172492 ,  4.16756309],
-       [ 1.07459909,  2.30561153,  4.09567327,  4.3881782 ],
-       [ 0.896079  ,  2.0233295 ,  1.54235909,  3.81888286],
-       [ 1.00415   ,  2.4246118 ,  3.3500082 ,  4.07788558],
-       [ 0.91999246,  1.50179698,  2.70669743,  3.7826346 ],
-       [ 0.97030478,  1.99322045,  3.178122  ,  4.04955409],
-       [ 1.12124679,  1.22454846,  4.52414072,  3.8707982 ]])
+array([[1.13594132, 2.36663792, 2.95678009, 3.63056147],
+       [0.96532419, 1.8502459 , 3.24576985, 3.76982777],
+       [0.85771899, 1.88156874, 2.28427246, 4.22784   ],
+       [0.92032956, 1.65490697, 1.63330072, 4.05644396],
+       [1.09644209, 2.49119469, 3.37635123, 3.86360439],
+       [1.04616626, 2.81087004, 4.02346331, 3.88497615],
+       [1.01911827, 1.57481955, 4.42340726, 3.9768851 ],
+       [1.05693154, 1.14637525, 2.0697235 , 4.45954277],
+       [0.9888118 , 2.15203651, 2.59935681, 4.20751801],
+       [0.87703694, 2.04449189, 3.75366972, 4.06617543]])
 ```
 
 !!! note
@@ -277,8 +288,8 @@ Euclidean distance between design points. Maximin designs spread points
 as far apart as possible, which is desirable for space-filling computer
 experiments.
 
-```pycon
->>> maximin_design(n_points, n_factors, *, iterations=200, seed=None)
+```python
+maximin_design(n_points, n_factors, *, iterations=200, seed=None)
 ```
 
 where
@@ -311,9 +322,9 @@ set so as to minimize the maximum distance from any point in the
 candidate set to its nearest selected design point (a k-center / facility
 location criterion), refined via swap-based local search.
 
-```pycon
->>> minimax_design(n_points, n_factors, *, n_candidates=1000,
-...                iterations=200, seed=None)
+```python
+minimax_design(n_points, n_factors, *, n_candidates=1000,
+               iterations=200, seed=None)
 ```
 
 where
@@ -348,8 +359,8 @@ $\psi = \sum_{i<j} \prod_{k=1}^{p} (x_{ik} - x_{jk})^{-2}$, which
 guarantees good space-filling properties in every projection onto a
 subset of factors.
 
-```pycon
->>> maxpro_design(n_points, n_factors, *, iterations=200, seed=None)
+```python
+maxpro_design(n_points, n_factors, *, iterations=200, seed=None)
 ```
 
 where
@@ -382,8 +393,8 @@ coordinate-exchange local search to minimize the maximum absolute pairwise
 Pearson correlation between columns. This reduces confounding between
 factor effect estimates compared to a plain random Latin hypercube.
 
-```pycon
->>> nearly_orthogonal_lhs(n_points, n_factors, *, iterations=200, seed=None)
+```python
+nearly_orthogonal_lhs(n_points, n_factors, *, iterations=200, seed=None)
 ```
 
 where
@@ -426,10 +437,12 @@ updating cluster centers based on randomly sampled points.
 
 Random K-Means designs can be created using the following syntax:
 
-```pycon
->>> random_k_means(num_points,
-                   dimension,
-                   [num_steps, initial_points, callback, seed])
+```python
+random_k_means(
+    num_points,
+    dimension,
+    [num_steps, initial_points, callback, random_state, seed],
+)
 ```
 
 where
@@ -437,10 +450,14 @@ where
 * `num_points`: an integer that designates the number of cluster centers to generate (required)
 * `dimension`: an integer that designates the dimensionality of the space (required)
 * `num_steps`: an integer that designates the number of iterations (default: 100 * num_points)
-* `initial_points`: an array of initial cluster centers (default: None, which uses random points)
+* `initial_points`: an array of shape `(num_points, dimension)` with the initial cluster centers, all in $[0, 1]$ (default: None, which uses random points)
 * `callback`: a callable function called at each step with current cluster centers (default: None)
 * `seed`: an integer or `np.random.Generator` for reproducibility (default: None)
-* `random_state`: (Deprecated) Use `seed` parameter instead
+* `random_state`: deprecated; passing it emits a `DeprecationWarning`. Use `seed` instead
+
+At each step one point is drawn uniformly in the unit hypercube, and the
+nearest cluster center is moved to the mean of itself and all the points
+assigned to it so far (MacQueen's update).
 
 
 The output design contains cluster centers that are well-distributed across the
@@ -451,38 +468,45 @@ unit hypercube $[0, 1]^\text{dimension}$.
 A basic 3-point, 2-dimensional Random K-Means design:
 
 ```python
->>> random_k_means(3, 2, random_state=42)
-array([[0.50047407, 0.49860013],
-       [0.50168345, 0.50033893],
-       [0.49956536, 0.50004765]])
+>>> random_k_means(3, 2, seed=42)
+array([[0.50957531, 0.22400726],
+       [0.78810092, 0.70678097],
+       [0.20686406, 0.65349212]])
 ```
 
 With custom initial points:
 
 ```python
 >>> initial = [[0.1, 0.1], [0.5, 0.5], [0.9, 0.9]]
->>> random_k_means(3, 2, initial_points=initial, num_steps=50, random_state=42)
-array([[0.24854237, 0.25041155],
-       [0.50043582, 0.50058412],
-       [0.75123745, 0.74896743]])
+>>> random_k_means(3, 2, initial_points=initial, num_steps=50, seed=42)
+array([[0.4360224 , 0.21207178],
+       [0.2761386 , 0.64799756],
+       [0.74605502, 0.70867558]])
 ```
 
 ## Random Uniform (`random_uniform`) {#random-uniform}
 
 Random Uniform generates random samples from a uniform distribution over the
-half-open interval [0, 1). This is a simple wrapper around `numpy.random.rand`
-that provides a consistent interface with other PyDOE functions.
+half-open interval [0, 1). The samples are drawn from
+`numpy.random.default_rng(seed)`, through an interface consistent with
+the other PyDOE functions.
 
 Random Uniform designs can be created using the following syntax:
 
 ```python
->>> random_uniform(num_points, dimension)
+>>> random_uniform(num_points, dimension, seed=None)
 ```
 
 where
 
 * **num_points**: an integer that designates the number of random points to generate (required)
 * **dimension**: an integer that designates the dimensionality of each point (required)
+* **seed**: an integer or `np.random.Generator` for reproducibility (default: None)
+
+!!! note
+    `random_uniform` has its own generator, so the legacy global seed
+    `np.random.seed(...)` has no effect on it. Pass `seed` to get
+    reproducible points.
 
 The output design contains completely random points uniformly distributed in
 the unit hypercube $[0, 1)^\text{dimension}$.
@@ -492,23 +516,66 @@ the unit hypercube $[0, 1)^\text{dimension}$.
 A basic 5-point, 3-dimensional Random Uniform design:
 
 ```python
->>> np.random.seed(42)  # For reproducibility
->>> random_uniform(5, 3)
-array([[0.37454012, 0.95071431, 0.73199394],
-       [0.59865848, 0.15601864, 0.15599452],
-       [0.05808361, 0.86617615, 0.60111501],
-       [0.70807258, 0.02058449, 0.96990985],
-       [0.83244264, 0.21233911, 0.18182497]])
+>>> random_uniform(5, 3, seed=42)
+array([[0.77395605, 0.43887844, 0.85859792],
+       [0.69736803, 0.09417735, 0.97562235],
+       [0.7611397 , 0.78606431, 0.12811363],
+       [0.45038594, 0.37079802, 0.92676499],
+       [0.64386512, 0.82276161, 0.4434142 ]])
 ```
 
 For 2D visualization:
 
 ```pycon
->>> np.random.seed(123)
->>> points = random_uniform(20, 2)  # (1)!
+>>> points = random_uniform(20, 2, seed=123)  # (1)!
 ```
 
 1.  Points are completely random with no structure
+
+## Scaling Samples to Bounds (`scale_samples`) {#scale-samples}
+
+The designs of this section, and the
+[low-discrepancy sequences](low_discrepancy_sequences.md) that return
+points in the unit hypercube, can be mapped to the actual ranges of the
+factors with `scale_samples`:
+
+```python
+>>> scale_samples(samples, bounds)
+```
+
+where
+
+* **samples**: an array of shape `(n_samples, n_vars)` with values in
+  $[0, 1]$
+* **bounds**: a list of `(min, max)` pairs, one per column of `samples`
+
+Column $i$ is mapped linearly to its bounds,
+$x_i \mapsto \text{min}_i + x_i (\text{max}_i - \text{min}_i)$. The result
+has the shape and the data type of `samples`, so `samples` should be a
+float array. A `ValueError` is raised if the number of bounds differs
+from the number of columns, or if a lower bound is not less than its
+upper bound.
+
+### Examples
+
+```pycon
+>>> samples = np.array([[0.1, 0.2], [0.8, 0.9]])
+>>> scale_samples(samples, [(-1, 1), (0, 10)])
+array([[-0.8,  2. ],
+       [ 0.6,  9. ]])
+```
+
+A Latin hypercube for a temperature between 20 and 80 and a pressure
+between 1 and 5:
+
+```pycon
+>>> unit = lhs(2, samples=4, criterion="center", seed=42)
+>>> scale_samples(unit, [(20, 80), (1, 5)])
+array([[42.5,  1.5],
+       [27.5,  3.5],
+       [57.5,  4.5],
+       [72.5,  2.5]])
+```
 
 ## References
 

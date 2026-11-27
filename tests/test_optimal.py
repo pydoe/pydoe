@@ -29,6 +29,16 @@ from pydoe import (
 from pydoe.optimal.criterion import regularized_inv
 
 
+def _model_diff(points):
+    """Departure of a rival model from polynomials of degree 1 and 2."""
+    return np.sum(points**2, axis=1) + np.sum(points**3, axis=1)
+
+
+def _criterion_inputs(criterion):
+    """Inputs that a criterion needs beyond the candidates."""
+    return {"model_diff": _model_diff} if criterion == "T" else {}
+
+
 class TestOptimalDesign(unittest.TestCase):
     def setUp(self):
         np.random.seed(42)
@@ -152,7 +162,8 @@ class TestOptimalDesign(unittest.TestCase):
         M = np.array([[4, 0], [0, 1]])
         det_M = 4.0
         col_rms = np.sqrt([4, 1])
-        expected = det_M / np.prod(col_rms)
+        # Shin and Xiu (2016): sqrt(det M) / prod_j sqrt(M_jj)
+        expected = np.sqrt(det_M) / np.prod(col_rms)
         actual = s_optimality(M)
         self.assertAlmostEqual(actual, expected)
 
@@ -160,11 +171,13 @@ class TestOptimalDesign(unittest.TestCase):
         X = np.array([[1, 0], [1, 1], [1, -1]])
         model_diff_subset = np.array([1, 0, -1])
 
+        # Lack-of-fit sum of squares d^T (I - P_X) d (Atkinson and
+        # Fedorov, 1975): what the model X cannot explain of d.
         H = X.T @ X
         H_inv = np.linalg.inv(H)
         P = X @ H_inv @ X.T
         d = model_diff_subset.reshape(-1, 1)
-        expected = float((d.T @ P @ d).item())
+        expected = float((d.T @ (np.eye(3) - P) @ d).item())
 
         actual = t_optimality(X, model_diff_subset)
         self.assertAlmostEqual(actual, expected)
@@ -488,6 +501,7 @@ class TestOptimalDesign(unittest.TestCase):
                         n_points=10,  # More points
                         degree=1,  # Lower degree to start
                         criterion=criterion,
+                        **_criterion_inputs(criterion),
                         method="detmax",
                         alpha=0.1,  # Higher alpha for regularization
                         max_iter=100,
@@ -509,6 +523,7 @@ class TestOptimalDesign(unittest.TestCase):
                                 n_points=12,  # Even more points
                                 degree=1,
                                 criterion=criterion,
+                                **_criterion_inputs(criterion),
                                 method="sequential",  # Different algorithm
                                 alpha=0.5,  # Much higher alpha
                                 max_iter=50,
@@ -662,6 +677,7 @@ class TestOptimalDesign(unittest.TestCase):
                 n_points=8,
                 degree=1,  # Linear model
                 criterion="T",
+                model_diff=_model_diff,
                 method="sequential",
                 alpha=0.2,
             )
@@ -686,6 +702,7 @@ class TestOptimalDesign(unittest.TestCase):
                 n_points=8,
                 degree=2,
                 criterion=criterion,
+                **_criterion_inputs(criterion),
                 method="detmax",
                 alpha=0.05,
                 max_iter=50,
@@ -735,6 +752,7 @@ class TestOptimalDesign(unittest.TestCase):
                             n_points=6,
                             degree=1,
                             criterion=criterion,
+                            **_criterion_inputs(criterion),
                             method=method,
                             alpha=0.01,
                             max_iter=50,
@@ -782,6 +800,7 @@ class TestOptimalDesign(unittest.TestCase):
             n_points=6,
             degree=1,
             criterion="T",
+            model_diff=_model_diff,
             method="detmax",
             alpha=0.01,
         )
@@ -799,6 +818,7 @@ class TestOptimalDesign(unittest.TestCase):
                         n_points=12,
                         degree=2,
                         criterion=criterion,
+                        **_criterion_inputs(criterion),
                         method="detmax",
                         alpha=0.01,
                         max_iter=50,
@@ -824,6 +844,7 @@ class TestOptimalDesign(unittest.TestCase):
                     n_points=6,
                     degree=2,
                     criterion=criterion,
+                    **_criterion_inputs(criterion),
                     method="detmax",
                     max_iter=10,
                 )
@@ -834,6 +855,7 @@ class TestOptimalDesign(unittest.TestCase):
                     n_points=6,
                     degree=2,
                     criterion=criterion,
+                    **_criterion_inputs(criterion),
                     method="detmax",
                     max_iter=100,
                 )
@@ -854,6 +876,7 @@ class TestOptimalDesign(unittest.TestCase):
                             n_points=8,
                             degree=2,
                             criterion=criterion,
+                            **_criterion_inputs(criterion),
                             method="detmax",
                             alpha=0.05,  # Some regularization
                             max_iter=100,
@@ -865,6 +888,7 @@ class TestOptimalDesign(unittest.TestCase):
                             n_points=10,  # More points for stability
                             degree=1,  # Linear model
                             criterion=criterion,
+                            **_criterion_inputs(criterion),
                             method="sequential",  # Most stable algorithm
                             alpha=0.2,  # Higher regularization
                             max_iter=50,
@@ -959,6 +983,7 @@ class TestOptimalDesign(unittest.TestCase):
                         n_points=15,
                         degree=2,
                         criterion=criterion,
+                        **_criterion_inputs(criterion),
                         method="detmax",
                         alpha=0.1,
                         max_iter=50,

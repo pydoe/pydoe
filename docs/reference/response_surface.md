@@ -48,16 +48,16 @@ The default 3-factor Box-Behnken design:
 ```pycon
 >>> bbdesign(3)
 array([[-1., -1.,  0.],
-       [ 1., -1.,  0.],
        [-1.,  1.,  0.],
+       [ 1., -1.,  0.],
        [ 1.,  1.,  0.],
        [-1.,  0., -1.],
-       [ 1.,  0., -1.],
        [-1.,  0.,  1.],
+       [ 1.,  0., -1.],
        [ 1.,  0.,  1.],
        [ 0., -1., -1.],
-       [ 0.,  1., -1.],
        [ 0., -1.,  1.],
+       [ 0.,  1., -1.],
        [ 0.,  1.,  1.],
        [ 0.,  0.,  0.],
        [ 0.,  0.,  0.],
@@ -69,28 +69,28 @@ A customized design with four factors, but only a single center point:
 ```pycon
 >>> bbdesign(4, center=1)
 array([[-1., -1.,  0.,  0.],
-       [ 1., -1.,  0.,  0.],
        [-1.,  1.,  0.,  0.],
+       [ 1., -1.,  0.,  0.],
        [ 1.,  1.,  0.,  0.],
        [-1.,  0., -1.,  0.],
-       [ 1.,  0., -1.,  0.],
        [-1.,  0.,  1.,  0.],
+       [ 1.,  0., -1.,  0.],
        [ 1.,  0.,  1.,  0.],
        [-1.,  0.,  0., -1.],
-       [ 1.,  0.,  0., -1.],
        [-1.,  0.,  0.,  1.],
+       [ 1.,  0.,  0., -1.],
        [ 1.,  0.,  0.,  1.],
        [ 0., -1., -1.,  0.],
-       [ 0.,  1., -1.,  0.],
        [ 0., -1.,  1.,  0.],
+       [ 0.,  1., -1.,  0.],
        [ 0.,  1.,  1.,  0.],
        [ 0., -1.,  0., -1.],
-       [ 0.,  1.,  0., -1.],
        [ 0., -1.,  0.,  1.],
+       [ 0.,  1.,  0., -1.],
        [ 0.,  1.,  0.,  1.],
        [ 0.,  0., -1., -1.],
-       [ 0.,  0.,  1., -1.],
        [ 0.,  0., -1.,  1.],
+       [ 0.,  0.,  1., -1.],
        [ 0.,  0.,  1.,  1.],
        [ 0.,  0.,  0.,  0.]])
 ```
@@ -133,8 +133,8 @@ fraction, the rotatable distance is $16^{1/4} = 2$, as in Box and Draper
 2.0
 ```
 
-The star points alone come from `star(n, alpha, center, *, n_cube=None)`, where
-`n_cube` is the run count of the cube (by default $2^n$).
+The star points alone come from [`star`](#star), where `n_cube` is the
+run count of the cube (by default $2^n$).
 
 !!! note
     - 'ccc' and 'cci' can be rotatable designs, but 'ccf' cannot.
@@ -147,8 +147,8 @@ Simplest input, assuming default kwargs:
 ```pycon
 >>> ccdesign(2)
 array([[-1.        , -1.        ],
-       [ 1.        , -1.        ],
        [-1.        ,  1.        ],
+       [ 1.        , -1.        ],
        [ 1.        ,  1.        ],
        [ 0.        ,  0.        ],
        [ 0.        ,  0.        ],
@@ -170,12 +170,12 @@ isn't variability so we only need a single center point:
 ```pycon
 >>> ccdesign(3, center=(0, 1), alpha="r", face="cci")
 array([[-0.59460356, -0.59460356, -0.59460356],
-       [ 0.59460356, -0.59460356, -0.59460356],
-       [-0.59460356,  0.59460356, -0.59460356],
-       [ 0.59460356,  0.59460356, -0.59460356],
        [-0.59460356, -0.59460356,  0.59460356],
-       [ 0.59460356, -0.59460356,  0.59460356],
+       [-0.59460356,  0.59460356, -0.59460356],
        [-0.59460356,  0.59460356,  0.59460356],
+       [ 0.59460356, -0.59460356, -0.59460356],
+       [ 0.59460356, -0.59460356,  0.59460356],
+       [ 0.59460356,  0.59460356, -0.59460356],
        [ 0.59460356,  0.59460356,  0.59460356],
        [-1.        ,  0.        ,  0.        ],
        [ 1.        ,  0.        ,  0.        ],
@@ -193,43 +193,82 @@ Doehlert designs are especially advantageous when optimizing multiple variables,
 
 The Doehlert design defines a **spherical experimental domain** and emphasizes **uniform space filling**. Although it is not orthogonal or rotatable, it is generally sufficient for practical applications.
 
-For two variables, the Doehlert design consists of a center point and six points forming a regular hexagon, situated on a circle. The total number of experiments is given by: $$ N = k^2 + k + C_0 $$
+The design consists of the center and the $k^2 + k$ points of the first
+uniform shell. The shell points are the differences between every two
+vertices of a regular simplex with unit edges: they all lie at distance 1
+from the center, and each is at distance 1 from its nearest neighbors. For
+two variables they form a regular hexagon, for three variables a
+cuboctahedron. The total number of experiments is given by: $$ N = k^2 + k + C_0 $$
 where
 
 - $k$ = number of factors (variables)
 - $C_0$ = number of center points
 
-Two implementations are included:
+Two functions are included; they return the same shell points in the same
+order:
 
-- `doehlert_shell_design`: uses a shell-based spherical approach with optional center points.
-- `doehlert_simplex_design`: uses a simplex-based method to uniformly fill the design space.
+- `doehlert_simplex_design(num_factors)`: one center point followed by the
+  $k^2 + k$ shell points, $k^2 + k + 1$ rows in total. The first $k + 1$
+  rows are the regular simplex (one vertex at the origin) the design is
+  built from.
+- `doehlert_shell_design(num_factors, num_center_points=1)`:
+  `num_center_points` center replicates followed by the same shell points.
+  With the default single center point it returns the same design as
+  `doehlert_simplex_design`; `num_center_points=0` returns the shell alone.
+
+Both raise `ValueError` if `num_factors` is less than 1;
+`doehlert_shell_design` also if `num_center_points` is negative.
 
 ### Examples
 
-Create a Doehlert design with 3 factors and 1 center point using the shell approach:
+The Doehlert design for 2 factors, the center and a regular hexagon:
 
 ```pycon
->>> doehlert_shell_design(3, num_center_points=1)
-array([[ 0.       ,  0.       ,  0.        ],
-       [ 1.       ,  0.       ,  0.        ],
-       [-0.5      ,  0.8660254,  0.        ],
-       [-0.5      , -0.8660254,  0.        ],
-       [ 0.8660254,  0.5      ,  0.        ],
-       [ 0.8660254, -0.5      ,  0.        ],
-       ...                                  ])
+>>> doehlert_simplex_design(2)
+array([[ 0.       ,  0.       ],
+       [ 1.       ,  0.       ],
+       [ 0.5      ,  0.8660254],
+       [-1.       ,  0.       ],
+       [-0.5      , -0.8660254],
+       [ 0.5      , -0.8660254],
+       [-0.5      ,  0.8660254]])
 ```
 
-Create a Doehlert design using the simplex approach for 3 factors:
+The Doehlert design for 3 factors, the center and the 12 vertices of a
+cuboctahedron:
 
 ```pycon
 >>> doehlert_simplex_design(3)
-array([[ 0.      ,  0.       , 0.        ],
-       [ 1.      ,  0.       , 0.        ],
-       [ 0.      ,  0.8660254, 0.        ],
-       [ 0.      ,  0.5      , 0.81649658],
-       [-1.      ,  0.       , 0.        ],
-       [ 0.      , -0.8660254, 0.        ],
-       ...                                ])
+array([[ 0.        ,  0.        ,  0.        ],
+       [ 1.        ,  0.        ,  0.        ],
+       [ 0.5       ,  0.8660254 ,  0.        ],
+       [ 0.5       ,  0.28867513,  0.81649658],
+       [-1.        ,  0.        ,  0.        ],
+       [-0.5       , -0.8660254 ,  0.        ],
+       [-0.5       , -0.28867513, -0.81649658],
+       [ 0.5       , -0.8660254 ,  0.        ],
+       [ 0.5       , -0.28867513, -0.81649658],
+       [-0.5       ,  0.8660254 ,  0.        ],
+       [ 0.        ,  0.57735027, -0.81649658],
+       [-0.5       ,  0.28867513,  0.81649658],
+       [ 0.        , -0.57735027,  0.81649658]])
+```
+
+The same design with 3 center points instead of 1:
+
+```pycon
+>>> design = doehlert_shell_design(3, num_center_points=3)
+>>> design.shape
+(15, 3)
+>>> design[:4]
+array([[0., 0., 0.],
+       [0., 0., 0.],
+       [0., 0., 0.],
+       [1., 0., 0.]])
+>>> bool(np.allclose(np.linalg.norm(design[3:], axis=1), 1.0))
+True
+>>> bool(np.allclose(design[3:], doehlert_simplex_design(3)[1:]))
+True
 ```
 
 !!! note
@@ -290,6 +329,105 @@ built on the full $2^4$ factorial:
 !!! note
     Reference: Hartley, H. O. (1959). Smallest composite designs for
     quadratic response surfaces. *Biometrics*, 15(4), 611-624.
+
+## Building Blocks (`star`, `union`, `repeat_center`) {#building-blocks}
+
+The central composite and Box-Behnken designs are assembled from three
+small functions, which are also available on their own.
+
+### Star points (`star`) {#star}
+
+```python
+star(n, alpha="faced", center=(1, 1), *, n_cube=None)
+```
+
+- `n`: number of factors.
+- `alpha`: `"faced"` (default), `"orthogonal"` or `"rotatable"`; the full
+  names are required here (the abbreviations accepted by `ccdesign` are
+  not). Any other value raises `ValueError`.
+- `center`: 2-tuple with the number of center points of the factorial
+  block and of the star block (default `(1, 1)`). Only used by
+  `"orthogonal"`.
+- `n_cube` (keyword only): run count $n_F$ of the factorial (cube) portion
+  the star points will be combined with. `None` (default) means the full
+  factorial, $n_F = 2^n$. A value that is not a positive integer raises
+  `ValueError`.
+
+Returns the tuple `(H, a)`: `H` is the $2n \times n$ matrix of the star
+points $\pm a$ on each axis, without center points, and `a` is the axial
+distance:
+
+- `"faced"`: $a = 1$;
+- `"rotatable"`: $a = n_F^{1/4}$;
+- `"orthogonal"`: with $n_0$ = `center[0]` and $n_{a0}$ = `center[1]`,
+
+$$
+a = \sqrt{\frac{n \, (1 + n_{a0} / (2n))}{1 + n_0 / n_F}} .
+$$
+
+```pycon
+>>> H, a = star(3)
+>>> H
+array([[-1.,  0.,  0.],
+       [ 1.,  0.,  0.],
+       [ 0., -1.,  0.],
+       [ 0.,  1.,  0.],
+       [ 0.,  0., -1.],
+       [ 0.,  0.,  1.]])
+>>> a
+1
+>>> H, a = star(2, alpha="rotatable")
+>>> H
+array([[-1.41421356,  0.        ],
+       [ 1.41421356,  0.        ],
+       [ 0.        , -1.41421356],
+       [ 0.        ,  1.41421356]])
+>>> float(star(5, alpha="rotatable", n_cube=16)[1])
+2.0
+```
+
+### Center points (`repeat_center`) {#repeat_center}
+
+```python
+repeat_center(n, repeat)
+```
+
+- `n`: number of factors.
+- `repeat`: number of center points.
+
+Returns a `repeat`-by-`n` array of zeros, the center-point portion of a
+design in coded units.
+
+```pycon
+>>> repeat_center(3, 2)
+array([[0., 0., 0.],
+       [0., 0., 0.]])
+```
+
+### Stacking designs (`union`) {#union}
+
+```python
+union(H1, H2)
+```
+
+- `H1`, `H2`: 2D arrays with the same number of columns.
+
+Returns the rows of `H1` followed by the rows of `H2`. For example, a
+2-factor face-centered composite design with one center point is the
+factorial points, the star points and the center:
+
+```pycon
+>>> union(union(ff2n(2), star(2)[0]), repeat_center(2, 1))
+array([[-1., -1.],
+       [-1.,  1.],
+       [ 1., -1.],
+       [ 1.,  1.],
+       [-1.,  0.],
+       [ 1.,  0.],
+       [ 0., -1.],
+       [ 0.,  1.],
+       [ 0.,  0.]])
+```
 
 ## More Information
 

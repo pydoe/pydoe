@@ -91,6 +91,8 @@ It provides:
   - Efficiency measures (``a_efficiency``, ``d_efficiency``)
   - Search algorithms (``sequential_dykstra``, ``simple_exchange_wynn_mitchell``, ``fedorov``, ``modified_fedorov``, ``detmax``)
   - Design utilities (``criterion_value``, ``information_matrix``, ``build_design_matrix``, ``build_uniform_moment_matrix``, ``generate_candidate_set``)
+  - Fisher-information designs over Jacobians (``fisher_information``, ``jacobian_optimal_design``)
+  - Prediction variance of a regression model (``var_regression_matrix``)
 
 - **Sparse Grid Designs**
   - Sparse Grid Design (``doe_sparse_grid``)
@@ -104,3 +106,6 @@ It provides:
   - Sequential Design Driver (``sequential_design``)
   - Gaussian Process Surrogate (``GaussianProcessRegressor``)
   - Acquisition Functions (``expected_improvement``, ``probability_of_improvement``, ``upper_confidence_bound``)
+
+- **Utilities**
+  - Scaling of unit-hypercube samples to bounds (``scale_samples``)

@@ -1,3 +1,5 @@
+import itertools
+
 import numpy as np
 import pytest
 
@@ -147,33 +149,160 @@ class TestSparseGridExamples:
 
     def test_grid_type_variations(self):
         level, dims = 2, 2
-        expected_count = 13  # MATLAB verified
+        # Clenshaw-Curtis and Chebyshev: 1, 3, 5 points per axis;
+        # Gauss-Patterson: 1, 3, 7 points per axis.
+        expected_counts = {
+            "clenshaw_curtis": 13,
+            "chebyshev": 13,
+            "gauss_patterson": 17,
+        }
 
-        grid_types = ["clenshaw_curtis", "chebyshev", "gauss_patterson"]
-
-        for grid_type in grid_types:
+        for grid_type, expected_count in expected_counts.items():
             design = doe_sparse_grid(level, dims, grid_type=grid_type)
             assert len(design) == expected_count, (
                 f"{grid_type} should produce {expected_count} points"
             )
             assert design.shape[1] == dims
             assert np.all(design >= 0.0) and np.all(design <= 1.0)
+            assert sparse_grid_dimension(level, dims, grid_type) == (
+                expected_count
+            )
 
     def test_grid_types(self):
         level, dims = 2, 3
-        expected_count = 25  # MATLAB verified
 
-        # Test Clenshaw-Curtis grid type
         design_cc = doe_sparse_grid(level, dims, grid_type="clenshaw_curtis")
-        assert len(design_cc) == expected_count
+        assert len(design_cc) == 25  # MATLAB verified
 
-        # Test Chebyshev grid type
         design_cheb = doe_sparse_grid(level, dims, grid_type="chebyshev")
-        assert len(design_cheb) == expected_count
+        assert len(design_cheb) == 25
 
-        # Test Gauss-Patterson grid type
         design_gp = doe_sparse_grid(level, dims, grid_type="gauss_patterson")
-        assert len(design_gp) == expected_count
+        assert len(design_gp) == 31
+
+    def test_grid_types_give_different_points(self):
+        # grid_type used to be ignored: all three gave the same design.
+        cc = doe_sparse_grid(3, 2, grid_type="clenshaw_curtis")
+        cheb = doe_sparse_grid(3, 2, grid_type="chebyshev")
+        gp = doe_sparse_grid(3, 2, grid_type="gauss_patterson")
+        assert cc.shape == cheb.shape
+        assert not np.allclose(cc, cheb)
+        assert gp.shape != cc.shape
+        # only the Gauss-Patterson grid stays off the boundary
+        assert np.any(cc == 0.0) and np.any(cc == 1.0)
+        assert np.any(cheb == 0.0) and np.any(cheb == 1.0)
+        assert np.all(gp > 0.0) and np.all(gp < 1.0)
+
+    def test_unknown_grid_type(self):
+        with pytest.raises(ValueError, match="grid_type must be one of"):
+            doe_sparse_grid(2, 2, grid_type="bogus")
+        with pytest.raises(ValueError, match="grid_type must be one of"):
+            sparse_grid_dimension(2, 2, grid_type="bogus")
+
+    def test_one_dimensional_points(self):
+        np.testing.assert_allclose(
+            np.sort(doe_sparse_grid(3, 1, "clenshaw_curtis")[:, 0]),
+            np.linspace(0, 1, 9),
+        )
+        np.testing.assert_allclose(
+            np.sort(doe_sparse_grid(3, 1, "chebyshev")[:, 0]),
+            (1 - np.cos(np.pi * np.arange(9) / 8)) / 2,
+        )
+        # Gauss-Patterson: 3-point Gauss-Legendre rule, then Patterson's
+        # 7-point extension (Patterson, 1968)
+        np.testing.assert_allclose(
+            np.sort(doe_sparse_grid(1, 1, "gauss_patterson")[:, 0]) * 2 - 1,
+            [-np.sqrt(0.6), 0.0, np.sqrt(0.6)],
+            atol=1e-14,
+        )
+        np.testing.assert_allclose(
+            np.sort(doe_sparse_grid(2, 1, "gauss_patterson")[:, 0]) * 2 - 1,
+            [
+                -0.9604912687080203,
+                -np.sqrt(0.6),
+                -0.4342437493468026,
+                0.0,
+                0.4342437493468026,
+                np.sqrt(0.6),
+                0.9604912687080203,
+            ],
+            atol=1e-13,
+        )
+
+    def test_gauss_patterson_rules_are_exact(self):
+        # The rule with 2n + 1 nodes integrates polynomials of degree
+        # 3n + 1 exactly, which pins the nodes down.
+        legendre = np.polynomial.legendre
+        for level in range(1, 6):
+            nodes = np.sort(doe_sparse_grid(level, 1, "gauss_patterson")[:, 0])
+            x = nodes * 2 - 1
+            m = len(x)
+            assert m == 2 ** (level + 1) - 1
+            degree = 3 * ((m - 1) // 2) + 1
+            target = np.zeros(m)
+            target[0] = 2.0
+            weights = np.linalg.solve(legendre.legvander(x, m - 1).T, target)
+            assert np.all(weights > 0)
+            moments = legendre.legvander(x, degree).T @ weights
+            moments[0] -= 2.0
+            assert np.max(np.abs(moments)) < 1e-9
+
+    def test_gauss_patterson_level_limit(self):
+        with pytest.raises(ValueError, match="up to n_level 5"):
+            doe_sparse_grid(6, 2, grid_type="gauss_patterson")
+
+    def test_is_smolyak_union_of_tensor_grids(self):
+        # H(n, d) is the union of the tensor grids X^l1 x ... x X^ld over
+        # l1 + ... + ld <= n.
+        for grid_type in ["clenshaw_curtis", "chebyshev", "gauss_patterson"]:
+            for level, dims in [(2, 2), (3, 2), (4, 2), (3, 3), (2, 4)]:
+                axes = [
+                    doe_sparse_grid(lv, 1, grid_type)[:, 0]
+                    for lv in range(level + 1)
+                ]
+                expected = set()
+                for lv in itertools.product(range(level + 1), repeat=dims):
+                    if sum(lv) <= level:
+                        for point in itertools.product(*(axes[i] for i in lv)):
+                            expected.add(tuple(np.round(point, 12)))
+                design = doe_sparse_grid(level, dims, grid_type)
+                actual = {tuple(np.round(p, 12)) for p in design}
+                assert len(actual) == len(design), "duplicate points"
+                assert actual == expected
+
+    def test_levels_are_nested(self):
+        for grid_type in ["clenshaw_curtis", "chebyshev", "gauss_patterson"]:
+            for dims in (1, 2, 3):
+                for level in range(1, 5):
+                    lower = doe_sparse_grid(level - 1, dims, grid_type)
+                    upper = doe_sparse_grid(level, dims, grid_type)
+                    np.testing.assert_array_equal(upper[: len(lower)], lower)
+
+    def test_design_is_symmetric(self):
+        for grid_type in ["clenshaw_curtis", "chebyshev", "gauss_patterson"]:
+            design = doe_sparse_grid(3, 3, grid_type)
+            points = {tuple(np.round(p, 12)) for p in design}
+            mirrored = {tuple(np.round(1 - p, 12)) for p in design}
+            swapped = {tuple(np.round(p[::-1], 12)) for p in design}
+            assert points == mirrored
+            assert points == swapped
+
+    def test_point_count_matches_generated_design(self):
+        for grid_type in ["clenshaw_curtis", "chebyshev", "gauss_patterson"]:
+            for level in range(6):
+                for dims in range(1, 5):
+                    assert sparse_grid_dimension(level, dims, grid_type) == len(
+                        doe_sparse_grid(level, dims, grid_type)
+                    )
+
+    def test_point_count_beyond_level_seven(self):
+        # The closed-form table stopped at level 7 and returned the
+        # level-7 count for every higher level.
+        assert sparse_grid_dimension(7, 1) == 129
+        assert sparse_grid_dimension(8, 1) == 257
+        assert sparse_grid_dimension(9, 1) == 513
+        assert sparse_grid_dimension(8, 2) == 1537
+        assert sparse_grid_dimension(8, 2) == len(doe_sparse_grid(8, 2))
 
     def test_high_dimensional_efficiency(self):
         # Test cases inspired by spcompare.m high-dimensional tests
